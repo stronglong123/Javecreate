@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.common.generate.javacreate.dao.AssetsManagerMapper">
+
+    <resultMap id="assetsManagerResultMap" type="com.common.generate.javacreate.domain.AssetsManager">
+        <id column="id" jdbcType="BIGINT" property="id"/> 
+        <result column="assetCode" jdbcType="VARCHAR" property="assetCode"/> 
+        <result column="assetName" jdbcType="VARCHAR" property="assetName"/> 
+        <result column="assetSpecification" jdbcType="VARCHAR" property="assetSpecification"/> 
+        <result column="encodingType" jdbcType="VARCHAR" property="encodingType"/> 
+        <result column="remark" jdbcType="VARCHAR" property="remark"/> 
+        <result column="status" jdbcType="TINYINT" property="status"/> 
+        <result column="inStock" jdbcType="TINYINT" property="inStock"/> 
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/> 
+        <result column="createUser" jdbcType="VARCHAR" property="createUser"/> 
+        <result column="lastUpdateTime" jdbcType="TIMESTAMP" property="lastUpdateTime"/> 
+        <result column="lastUpdateUser" jdbcType="VARCHAR" property="lastUpdateUser"/> 
+
+        
+        
+    </resultMap>
+
+    <sql id="assetsManagerColumns">
+        assetsmanager.Id AS "id",
+        assetsmanager.AssetCode AS "assetCode",
+        assetsmanager.AssetName AS "assetName",
+        assetsmanager.AssetSpecification AS "assetSpecification",
+        assetsmanager.EncodingType AS "encodingType",
+        assetsmanager.Remark AS "remark",
+        assetsmanager.Status AS "status",
+        assetsmanager.InStock AS "inStock",
+        assetsmanager.CreateTime AS "createTime",
+        assetsmanager.CreateUser AS "createUser",
+        assetsmanager.LastUpdateTime AS "lastUpdateTime",
+        assetsmanager.LastUpdateUser AS "lastUpdateUser"
+    </sql>
+
+    <sql id="assetsManagerJoins">
+        
+    </sql>
+
+    <select id="detail" resultMap="assetsManagerResultMap">
+        SELECT
+        <include refid="assetsManagerColumns" />
+        FROM assetsmanager <include refid="assetsManagerJoins" />
+        <where>
+        assetsmanager.Id = #{id,jdbcType=BIGINT}
+        </where>
+    </select>
+
+    <select id="list" resultMap="assetsManagerResultMap">
+        SELECT
+        <include refid="assetsManagerColumns" />
+        FROM assetsmanager <include refid="assetsManagerJoins" />
+        <where>
+        </where>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO assetsmanager(
+            Id,
+            AssetCode,
+            AssetName,
+            AssetSpecification,
+            EncodingType,
+            Remark,
+            Status,
+            InStock,
+            CreateTime,
+            CreateUser,
+            LastUpdateTime,
+            LastUpdateUser
+        )
+        VALUES (
+            #{id,jdbcType=BIGINT},
+            #{assetCode,jdbcType=VARCHAR},
+            #{assetName,jdbcType=VARCHAR},
+            #{assetSpecification,jdbcType=VARCHAR},
+            #{encodingType,jdbcType=VARCHAR},
+            #{remark,jdbcType=VARCHAR},
+            #{status,jdbcType=TINYINT},
+            #{inStock,jdbcType=TINYINT},
+            #{createTime,jdbcType=TIMESTAMP},
+            #{createUser,jdbcType=VARCHAR},
+            #{lastUpdateTime,jdbcType=TIMESTAMP},
+            #{lastUpdateUser,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO assetsmanager(
+            Id,
+            AssetCode,
+            AssetName,
+            AssetSpecification,
+            EncodingType,
+            Remark,
+            Status,
+            InStock,
+            CreateTime,
+            CreateUser,
+            LastUpdateTime,
+            LastUpdateUser
+        )
+        VALUES
+        <foreach collection ="list" item="assetsManager" separator =",">
+        (
+            #{assetsManager.id,jdbcType=BIGINT},
+            #{assetsManager.assetCode,jdbcType=VARCHAR},
+            #{assetsManager.assetName,jdbcType=VARCHAR},
+            #{assetsManager.assetSpecification,jdbcType=VARCHAR},
+            #{assetsManager.encodingType,jdbcType=VARCHAR},
+            #{assetsManager.remark,jdbcType=VARCHAR},
+            #{assetsManager.status,jdbcType=TINYINT},
+            #{assetsManager.inStock,jdbcType=TINYINT},
+            #{assetsManager.createTime,jdbcType=TIMESTAMP},
+            #{assetsManager.createUser,jdbcType=VARCHAR},
+            #{assetsManager.lastUpdateTime,jdbcType=TIMESTAMP},
+            #{assetsManager.lastUpdateUser,jdbcType=VARCHAR}
+        )
+        </foreach>
+    </insert>
+
+    <update id="update">
+        UPDATE assetsmanager
+        <set>
+            <if test="id!= null">
+                Id = #{id,jdbcType=BIGINT},
+            </if>  
+            <if test="assetCode!= null">
+                AssetCode = #{assetCode,jdbcType=VARCHAR},
+            </if>  
+            <if test="assetName!= null">
+                AssetName = #{assetName,jdbcType=VARCHAR},
+            </if>  
+            <if test="assetSpecification!= null">
+                AssetSpecification = #{assetSpecification,jdbcType=VARCHAR},
+            </if>  
+            <if test="encodingType!= null">
+                EncodingType = #{encodingType,jdbcType=VARCHAR},
+            </if>  
+            <if test="remark!= null">
+                Remark = #{remark,jdbcType=VARCHAR},
+            </if>  
+            <if test="status!= null">
+                Status = #{status,jdbcType=TINYINT},
+            </if>  
+            <if test="inStock!= null">
+                InStock = #{inStock,jdbcType=TINYINT},
+            </if>  
+            <if test="createTime!= null">
+                CreateTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>  
+            <if test="createUser!= null">
+                CreateUser = #{createUser,jdbcType=VARCHAR},
+            </if>  
+            <if test="lastUpdateTime!= null">
+                LastUpdateTime = #{lastUpdateTime,jdbcType=TIMESTAMP},
+            </if>  
+            <if test="lastUpdateUser!= null">
+                LastUpdateUser = #{lastUpdateUser,jdbcType=VARCHAR},
+            </if> 
+        </set>
+        WHERE Id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="delete">
+        DELETE FROM assetsmanager
+        WHERE Id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

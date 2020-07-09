@@ -13,80 +13,80 @@ public class TableDTO implements Serializable {
     /**
      * 表名
      */
-    private String TableName;
+    private String tableName;
 
     /**
      * 表描述
      */
-    private String TableComment;
+    private String tableComment;
 
     /**
-     * 列名
+     * 字段名
      */
-    private String ColumnName;
+    private String columnName;
     /**
-     * 列属性
+     * 字段属性
      */
-    private String Type;
+    private String type;
     /**
      * 是否非空
      */
-    private String IsNull;
+    private String isNull;
     /**
      * 默认值
      */
-    private String DefaultValue;
+    private String defaultValue;
     /**
      * 描述
      */
     private String comment;
 
     public String getTableName() {
-        return TableName;
+        return tableName;
     }
 
     public void setTableName(String tableName) {
-        TableName = tableName;
+        this.tableName = tableName;
     }
 
     public String getTableComment() {
-        return TableComment;
+        return tableComment;
     }
 
     public void setTableComment(String tableComment) {
-        TableComment = tableComment;
+        this.tableComment = tableComment;
     }
 
     public String getColumnName() {
-        return ColumnName;
+        return columnName;
     }
 
     public void setColumnName(String columnName) {
-        ColumnName = columnName;
+        this.columnName = columnName;
     }
 
     public String getType() {
-        return Type;
+        return type;
     }
 
     public void setType(String type) {
-        Type = type;
+        this.type = type;
     }
 
     public String getIsNull() {
-        return IsNull;
+        return isNull;
     }
 
     public void setIsNull(String isNull) {
-        IsNull = isNull;
+        this.isNull = isNull;
     }
 
     public String getDefaultValue() {
-        return DefaultValue;
+        return defaultValue;
     }
 
     public void setDefaultValue(String defaultValue) {
-        DefaultValue = defaultValue;
+        this.defaultValue = defaultValue;
     }
 
     public String getComment() {

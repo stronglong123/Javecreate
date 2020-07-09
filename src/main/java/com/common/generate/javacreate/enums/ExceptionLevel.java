@@ -53,15 +53,6 @@ public enum ExceptionLevel {
 	}
 
 	public static ExceptionLevel getExcetpionType(Throwable e) {
-//		if (e instanceof BusinessValidateException) {
-//			return ExceptionLevel.WARN;
-//		}
-//		if (e instanceof BusinessException) {
-//			return ExceptionLevel.WARN;
-//		}
-//		if (e instanceof DataValidateException) {
-//			return ExceptionLevel.WARN;
-//		}
 		if (e instanceof HttpMessageConversionException ||
 				e instanceof JsonMappingException) {
 			return ExceptionLevel.WARN;

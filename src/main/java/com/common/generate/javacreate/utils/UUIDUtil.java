@@ -21,8 +21,6 @@ public class UUIDUtil {
         return UUID.randomUUID().getLeastSignificantBits() * -1;
     }
 
-
-
     public static Long getUuid(){
        return SnowflakeComponent.getInstance().nextId();
     }

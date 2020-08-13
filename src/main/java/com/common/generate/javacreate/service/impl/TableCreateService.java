@@ -22,7 +22,6 @@ public class TableCreateService implements ITableCreateService {
     @Override
     public List<String> createTableInfo(List<TableDTO> tableDTOS) {
         List<String> tableInfo = tableCreateBL.createTableInfo(tableDTOS);
-
         return tableInfo;
     }
 }

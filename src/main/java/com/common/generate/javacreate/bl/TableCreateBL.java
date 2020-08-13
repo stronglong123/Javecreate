@@ -99,6 +99,9 @@ public class TableCreateBL {
     }
 
     private String setComment(String comment) {
+        if(StringUtils.isEmpty(comment)){
+            return ",";
+        }
         return "COMMENT '" + comment + "',";
     }
 
@@ -114,7 +117,7 @@ public class TableCreateBL {
 
 
     private String setTableFoot(String tableBodyBody, String tableName, String tableComment) {
-        return "CREATE TABLE " + tableName + "(" +
+        return "CREATE TABLE `" + tableName + "` (" +
                 tableBodyBody + " PRIMARY KEY (`id`) USING BTREE ) COMMENT = '" + tableComment + "';";
     }
 

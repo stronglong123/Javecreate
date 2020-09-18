@@ -1,4 +1,4 @@
-package com.common.generate.javacreate.domain.base;
+package com.common.generate.javacreate.model.base;
 
 
 import com.common.generate.javacreate.constants.ResultCode;

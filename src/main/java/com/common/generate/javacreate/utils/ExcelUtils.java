@@ -1,6 +1,6 @@
 package com.common.generate.javacreate.utils;
 
-import com.common.generate.javacreate.domain.excel.ExcelHead;
+import com.common.generate.javacreate.model.excel.ExcelHead;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;

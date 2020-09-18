@@ -1,4 +1,4 @@
-package com.common.generate.javacreate.domain.base.search;
+package com.common.generate.javacreate.model.base.search;
 
 /**
  * @author xialei

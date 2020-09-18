@@ -1,4 +1,4 @@
-package com.common.generate.javacreate.domain.base.exception;
+package com.common.generate.javacreate.model.base.exception;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package com.common.generate.javacreate.domain.base.exception;
+package com.common.generate.javacreate.model.base.exception;
 
 /**
  * 业务异常，如指定Id的对象不存在，订单不能提交等，以Warn方式进行输出。

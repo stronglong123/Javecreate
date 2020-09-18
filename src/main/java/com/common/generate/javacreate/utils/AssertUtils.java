@@ -1,6 +1,6 @@
 package com.common.generate.javacreate.utils;
 
-import com.common.generate.javacreate.domain.base.exception.DataValidateException;
+import com.common.generate.javacreate.model.base.exception.DataValidateException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;

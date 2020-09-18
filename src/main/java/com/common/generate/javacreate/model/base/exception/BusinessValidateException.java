@@ -1,4 +1,4 @@
-package com.common.generate.javacreate.domain.base.exception;
+package com.common.generate.javacreate.model.base.exception;
 
 /**
  * 业务检验异常，如检验用户名是否唯一，用户是否可提交订单等.

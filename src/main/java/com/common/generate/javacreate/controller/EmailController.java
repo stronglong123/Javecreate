@@ -1,6 +1,6 @@
 package com.common.generate.javacreate.controller;
 
-import com.common.generate.javacreate.domain.email.EmailDTO;
+import com.common.generate.javacreate.model.email.EmailDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,9 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.common.generate.javacreate.service.impl.EmailSendService;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 

@@ -1,7 +1,7 @@
 package com.common.generate.javacreate.bl;
 
 import com.alibaba.fastjson.JSON;
-import com.common.generate.javacreate.domain.TableDTO;
+import com.common.generate.javacreate.model.TableDTO;
 import com.common.generate.javacreate.utils.StringUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

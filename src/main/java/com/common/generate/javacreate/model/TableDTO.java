@@ -1,4 +1,4 @@
-package com.common.generate.javacreate.domain;
+package com.common.generate.javacreate.model;
 
 import java.io.Serializable;
 

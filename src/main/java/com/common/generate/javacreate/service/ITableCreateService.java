@@ -1,6 +1,6 @@
 package com.common.generate.javacreate.service;
 
-import com.common.generate.javacreate.domain.TableDTO;
+import com.common.generate.javacreate.model.TableDTO;
 
 import java.util.List;
 

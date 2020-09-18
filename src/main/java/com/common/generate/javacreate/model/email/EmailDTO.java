@@ -1,4 +1,4 @@
-package com.common.generate.javacreate.domain.email;
+package com.common.generate.javacreate.model.email;
 
 import java.io.File;
 import java.io.Serializable;

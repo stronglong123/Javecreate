@@ -1,4 +1,4 @@
-package com.common.generate.javacreate.domain.excel;
+package com.common.generate.javacreate.model.excel;
 
 public class ExcelHead {
     private String excelName;             //Excel名

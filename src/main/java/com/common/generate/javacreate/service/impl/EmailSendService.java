@@ -1,8 +1,8 @@
 package com.common.generate.javacreate.service.impl;
 
 
-import com.common.generate.javacreate.domain.email.EmailDTO;
-import com.common.generate.javacreate.domain.email.VerifyEmailDTO;
+import com.common.generate.javacreate.model.email.EmailDTO;
+import com.common.generate.javacreate.model.email.VerifyEmailDTO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

@@ -1,10 +1,8 @@
 package com.common.generate.javacreate.service.impl;
 
 import com.common.generate.javacreate.bl.TableCreateBL;
-import com.common.generate.javacreate.domain.TableDTO;
+import com.common.generate.javacreate.model.TableDTO;
 import com.common.generate.javacreate.service.ITableCreateService;
-import com.greedystar.generator.invoker.SingleInvoker;
-import com.greedystar.generator.invoker.base.Invoker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

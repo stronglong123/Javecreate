@@ -1,4 +1,4 @@
-package com.common.generate.javacreate.utils;
+package com.common.generate.javacreate.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,10 +8,13 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * @author xialei
- * @date 2020/9/18 16:43
+ * @date 2020/10/13 16:22
  */
 public class MD5Utils {
     private static final Logger LOGGER = LoggerFactory.getLogger(MD5Utils.class);
+
+    public MD5Utils() {
+    }
 
     public static String getMD5(String str) {
         try {
@@ -20,7 +23,7 @@ public class MD5Utils {
             byte[] byteDigest = md.digest();
             StringBuffer buf = new StringBuffer("");
 
-            for (int offset = 0; offset < byteDigest.length; ++offset) {
+            for(int offset = 0; offset < byteDigest.length; ++offset) {
                 int i = byteDigest[offset];
                 if (i < 0) {
                     i += 256;
@@ -39,4 +42,5 @@ public class MD5Utils {
             return null;
         }
     }
+
 }

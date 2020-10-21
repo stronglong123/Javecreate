@@ -1,9 +1,9 @@
-package com.common.generate.javacreate.enums;
+package com.common.generate.javacreate.util;
 
 public enum BasicClassType {
 	STRING("java.lang.String"), LONG("java.lang.Long"), BOOLEAN("java.lang.Boolean"),
 	INTEGER("java.lang.Integer"), DOUBLE("java.lang.Double"), FLOAT("java.lang.Float"),
-	BYTE("java.lang.Byte"), SHORT("java.lang.Short"),BIGDECIMAL("java.math.BigDecimal");
+	BYTE("java.lang.Byte"), SHORT("java.lang.Short"), BIGDECIMAL("java.math.BigDecimal");
 
 	public String type;
 	  

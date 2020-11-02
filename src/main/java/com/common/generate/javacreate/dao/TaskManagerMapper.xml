@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.common.generate.javacreate.dao.TaskManagerMapper">
+
+    <resultMap id="taskManagerResultMap" type="com.common.generate.javacreate.model.TaskManagerDTO">
+        <id column="id" jdbcType="BIGINT" property="id"/> 
+        <result column="taskName" jdbcType="VARCHAR" property="taskName"/> 
+        <result column="taskNo" jdbcType="VARCHAR" property="taskNo"/> 
+        <result column="refProject" jdbcType="VARCHAR" property="refProject"/> 
+        <result column="state" jdbcType="TINYINT" property="state"/> 
+        <result column="priority" jdbcType="INTEGER" property="priority"/> 
+        <result column="remark" jdbcType="VARCHAR" property="remark"/> 
+        <result column="operator" jdbcType="VARCHAR" property="operator"/> 
+        <result column="deadTime" jdbcType="TIMESTAMP" property="deadTime"/> 
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/> 
+        <result column="lastUpdateTime" jdbcType="TIMESTAMP" property="lastUpdateTime"/> 
+
+        
+        
+    </resultMap>
+
+    <sql id="taskManagerColumns">
+        taskmanager.Id AS "id",
+        taskmanager.TaskName AS "taskName",
+        taskmanager.TaskNo AS "taskNo",
+        taskmanager.RefProject AS "refProject",
+        taskmanager.State AS "state",
+        taskmanager.Priority AS "priority",
+        taskmanager.Remark AS "remark",
+        taskmanager.Operator AS "operator",
+        taskmanager.DeadTime AS "deadTime",
+        taskmanager.CreateTime AS "createTime",
+        taskmanager.LastUpdateTime AS "lastUpdateTime"
+    </sql>
+
+    <sql id="taskManagerJoins">
+        
+    </sql>
+
+    <select id="detail" resultMap="taskManagerResultMap">
+        SELECT
+        <include refid="taskManagerColumns" />
+        FROM taskmanager <include refid="taskManagerJoins" />
+        <where>
+        taskmanager.Id = #{id,jdbcType=BIGINT}
+        </where>
+    </select>
+
+    <select id="pageList" resultMap="taskManagerResultMap">
+        SELECT
+        <include refid="taskManagerColumns" />
+        FROM taskmanager <include refid="taskManagerJoins" />
+    </select>
+
+    <insert id="insert">
+        INSERT INTO taskmanager(
+            Id,
+            TaskName,
+            TaskNo,
+            RefProject,
+            State,
+            Priority,
+            Remark,
+            Operator,
+            DeadTime,
+            CreateTime,
+            LastUpdateTime
+        )
+        VALUES (
+            #{id,jdbcType=BIGINT},
+            #{taskName,jdbcType=VARCHAR},
+            #{taskNo,jdbcType=VARCHAR},
+            #{refProject,jdbcType=VARCHAR},
+            #{state,jdbcType=TINYINT},
+            #{priority,jdbcType=INTEGER},
+            #{remark,jdbcType=VARCHAR},
+            #{operator,jdbcType=VARCHAR},
+            #{deadTime,jdbcType=TIMESTAMP},
+            #{createTime,jdbcType=TIMESTAMP},
+            #{lastUpdateTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO taskmanager(
+            Id,
+            TaskName,
+            TaskNo,
+            RefProject,
+            State,
+            Priority,
+            Remark,
+            Operator,
+            DeadTime,
+            CreateTime,
+            LastUpdateTime
+        )
+        VALUES
+        <foreach collection ="list" item="taskManager" separator =",">
+        (
+            #{taskManager.id,jdbcType=BIGINT},
+            #{taskManager.taskName,jdbcType=VARCHAR},
+            #{taskManager.taskNo,jdbcType=VARCHAR},
+            #{taskManager.refProject,jdbcType=VARCHAR},
+            #{taskManager.state,jdbcType=TINYINT},
+            #{taskManager.priority,jdbcType=INTEGER},
+            #{taskManager.remark,jdbcType=VARCHAR},
+            #{taskManager.operator,jdbcType=VARCHAR},
+            #{taskManager.deadTime,jdbcType=TIMESTAMP},
+            #{taskManager.createTime,jdbcType=TIMESTAMP},
+            #{taskManager.lastUpdateTime,jdbcType=TIMESTAMP}
+        )
+        </foreach>
+    </insert>
+
+    <update id="update">
+        UPDATE taskmanager
+        <set>
+            <if test="id!= null">
+                Id = #{id,jdbcType=BIGINT},
+            </if>  
+            <if test="taskName!= null">
+                TaskName = #{taskName,jdbcType=VARCHAR},
+            </if>  
+            <if test="taskNo!= null">
+                TaskNo = #{taskNo,jdbcType=VARCHAR},
+            </if>  
+            <if test="refProject!= null">
+                RefProject = #{refProject,jdbcType=VARCHAR},
+            </if>  
+            <if test="state!= null">
+                State = #{state,jdbcType=TINYINT},
+            </if>  
+            <if test="priority!= null">
+                Priority = #{priority,jdbcType=INTEGER},
+            </if>  
+            <if test="remark!= null">
+                Remark = #{remark,jdbcType=VARCHAR},
+            </if>  
+            <if test="operator!= null">
+                Operator = #{operator,jdbcType=VARCHAR},
+            </if>  
+            <if test="deadTime!= null">
+                DeadTime = #{deadTime,jdbcType=TIMESTAMP},
+            </if>  
+            <if test="createTime!= null">
+                CreateTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>  
+            <if test="lastUpdateTime!= null">
+                LastUpdateTime = #{lastUpdateTime,jdbcType=TIMESTAMP},
+            </if> 
+        </set>
+        WHERE Id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <update id="delete">
+        DELETE FROM taskmanager
+        WHERE Id = #{id,jdbcType=BIGINT}
+    </update>
+
+</mapper>

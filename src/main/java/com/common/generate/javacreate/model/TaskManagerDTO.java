@@ -29,7 +29,7 @@ public class TaskManagerDTO implements Serializable {
      */
     private String refProject;
     /**
-     * 状态，0:未开始，1:开发中，2:开发完成，3:部署test，4:部署release，5:部署pre，6:部署product
+     * 状态，1:未开始，2:开发中，3:开发完成，4:部署test，5:部署release，6:部署pre，7:部署product
      */
     private Byte state;
     /**

@@ -134,9 +134,6 @@
     <update id="update">
         UPDATE taskmanager
         <set>
-            <if test="id!= null">
-                Id = #{id,jdbcType=BIGINT},
-            </if>  
             <if test="taskName!= null">
                 TaskName = #{taskName,jdbcType=VARCHAR},
             </if>  
@@ -166,9 +163,9 @@
         WHERE Id = #{id,jdbcType=BIGINT}
     </update>
 
-    <update id="delete">
+    <delete id="delete">
         DELETE FROM taskmanager
         WHERE Id = #{id,jdbcType=BIGINT}
-    </update>
+    </delete>
 
 </mapper>

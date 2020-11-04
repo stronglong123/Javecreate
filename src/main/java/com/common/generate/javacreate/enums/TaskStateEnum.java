@@ -10,7 +10,7 @@ public enum TaskStateEnum {
     /**
      * 未开始
      */
-    INVALID((byte) 0, "作废"),
+    INVALID((byte) -1, "作废"),
     /**
      * 未开始
      */

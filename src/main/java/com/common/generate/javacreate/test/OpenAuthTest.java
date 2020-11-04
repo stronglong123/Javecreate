@@ -2,19 +2,16 @@ package com.common.generate.javacreate.test;
 
 import com.alibaba.fastjson.JSON;
 import com.common.generate.javacreate.test.dto.MenuSyncDTO;
-import com.common.generate.javacreate.test.dto.OrderQueryDTO;
 import com.common.generate.javacreate.test.dto.ThirdMenuItemDTO;
 import com.common.generate.javacreate.test.dto.ThirdMenuSyncDTO;
 import com.common.generate.javacreate.test.dto.ThirdRoleQueryDTO;
-import com.common.generate.javacreate.util.AuthUtil;
+import com.common.generate.javacreate.utils.authutils.AuthUtil;
 import com.common.generate.javacreate.utils.HttpUtil;
-import com.common.generate.javacreate.utils.StringUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author xialei
@@ -22,9 +19,9 @@ import java.util.Map;
  */
 public class OpenAuthTest {
 
-//    private static final String baseUrl = "http://api.test.yijiupi.com";
+    private static final String baseUrl = "http://api.test.yijiupi.com";
 //    private static final String baseUrl = "http://api.yijiupi.com";
-    private static final String baseUrl = "http://api.release.yijiupidev.com";
+//    private static final String baseUrl = "http://api.release.yijiupidev.com";
 
 //    private static final String baseUrl = "http://localhost:40000";
 
@@ -36,9 +33,9 @@ public class OpenAuthTest {
     public static void jy() {
         String appSecret = "5c41d2fdd2490b70468d1b95e6b2c140";
         String appKey = "a76ef0c5-ae7d-4647-ac3a-e46ef0c5ae7d4647ac3a333864d21adb";
-//        findPermissionsByRoleCode(appSecret, appKey);
+        findPermissionsByRoleCode(appSecret, appKey);
 //        findPermissionsJsonByRoleCode(appSecret,appKey);
-        exportMenuByAppCode(appSecret,appKey);
+//        exportMenuByAppCode(appSecret,appKey);
     }
 
     public static void yjx() {

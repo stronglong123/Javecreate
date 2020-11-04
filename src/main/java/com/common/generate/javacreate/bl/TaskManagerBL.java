@@ -1,9 +1,13 @@
 package com.common.generate.javacreate.bl;
 
 import com.common.generate.javacreate.dao.TaskManagerMapper;
+import com.common.generate.javacreate.enums.TaskStateEnum;
 import com.common.generate.javacreate.model.TaskManagerDTO;
+import com.common.generate.javacreate.model.TaskManagerQueryDTO;
 import com.common.generate.javacreate.model.base.PageResult;
 import com.common.generate.javacreate.model.base.search.PageList;
+import com.common.generate.javacreate.utils.NoGeneratorUtil;
+import com.common.generate.javacreate.utils.UUIDUtil;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +28,7 @@ public class TaskManagerBL {
         return taskManagerMapper.detail(id);
     }
 
-    public PageList<TaskManagerDTO> pageList(TaskManagerDTO taskManager) {
+    public PageList<TaskManagerDTO> pageList(TaskManagerQueryDTO taskManager) {
         PageHelper.startPage(taskManager.getPageNum(), taskManager.getPageSize());
         PageResult<TaskManagerDTO> pageResult = taskManagerMapper.pageList(taskManager);
         return pageResult.toPageList();
@@ -32,6 +36,12 @@ public class TaskManagerBL {
 
     @Transactional
     public void insert(TaskManagerDTO taskManager) {
+        taskManager.setId(UUIDUtil.getUuid());
+        taskManager.setTaskNo(NoGeneratorUtil.createNO("TK"));
+        taskManager.setState(TaskStateEnum.WAIT.getValue());
+        if (taskManager.getPriority() == null) {
+            taskManager.setPriority(1);
+        }
         taskManagerMapper.insert(taskManager);
     }
 

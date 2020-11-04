@@ -1,4 +1,4 @@
-package com.common.generate.javacreate.util;
+package com.common.generate.javacreate.utils.authutils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

@@ -1,6 +1,7 @@
 package com.common.generate.javacreate.dao;
 
 import com.common.generate.javacreate.model.TaskManagerDTO;
+import com.common.generate.javacreate.model.TaskManagerQueryDTO;
 import com.common.generate.javacreate.model.base.PageResult;
 
 
@@ -14,7 +15,7 @@ public interface TaskManagerMapper {
 
      TaskManagerDTO detail(Long id);
 
-     PageResult<TaskManagerDTO> pageList(TaskManagerDTO taskManager);
+     PageResult<TaskManagerDTO> pageList(TaskManagerQueryDTO taskManager);
 
      int insert(TaskManagerDTO taskManager);
 

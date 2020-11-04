@@ -1,4 +1,4 @@
-package com.common.generate.javacreate.util;
+package com.common.generate.javacreate.utils.authutils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

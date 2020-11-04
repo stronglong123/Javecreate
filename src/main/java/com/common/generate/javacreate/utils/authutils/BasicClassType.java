@@ -1,4 +1,4 @@
-package com.common.generate.javacreate.util;
+package com.common.generate.javacreate.utils.authutils;
 
 public enum BasicClassType {
 	STRING("java.lang.String"), LONG("java.lang.Long"), BOOLEAN("java.lang.Boolean"),

@@ -28,9 +28,10 @@
         taskmanager.Priority AS "priority",
         taskmanager.Remark AS "remark",
         taskmanager.Operator AS "operator",
-        taskmanager.DeadTime AS "deadTime",
-        taskmanager.CreateTime AS "createTime",
-        taskmanager.LastUpdateTime AS "lastUpdateTime"
+        date_format(taskmanager.DeadTime, '%Y-%m-%d %H:%i:%s') as deadTime,
+        date_format(taskmanager.lastUpdateTime, '%Y-%m-%d %H:%i:%s') as lastUpdateTime,
+        date_format(taskmanager.CreateTime, '%Y-%m-%d %H:%i:%s') as createTime
+
     </sql>
 
     <sql id="taskManagerJoins">
@@ -40,7 +41,7 @@
     <select id="detail" resultMap="taskManagerResultMap">
         SELECT
         <include refid="taskManagerColumns" />
-        FROM taskmanager <include refid="taskManagerJoins" />
+        FROM taskmanager
         <where>
         taskmanager.Id = #{id,jdbcType=BIGINT}
         </where>
@@ -49,7 +50,24 @@
     <select id="pageList" resultMap="taskManagerResultMap">
         SELECT
         <include refid="taskManagerColumns" />
-        FROM taskmanager <include refid="taskManagerJoins" />
+        FROM taskmanager
+        <where>
+            <if test="taskName!= null">
+                and TaskName = #{taskName,jdbcType=VARCHAR}
+            </if>
+            <if test="taskNo!= null">
+                and TaskNo = #{taskNo,jdbcType=VARCHAR}
+            </if>
+            <if test="state!= null">
+                and State = #{state,jdbcType=TINYINT}
+            </if>
+            <if test="stateList != null and stateList.size>0">
+                and State in
+                <foreach collection="stateList" item="item" separator="," open="(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
     </select>
 
     <insert id="insert">
@@ -76,8 +94,8 @@
             #{remark,jdbcType=VARCHAR},
             #{operator,jdbcType=VARCHAR},
             #{deadTime,jdbcType=TIMESTAMP},
-            #{createTime,jdbcType=TIMESTAMP},
-            #{lastUpdateTime,jdbcType=TIMESTAMP}
+            now(),
+            now()
         )
     </insert>
 
@@ -107,8 +125,8 @@
             #{taskManager.remark,jdbcType=VARCHAR},
             #{taskManager.operator,jdbcType=VARCHAR},
             #{taskManager.deadTime,jdbcType=TIMESTAMP},
-            #{taskManager.createTime,jdbcType=TIMESTAMP},
-            #{taskManager.lastUpdateTime,jdbcType=TIMESTAMP}
+            now(),
+            now()
         )
         </foreach>
     </insert>
@@ -142,13 +160,8 @@
             </if>  
             <if test="deadTime!= null">
                 DeadTime = #{deadTime,jdbcType=TIMESTAMP},
-            </if>  
-            <if test="createTime!= null">
-                CreateTime = #{createTime,jdbcType=TIMESTAMP},
-            </if>  
-            <if test="lastUpdateTime!= null">
-                LastUpdateTime = #{lastUpdateTime,jdbcType=TIMESTAMP},
-            </if> 
+            </if>
+            LastUpdateTime = now()
         </set>
         WHERE Id = #{id,jdbcType=BIGINT}
     </update>

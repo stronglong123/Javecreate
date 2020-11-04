@@ -7,7 +7,7 @@ import com.common.generate.javacreate.test.dto.OrderSendSyncDTO;
 import com.common.generate.javacreate.test.dto.PaymentReturnInfoQueryDTO;
 import com.common.generate.javacreate.test.dto.ProductSkuListSO;
 import com.common.generate.javacreate.test.dto.ThirdReturnOrderQueryDTO;
-import com.common.generate.javacreate.util.AuthUtil;
+import com.common.generate.javacreate.utils.authutils.AuthUtil;
 import com.common.generate.javacreate.utils.HttpUtil;
 
 import java.util.Arrays;
@@ -27,8 +27,8 @@ public class OpenApiTest {
     private static String baseUrl;
 
     public static void main(String[] args) {
-        baseUrl = getUrl("product");
-        deal("gjp");
+        baseUrl = getUrl("test");
+        deal("test");
     }
 
     public static String getUrl(String system) {
@@ -83,11 +83,11 @@ public class OpenApiTest {
 //        getOrderDetail(appSecret, appKey);
 //        getReturnOrderList(appSecret, appKey);
 //        getReturnPaymentState(appSecret, appKey);
-//        listProductSku(appSecret, appKey);
+        listProductSku(appSecret, appKey);
 //        orderSendSync(appSecret, appKey);
 //        findSplitOrder(appSecret, appKey);
 //        directOutStockByOrder(appSecret,appKey);
-        findStorePage(appSecret,appKey);
+//        findStorePage(appSecret,appKey);
 
     }
 
@@ -134,7 +134,7 @@ public class OpenApiTest {
     public static void getOrderDetail(String appSecret, String appKey) {
         String url = baseUrl + "/order/getOrderDetail";
         System.out.println("订单详情获取" + url);
-        String json = "{\"businessNo\":\"998002201030140609\"}";
+        String json = "{\"businessNo\":\"998002201102150613\"}";
         OrderQueryDTO orderQueryDTO = JSON.parseObject(json, OrderQueryDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, OrderQueryDTO.class, orderQueryDTO);
         try {
@@ -206,7 +206,7 @@ public class OpenApiTest {
     public static void listProductSku(String appSecret, String appKey) {
         String url = baseUrl + "/productSku/listProductSku";
         System.out.println("查询产品SKU：" + url);
-        String json = "{\"pageNum\":1,\"pageSize\":10,\"cityId\":998,\"warehouseId\":11}";
+        String json = "{\"pageNum\":1,\"pageSize\":10,\"cityId\":998,\"warehouseId\":11,\"lastUpdateTimeStart\":\"2020-10-13 12:48:40\",\"lastUpdateTimeEnd\":\"2020-11-13 12:48:40\"}";
         ProductSkuListSO dto = JSON.parseObject(json, ProductSkuListSO.class);
         dto.setProductSkuIdList(Arrays.asList(99900119334650L));
 
@@ -252,7 +252,7 @@ public class OpenApiTest {
         String url = baseUrl + "/order/orderSendSync";
         System.out.println("订单发货同步：" + url);
         String json = "{\n" +
-                "    \"businessNo\": \"998002201030140609\",\n" +
+                "    \"businessNo\": \"998002201102150613\",\n" +
                 "    \"logstics\": [\n" +
                 "        {\n" +
                 "            \"logisticsCompany\": \"顺丰速运\",\n" +
@@ -260,10 +260,9 @@ public class OpenApiTest {
                 "            \"logisticsNo\": \"24312424\",\n" +
                 "            \"subOrderItems\": [\n" +
                 "                {\n" +
-                "                    \"orderItemId\": 998001201030141630\n" +
+                "                    \"orderItemId\": 998001201102151638\n" +
                 "                }\n" +
                 "            ],\n" +
-                "            \"subOrderNo\": \"TEST99800220103014060901\"\n" +
                 "        },\n" +
                 "        {\n" +
                 "            \"logisticsCompany\": \"顺丰速运\",\n" +
@@ -271,13 +270,12 @@ public class OpenApiTest {
                 "            \"logisticsNo\": \"5424133\",\n" +
                 "            \"subOrderItems\": [\n" +
                 "                {\n" +
-                "                    \"orderItemId\": 998001201030141631\n" +
+                "                    \"orderItemId\": 998001201102151639\n" +
                 "                }\n" +
                 "            ],\n" +
-                "            \"subOrderNo\": \"TEST99800220103014060902\"\n" +
                 "        }\n" +
                 "    ],\n" +
-                "    \"subOrderSize\": 3\n" +
+                "    \"subOrderSize\": 2\n" +
                 "}";
         OrderSendSyncDTO dto = JSON.parseObject(json, OrderSendSyncDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, OrderSendSyncDTO.class, dto);
@@ -299,7 +297,7 @@ public class OpenApiTest {
     public static void findSplitOrder(String appSecret, String appKey) {
         String url = baseUrl + "/order/findSplitOrder";
         System.out.println("查询拆分订单接口：" + url);
-        String json = "{\"businessNo\":\"998002201030110603\"}";
+        String json = "{\"businessNo\":\"998002201102152914\"}";
         OrderQueryDTO dto = JSON.parseObject(json, OrderQueryDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, OrderQueryDTO.class, dto);
         try {

@@ -2,6 +2,7 @@ package com.common.generate.javacreate.service.impl;
 
 import com.common.generate.javacreate.bl.TaskManagerBL;
 import com.common.generate.javacreate.model.TaskManagerDTO;
+import com.common.generate.javacreate.model.TaskManagerQueryDTO;
 import com.common.generate.javacreate.model.base.search.PageList;
 import com.common.generate.javacreate.service.ITaskManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class TaskManagerServiceImpl implements ITaskManagerService {
     }
 
     @Override
-    public PageList<TaskManagerDTO> pageList(TaskManagerDTO taskManager) {
+    public PageList<TaskManagerDTO> pageList(TaskManagerQueryDTO taskManager) {
         return taskManagerBl.pageList(taskManager);
     }
 

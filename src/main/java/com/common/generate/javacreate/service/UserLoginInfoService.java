@@ -37,7 +37,7 @@ public class UserLoginInfoService {
         AdminUser user = userBL.configLogin(param);
         String token = UUIDUtil.randonUUID();
         user.setToken(token);
-//        setLoginToken(token, user);
+        setLoginToken(token, user);
         return user;
     }
 
@@ -59,9 +59,10 @@ public class UserLoginInfoService {
 
     public void clearUserByToken(String token) {
         AdminUser user = getUserInfoByToken(token);
+        if (user != null && user.getId() != null) {
+            redisTemplate.delete(SystemConstant.USERID_SESSION + user.getId());
+        }
         redisTemplate.delete(token);
-        redisTemplate.delete(SystemConstant.USERID_SESSION + user.getId());
-
     }
 
     /**

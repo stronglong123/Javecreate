@@ -3,11 +3,13 @@ package com.common.generate.javacreate.service.impl;
 import com.common.generate.javacreate.model.user.AdminUser;
 import com.common.generate.javacreate.model.user.UserLoginInfoParam;
 import com.common.generate.javacreate.service.IUserServicce;
+import org.springframework.stereotype.Service;
 
 /**
  * @author xialei
  * @date 2020/11/8 17:27
  */
+@Service
 public class UserServicceImpl implements IUserServicce {
     @Override
     public void insertUser(AdminUser userDTO) {

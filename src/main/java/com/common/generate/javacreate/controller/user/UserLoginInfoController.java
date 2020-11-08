@@ -6,18 +6,15 @@ import com.common.generate.javacreate.model.base.RetResponse;
 import com.common.generate.javacreate.model.user.AdminUser;
 import com.common.generate.javacreate.model.user.UserLoginInfoParam;
 import com.common.generate.javacreate.service.UserLoginInfoService;
-import com.common.generate.javacreate.utils.CookieHelper;
-import com.common.generate.javacreate.utils.RedisKeyHelper;
 import com.common.generate.javacreate.utils.UserInfoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -60,11 +57,16 @@ public class UserLoginInfoController {
      * @param request
      * @param response
      */
+    @IgnoreAuthInterceptor
     @PostMapping(value = "/user/clearCookie")
-    public void clearCookie(HttpServletRequest request, HttpServletResponse response) {
+    public Result<Boolean> clearCookie(HttpServletRequest request, HttpServletResponse response) {
         /** 检查cookie是否存在，存在则删除之前的缓存信息 */
         String token = request.getHeader("token");
+        if(StringUtils.isEmpty(token)){
+            return  RetResponse.makeOKRsp();
+        }
         userService.clearUserByToken(token);
         userInfoUtils.removeUserInfo();// 清除用户线程信息
+        return  RetResponse.makeOKRsp();
     }
 }

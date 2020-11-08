@@ -6,8 +6,6 @@ package com.common.generate.javacreate.advice;
 import com.alibaba.fastjson.JSON;
 import com.common.generate.javacreate.advice.aop.IgnoreAuthInterceptor;
 import com.common.generate.javacreate.enums.BusinessCodeEnum;
-import com.common.generate.javacreate.model.base.exception.BusinessException;
-import com.common.generate.javacreate.model.base.exception.BusinessValidateException;
 import com.common.generate.javacreate.model.user.AdminUser;
 import com.common.generate.javacreate.service.UserLoginInfoService;
 import com.common.generate.javacreate.utils.UserInfoUtils;
@@ -39,6 +37,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+
         log.info("进入拦截器URI:{},参数：{}", JSON.toJSONString(request.getRequestURI()), JSON.toJSONString(request
                 .getParameterMap()));
         //请求路径
@@ -68,7 +67,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         // 通过token获取用户ID
         AdminUser userInfo = userService.getUserInfoByToken(token);
         if (null == userInfo) {
-            throw new BusinessValidateException(BusinessCodeEnum.LOGIN_OUT_TIME.getText());
+            throw new RuntimeException(BusinessCodeEnum.LOGIN_OUT_TIME.getText());
         } else {
             userService.setLoginToken(token, userInfo);
             userInfoUtils.setUserInfo(userInfo);

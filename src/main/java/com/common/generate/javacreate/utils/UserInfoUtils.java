@@ -7,7 +7,6 @@ package com.common.generate.javacreate.utils;
 import com.common.generate.javacreate.constants.SystemConstant;
 import com.common.generate.javacreate.model.base.exception.BusinessException;
 import com.common.generate.javacreate.model.user.AdminUser;
-import com.common.generate.javacreate.model.user.SaasGateWayUserLoginDTO;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 

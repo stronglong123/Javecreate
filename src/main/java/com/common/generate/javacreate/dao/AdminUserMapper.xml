@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.common.generate.javacreate.dao.AdminUserMapper">
+
+    <resultMap id="adminUserResultMap" type="com.common.generate.javacreate.model.user.AdminUser">
+        <id column="id" jdbcType="INTEGER" property="id"/> 
+        <result column="userName" jdbcType="VARCHAR" property="userName"/> 
+        <result column="state" jdbcType="TINYINT" property="state"/> 
+        <result column="password" jdbcType="VARCHAR" property="password"/> 
+        <result column="mobileNo" jdbcType="VARCHAR" property="mobileNo"/> 
+        <result column="gender" jdbcType="VARCHAR" property="gender"/> 
+        <result column="trueName" jdbcType="VARCHAR" property="trueName"/> 
+        <result column="lastLoginTime" jdbcType="TIMESTAMP" property="lastLoginTime"/> 
+        <result column="hireDate" jdbcType="TIMESTAMP" property="hireDate"/> 
+        <result column="employeeType" jdbcType="TINYINT" property="employeeType"/> 
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/> 
+        <result column="lastChangePasswordTime" jdbcType="TIMESTAMP" property="lastChangePasswordTime"/> 
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/> 
+        <result column="createUser" jdbcType="INTEGER" property="createUser"/> 
+        <result column="lastUpdateTime" jdbcType="TIMESTAMP" property="lastUpdateTime"/> 
+        <result column="lastUpdateUser" jdbcType="INTEGER" property="lastUpdateUser"/> 
+        <result column="idCard" jdbcType="VARCHAR" property="idCard"/> 
+
+        
+        
+    </resultMap>
+
+    <sql id="adminUserColumns">
+        adminuser.Id AS "id",
+        adminuser.UserName AS "userName",
+        adminuser.State AS "state",
+        adminuser.Password AS "password",
+        adminuser.MobileNo AS "mobileNo",
+        adminuser.Gender AS "gender",
+        adminuser.TrueName AS "trueName",
+        adminuser.LastLoginTime AS "lastLoginTime",
+        adminuser.HireDate AS "hireDate",
+        adminuser.EmployeeType AS "employeeType",
+        adminuser.Nickname AS "nickname",
+        adminuser.LastChangePasswordTime AS "lastChangePasswordTime",
+        adminuser.CreateTime AS "createTime",
+        adminuser.CreateUser AS "createUser",
+        adminuser.LastUpdateTime AS "lastUpdateTime",
+        adminuser.LastUpdateUser AS "lastUpdateUser",
+        adminuser.IdCard AS "idCard"
+    </sql>
+
+    <select id="detail" resultMap="adminUserResultMap">
+        SELECT
+        <include refid="adminUserColumns" />
+        FROM adminuser
+        <where>
+        adminuser.Id = #{id,jdbcType=INTEGER}
+        </where>
+    </select>
+
+    <select id="pageList" resultMap="adminUserResultMap">
+        SELECT
+        <include refid="adminUserColumns" />
+        FROM adminuser
+        <where>
+        </where>
+    </select>
+
+    <select id="list" resultMap="adminUserResultMap">
+        SELECT
+        <include refid="adminUserColumns" />
+        FROM adminuser
+        <where>
+        </where>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO adminuser(
+            Id,
+            UserName,
+            State,
+            Password,
+            MobileNo,
+            Gender,
+            TrueName,
+            LastLoginTime,
+            HireDate,
+            EmployeeType,
+            Nickname,
+            LastChangePasswordTime,
+            CreateTime,
+            CreateUser,
+            LastUpdateTime,
+            LastUpdateUser,
+            IdCard
+        )
+        VALUES (
+            #{id,jdbcType=INTEGER},
+            #{userName,jdbcType=VARCHAR},
+            #{state,jdbcType=TINYINT},
+            #{password,jdbcType=VARCHAR},
+            #{mobileNo,jdbcType=VARCHAR},
+            #{gender,jdbcType=VARCHAR},
+            #{trueName,jdbcType=VARCHAR},
+            #{lastLoginTime,jdbcType=TIMESTAMP},
+            #{hireDate,jdbcType=TIMESTAMP},
+            #{employeeType,jdbcType=TINYINT},
+            #{nickname,jdbcType=VARCHAR},
+            #{lastChangePasswordTime,jdbcType=TIMESTAMP},
+            #{createTime,jdbcType=TIMESTAMP},
+            #{createUser,jdbcType=INTEGER},
+            #{lastUpdateTime,jdbcType=TIMESTAMP},
+            #{lastUpdateUser,jdbcType=INTEGER},
+            #{idCard,jdbcType=VARCHAR}
+        )
+    </insert>
+
+
+    <update id="update">
+        UPDATE adminuser
+        <set>
+            <if test="id!= null">
+                Id = #{id,jdbcType=INTEGER},
+            </if>  
+            <if test="userName!= null">
+                UserName = #{userName,jdbcType=VARCHAR},
+            </if>  
+            <if test="state!= null">
+                State = #{state,jdbcType=TINYINT},
+            </if>  
+            <if test="password!= null">
+                Password = #{password,jdbcType=VARCHAR},
+            </if>  
+            <if test="mobileNo!= null">
+                MobileNo = #{mobileNo,jdbcType=VARCHAR},
+            </if>  
+            <if test="gender!= null">
+                Gender = #{gender,jdbcType=VARCHAR},
+            </if>  
+            <if test="trueName!= null">
+                TrueName = #{trueName,jdbcType=VARCHAR},
+            </if>  
+            <if test="lastLoginTime!= null">
+                LastLoginTime = #{lastLoginTime,jdbcType=TIMESTAMP},
+            </if>  
+            <if test="hireDate!= null">
+                HireDate = #{hireDate,jdbcType=TIMESTAMP},
+            </if>  
+            <if test="employeeType!= null">
+                EmployeeType = #{employeeType,jdbcType=TINYINT},
+            </if>  
+            <if test="nickname!= null">
+                Nickname = #{nickname,jdbcType=VARCHAR},
+            </if>  
+            <if test="lastChangePasswordTime!= null">
+                LastChangePasswordTime = #{lastChangePasswordTime,jdbcType=TIMESTAMP},
+            </if>  
+            <if test="createTime!= null">
+                CreateTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>  
+            <if test="createUser!= null">
+                CreateUser = #{createUser,jdbcType=INTEGER},
+            </if>  
+            <if test="lastUpdateTime!= null">
+                LastUpdateTime = #{lastUpdateTime,jdbcType=TIMESTAMP},
+            </if>  
+            <if test="lastUpdateUser!= null">
+                LastUpdateUser = #{lastUpdateUser,jdbcType=INTEGER},
+            </if>  
+            <if test="idCard!= null">
+                IdCard = #{idCard,jdbcType=VARCHAR},
+            </if> 
+        </set>
+        WHERE Id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM adminuser
+        WHERE Id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <select id="getUserByPhoneNum" resultMap="adminUserResultMap">
+        select
+        <include refid="adminUserColumns"/>
+        from adminuser
+        where mobileNo = #{phoneNum}
+        and State in (0,1)
+    </select>
+
+    <select id="getUserByUserName" resultMap="adminUserResultMap">
+        select
+        <include refid="adminUserColumns"/>
+        from adminuser
+        where user_name = #{userName}
+        and State in (0,1)
+    </select>
+
+</mapper>

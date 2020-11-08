@@ -1,17 +1,15 @@
 package com.common.generate.javacreate.controller;
 
+import com.common.generate.javacreate.model.WebsocketMsgDTO;
 import com.common.generate.javacreate.utils.HtmlToImageUtil;
-import gui.ava.html.image.generator.HtmlImageGenerator;
-import org.apache.commons.codec.binary.Base64;
+import com.common.generate.javacreate.utils.WebSocket;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.imageio.ImageIO;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author xialei
@@ -19,6 +17,44 @@ import java.io.ByteArrayOutputStream;
  */
 @RestController
 public class TestController {
+    @Resource
+    private WebSocket webSocket;
+
+    @GetMapping("/test1")
+    public void test1() {
+        //创建业务消息信息
+        WebsocketMsgDTO msgDTO =new WebsocketMsgDTO();
+        msgDTO.setType("topic");
+        msgDTO.setMsgId(1L);
+        msgDTO.setMsgTxt("全体测试消息");
+        //全体发送
+        webSocket.sendAllMessage(msgDTO);
+    }
+
+    @GetMapping("/test2")
+    public void test2(HttpServletResponse response) {
+        //创建业务消息信息
+        WebsocketMsgDTO msgDTO =new WebsocketMsgDTO();
+        msgDTO.setType("topic");
+        msgDTO.setMsgId(1L);
+        msgDTO.setMsgTxt("全体测试消息");
+        //单个用户发送 (userId为用户id)
+        webSocket.sendOneMessage("1111", msgDTO);
+    }
+
+    @GetMapping("/test3")
+    public void test3(HttpServletResponse response) {
+        //创建业务消息信息
+        WebsocketMsgDTO msgDTO =new WebsocketMsgDTO();
+        msgDTO.setType("topic");
+        msgDTO.setMsgId(1L);
+        msgDTO.setMsgTxt("全体测试消息");
+        List<String> userIds =new ArrayList<>();
+        userIds.add("1111");
+        userIds.add("2222");
+        webSocket.sendMoreMessage(userIds, msgDTO);
+    }
+
 
     @GetMapping("/getImage")
     public void getImage(HttpServletResponse response) {

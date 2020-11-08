@@ -7,7 +7,7 @@ import com.common.generate.javacreate.test.dto.OrderSendSyncDTO;
 import com.common.generate.javacreate.test.dto.PaymentReturnInfoQueryDTO;
 import com.common.generate.javacreate.test.dto.ProductSkuListSO;
 import com.common.generate.javacreate.test.dto.ThirdReturnOrderQueryDTO;
-import com.common.generate.javacreate.utils.authutils.AuthUtil;
+import com.common.generate.javacreate.authutils.AuthUtil;
 import com.common.generate.javacreate.utils.HttpUtil;
 
 import java.util.Arrays;
@@ -27,7 +27,7 @@ public class OpenApiTest {
     private static String baseUrl;
 
     public static void main(String[] args) {
-        baseUrl = getUrl("test");
+        baseUrl = getUrl("release");
         deal("test");
     }
 

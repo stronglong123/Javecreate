@@ -1,6 +1,5 @@
 package com.common.generate.javacreate.advice;
 
-import com.common.generate.javacreate.constants.WebConstants;
 import com.common.generate.javacreate.enums.ExceptionLevel;
 import com.common.generate.javacreate.model.base.Result;
 import com.common.generate.javacreate.model.base.RetResponse;
@@ -50,18 +49,17 @@ public class DefaultExceptionHandler {
         return getErrorMsg(exceptionType, request, paramMap, exception);
     }
 
-	/**
-	 *
-	 * @param exceptionType
-	 * @param request
-	 * @param paramMap
-	 * @param e
-	 * @return
-	 */
+    /**
+     * @param exceptionType
+     * @param request
+     * @param paramMap
+     * @param e
+     * @return
+     */
     private Result getErrorMsg(ExceptionLevel exceptionType, HttpServletRequest request, Map<String, Object> paramMap, Exception e) {
         Result failedResult = null;
         if (ExceptionLevel.ERROR.equals(exceptionType)) {
-            failedResult = RetResponse.makeErrRsp(null, WebConstants.SERVICE_ERROR_TIPS);
+            failedResult = RetResponse.makeErrRsp(e.getCause().getMessage(), e.getMessage());
             LOGGER.error("异常信息1", e);
         } else if (ExceptionLevel.WARN.equals(exceptionType)) {
             LOGGER.warn("WARN 发生错误：{}", e.getMessage());

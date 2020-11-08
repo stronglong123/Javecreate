@@ -1,4 +1,4 @@
-package com.common.generate.javacreate.utils.authutils;
+package com.common.generate.javacreate.authutils;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtilsBean;

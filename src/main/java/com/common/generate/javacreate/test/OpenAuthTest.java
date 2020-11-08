@@ -5,7 +5,7 @@ import com.common.generate.javacreate.test.dto.MenuSyncDTO;
 import com.common.generate.javacreate.test.dto.ThirdMenuItemDTO;
 import com.common.generate.javacreate.test.dto.ThirdMenuSyncDTO;
 import com.common.generate.javacreate.test.dto.ThirdRoleQueryDTO;
-import com.common.generate.javacreate.utils.authutils.AuthUtil;
+import com.common.generate.javacreate.authutils.AuthUtil;
 import com.common.generate.javacreate.utils.HttpUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.util.StringUtils;

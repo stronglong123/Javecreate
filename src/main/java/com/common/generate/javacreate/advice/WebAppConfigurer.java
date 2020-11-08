@@ -32,35 +32,35 @@ import java.util.List;
 public class WebAppConfigurer extends WebMvcConfigurerAdapter {
 
 
-//    private final AuthInterceptor interceptor;
-//
-//    @Autowired
-//    public WebAppConfigurer(AuthInterceptor interceptor) {
-//        this.interceptor = interceptor;
-//    }
-//
-//    /**
-//     *
-//     * 加载自定义的Filter
-//     * @return
-//     */
-//    @Bean
-//    public FilterRegistrationBean httpServletRequestReplacedFilter() {
-//        FilterRegistrationBean registration = new FilterRegistrationBean();
-//        registration.setFilter(new HttpServletRequestReplacedFilter());
-//        // /* 是全部的请求拦截，和Interceptor的拦截地址/**区别开
-//        registration.addUrlPatterns("/*");
-//        registration.setName("httpServletRequestReplacedFilter");
-//        registration.setOrder(1);
-//        return registration;
-//    }
-//
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(interceptor)
-//                .addPathPatterns("/**");
-//        super.addInterceptors(registry);
-//    }
+    private final AuthInterceptor interceptor;
+
+    @Autowired
+    public WebAppConfigurer(AuthInterceptor interceptor) {
+        this.interceptor = interceptor;
+    }
+
+    /**
+     *
+     * 加载自定义的Filter
+     * @return
+     */
+    @Bean
+    public FilterRegistrationBean httpServletRequestReplacedFilter() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new HttpServletRequestReplacedFilter());
+        // /* 是全部的请求拦截，和Interceptor的拦截地址/**区别开
+        registration.addUrlPatterns("/*");
+        registration.setName("httpServletRequestReplacedFilter");
+        registration.setOrder(1);
+        return registration;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(interceptor)
+                .addPathPatterns("/**");
+        super.addInterceptors(registry);
+    }
 
 	@Override
 	public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {

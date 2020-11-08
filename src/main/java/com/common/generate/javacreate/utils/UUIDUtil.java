@@ -17,8 +17,12 @@ public class UUIDUtil {
         super();
     }
 
-    public static Long randonUUID() {
+    public static Long randonLongUUID() {
         return UUID.randomUUID().getLeastSignificantBits() * -1;
+    }
+
+    public static String randonUUID(){
+        return UUID.randomUUID().toString();
     }
 
     public static Long getUuid(){

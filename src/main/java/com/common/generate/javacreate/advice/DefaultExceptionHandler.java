@@ -3,10 +3,13 @@ package com.common.generate.javacreate.advice;
 import com.common.generate.javacreate.enums.ExceptionLevel;
 import com.common.generate.javacreate.model.base.Result;
 import com.common.generate.javacreate.model.base.RetResponse;
+import com.common.generate.javacreate.model.base.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,6 +29,21 @@ import java.util.Map;
 public class DefaultExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultExceptionHandler.class);
 
+
+    /**
+     * 处理参数异常，一般用于校验body参数
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Result handleValidationBodyException(MethodArgumentNotValidException e) {
+        for (ObjectError s : e.getBindingResult().getAllErrors()) {
+            return  RetResponse.makeErrRsp("Invalid_Request_Parameter", s.getObjectName() + ": " + s.getDefaultMessage());
+        }
+        return  RetResponse.makeErrRsp(null, "未知参数错误");
+    }
+
     /**
      * 异常拦截入口
      *
@@ -35,7 +53,7 @@ public class DefaultExceptionHandler {
      * @return: BaseResult
      */
     @ResponseStatus(HttpStatus.OK)
-    @ExceptionHandler({Exception.class})
+    @ExceptionHandler({BusinessException.class})
     @ResponseBody
     public Result processUnauthenticatedException(HttpServletRequest request, Exception exception) {
         // 获取所有参数
@@ -60,16 +78,16 @@ public class DefaultExceptionHandler {
         Result failedResult = null;
         if (ExceptionLevel.ERROR.equals(exceptionType)) {
             failedResult = RetResponse.makeErrRsp(e.getCause().getMessage(), e.getMessage());
-            LOGGER.error("异常信息1", e);
+            LOGGER.info("异常信息:{}", e.getMessage());
         } else if (ExceptionLevel.WARN.equals(exceptionType)) {
-            LOGGER.warn("WARN 发生错误：{}", e.getMessage());
+            LOGGER.info("WARN 发生错误：{}", e.getMessage());
             if (null != e.getCause() && StringUtils.isNumeric(e.getCause().getMessage())) {
                 failedResult = RetResponse.makeExceptionRsp(e.getCause().getMessage(), e.getMessage());
             } else {
                 failedResult = RetResponse.makeFailRsp(paramMap, e.getMessage());
             }
         } else {
-            LOGGER.error("异常信息2", e.getMessage());
+            LOGGER.info("异常信息:{}", e.getMessage());
         }
 
         return failedResult;

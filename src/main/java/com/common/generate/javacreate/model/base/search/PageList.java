@@ -1,5 +1,7 @@
 package com.common.generate.javacreate.model.base.search;
 
+import com.github.pagehelper.Page;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -10,6 +12,22 @@ import java.util.List;
 public class PageList<T extends Serializable> implements Serializable {
 
     private static final long serialVersionUID = 6715454397990178794L;
+    public PageList(){
+        this.setPager(new Pager());
+    }
+
+
+    public PageList(List<T> list) {
+        Page page = (Page) list;
+        Pager pager = new Pager();
+        pager.setPageSize(page.getPageSize());
+        pager.setCurrentPage(page.getPageNum());
+        pager.setRecordCount(Math.toIntExact(page.getTotal()));
+        pager.setTotalPage(page.getPages());
+        this.setPager(pager);
+        this.setDataList(page.getResult());
+    }
+
     /**
      * 返回的数据集合
      */

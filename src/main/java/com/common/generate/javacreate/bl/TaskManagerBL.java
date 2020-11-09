@@ -4,7 +4,6 @@ import com.common.generate.javacreate.dao.TaskManagerMapper;
 import com.common.generate.javacreate.enums.TaskStateEnum;
 import com.common.generate.javacreate.model.TaskManagerDTO;
 import com.common.generate.javacreate.model.TaskManagerQueryDTO;
-import com.common.generate.javacreate.model.base.PageResult;
 import com.common.generate.javacreate.model.base.search.PageList;
 import com.common.generate.javacreate.utils.NoGeneratorUtil;
 import com.common.generate.javacreate.utils.UUIDUtil;
@@ -34,8 +33,8 @@ public class TaskManagerBL {
 
     public PageList<TaskManagerDTO> pageList(TaskManagerQueryDTO taskManager) {
         PageHelper.startPage(taskManager.getPageNum(), taskManager.getPageSize());
-        PageResult<TaskManagerDTO> pageResult = taskManagerMapper.pageList(taskManager);
-        return pageResult.toPageList();
+        List<TaskManagerDTO> list = taskManagerMapper.list(taskManager);
+        return new PageList<>(list);
     }
 
     @Transactional

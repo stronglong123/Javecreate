@@ -17,6 +17,8 @@ public interface TaskManagerMapper {
 
      PageResult<TaskManagerDTO> pageList(TaskManagerQueryDTO taskManager);
 
+     List<TaskManagerDTO> list(TaskManagerQueryDTO taskManager);
+
      int insert(TaskManagerDTO taskManager);
 
      int insertBatch(List<TaskManagerDTO> taskManagers);

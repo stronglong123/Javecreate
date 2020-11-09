@@ -3,12 +3,13 @@ package com.common.generate.javacreate.bl;
 import com.common.generate.javacreate.constants.SystemConstant;
 import com.common.generate.javacreate.dao.AdminUserMapper;
 import com.common.generate.javacreate.enums.BusinessCodeEnum;
-import com.common.generate.javacreate.model.base.PageResult;
 import com.common.generate.javacreate.model.base.exception.BusinessException;
 import com.common.generate.javacreate.model.base.search.PageList;
 import com.common.generate.javacreate.model.user.AdminUser;
 import com.common.generate.javacreate.model.user.UserLoginInfoParam;
+import com.common.generate.javacreate.model.user.UserQueryDTO;
 import com.common.generate.javacreate.utils.Md5Utils;
+import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,12 +31,13 @@ public class UserBL {
         return adminUserMapper.detail(id);
     }
 
-    public PageList<AdminUser> pageList(AdminUser adminUser) {
-        PageResult<AdminUser> pageResult = adminUserMapper.pageList(adminUser);
-        return pageResult.toPageList();
+    public PageList<AdminUser> pageList(UserQueryDTO adminUser) {
+        PageHelper.startPage(adminUser.getPageNum(), adminUser.getPageSize());
+        List<AdminUser> list = adminUserMapper.list(adminUser);
+        return new PageList<>(list);
     }
 
-    public List<AdminUser> list(AdminUser adminUser) {
+    public List<AdminUser> list(UserQueryDTO adminUser) {
         return adminUserMapper.list(adminUser);
     }
 

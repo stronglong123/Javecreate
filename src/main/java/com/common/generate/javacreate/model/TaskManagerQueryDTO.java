@@ -59,6 +59,9 @@ public class TaskManagerQueryDTO extends PageCondition implements Serializable {
      */
     private Timestamp lastUpdateTime;
 
+    private String createUser;
+
+    private String lastUpdateUser;
 
     /**
      * 获取主键
@@ -155,5 +158,21 @@ public class TaskManagerQueryDTO extends PageCondition implements Serializable {
 
     public void setStateList(List<Byte> stateList) {
         this.stateList = stateList;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    public String getLastUpdateUser() {
+        return lastUpdateUser;
+    }
+
+    public void setLastUpdateUser(String lastUpdateUser) {
+        this.lastUpdateUser = lastUpdateUser;
     }
 }

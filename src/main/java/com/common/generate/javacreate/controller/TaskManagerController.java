@@ -48,14 +48,6 @@ public class TaskManagerController {
         return true;
     }
 
-    @PostMapping("/taskManager/taskManager/insertBatch")
-    public Boolean insertBatch(@RequestBody List<TaskManagerDTO> taskManagers) {
-        LOGGER.info("批量新增：{}", JSON.toJSONString(taskManagers));
-
-        taskManagerService.insertBatch(taskManagers);
-        return true;
-    }
-
     @PostMapping("/taskManager/update")
     public Boolean update(@RequestBody TaskManagerDTO taskManager) {
         LOGGER.info("修改：{}", JSON.toJSONString(taskManager));

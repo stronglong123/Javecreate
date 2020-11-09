@@ -35,11 +35,6 @@ public class TaskManagerServiceImpl implements ITaskManagerService {
     }
 
     @Override
-    public void insertBatch(List<TaskManagerDTO> taskManagers) {
-        taskManagerBl.insertBatch(taskManagers);
-    }
-
-    @Override
     public void update(TaskManagerDTO taskManager) {
         taskManagerBl.update(taskManager);
     }

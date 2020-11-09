@@ -3,6 +3,7 @@ package com.common.generate.javacreate.dao;
 import com.common.generate.javacreate.model.base.PageResult;
 import com.common.generate.javacreate.model.user.AdminUser;
 import com.common.generate.javacreate.model.user.UserLoginInfoParam;
+import com.common.generate.javacreate.model.user.UserQueryDTO;
 
 import java.util.List;
 
@@ -14,9 +15,9 @@ public interface AdminUserMapper {
 
     AdminUser detail(Long id);
 
-    PageResult<AdminUser> pageList(AdminUser adminUser);
+    PageResult<AdminUser> pageList(UserQueryDTO adminUser);
 
-     List<AdminUser> list(AdminUser adminUser);
+     List<AdminUser> list(UserQueryDTO adminUser);
 
      int insert(AdminUser adminUser);
 

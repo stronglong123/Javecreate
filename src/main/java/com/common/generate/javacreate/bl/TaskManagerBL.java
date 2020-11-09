@@ -7,6 +7,7 @@ import com.common.generate.javacreate.model.TaskManagerQueryDTO;
 import com.common.generate.javacreate.model.base.search.PageList;
 import com.common.generate.javacreate.utils.NoGeneratorUtil;
 import com.common.generate.javacreate.utils.UUIDUtil;
+import com.common.generate.javacreate.utils.UserInfoUtils;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,8 @@ import java.util.List;
 @Service
 public class TaskManagerBL {
     private static final Logger logger = LoggerFactory.getLogger(TaskManagerBL.class);
-
+    @Autowired
+    private UserInfoUtils userInfoUtils;
     @Autowired
     private TaskManagerMapper taskManagerMapper;
 
@@ -33,29 +35,31 @@ public class TaskManagerBL {
 
     public PageList<TaskManagerDTO> pageList(TaskManagerQueryDTO taskManager) {
         PageHelper.startPage(taskManager.getPageNum(), taskManager.getPageSize());
+        taskManager.setCreateUser(userInfoUtils.getUser().getId().toString());
         List<TaskManagerDTO> list = taskManagerMapper.list(taskManager);
         return new PageList<>(list);
     }
 
     @Transactional
     public void insert(TaskManagerDTO taskManager) {
+        Integer userId = userInfoUtils.getUser().getId();
         taskManager.setId(UUIDUtil.getUuid());
         taskManager.setTaskNo(NoGeneratorUtil.createNO("TK"));
         taskManager.setState(TaskStateEnum.WAIT.getValue());
+        taskManager.setCreateUser(userId.toString());
+        taskManager.setLastUpdateUser(userId.toString());
         if (taskManager.getPriority() == null) {
             taskManager.setPriority(1);
         }
         taskManagerMapper.insert(taskManager);
     }
 
-    @Transactional
-    public void insertBatch(List<TaskManagerDTO> taskManagers) {
-        taskManagerMapper.insertBatch(taskManagers);
-    }
 
     @Transactional
     public void update(TaskManagerDTO taskManager) {
-        int update = taskManagerMapper.update(taskManager);
+        Integer userId = userInfoUtils.getUser().getId();
+        taskManager.setLastUpdateUser(userId.toString());
+        taskManagerMapper.update(taskManager);
     }
 
     @Transactional

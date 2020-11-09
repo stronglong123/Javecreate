@@ -13,10 +13,9 @@
         <result column="operator" jdbcType="VARCHAR" property="operator"/> 
         <result column="deadTime" jdbcType="TIMESTAMP" property="deadTime"/> 
         <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/> 
-        <result column="lastUpdateTime" jdbcType="TIMESTAMP" property="lastUpdateTime"/> 
-
-        
-        
+        <result column="lastUpdateTime" jdbcType="TIMESTAMP" property="lastUpdateTime"/>
+        <result column="createUser" jdbcType="VARCHAR" property="createUser"/>
+        <result column="lastUpdateUser" jdbcType="VARCHAR" property="lastUpdateUser"/>
     </resultMap>
 
     <sql id="taskManagerColumns">
@@ -30,12 +29,9 @@
         taskmanager.Operator AS "operator",
         date_format(taskmanager.DeadTime, '%Y-%m-%d %H:%i:%s') as deadTime,
         date_format(taskmanager.lastUpdateTime, '%Y-%m-%d %H:%i:%s') as lastUpdateTime,
-        date_format(taskmanager.CreateTime, '%Y-%m-%d %H:%i:%s') as createTime
-
-    </sql>
-
-    <sql id="taskManagerJoins">
-        
+        date_format(taskmanager.CreateTime, '%Y-%m-%d %H:%i:%s') as createTime,
+        taskmanager.CreateUser AS "createUser",
+        taskmanager.LastUpdateUser AS "lastUpdateUser"
     </sql>
 
     <select id="detail" resultMap="taskManagerResultMap">
@@ -52,10 +48,10 @@
         <include refid="taskManagerColumns" />
         FROM taskmanager
         <where>
-            <if test="taskName!= null">
+            <if test="taskName!= null and taskName!=''">
                 and TaskName = #{taskName,jdbcType=VARCHAR}
             </if>
-            <if test="taskNo!= null">
+            <if test="taskNo!= null and taskNo!=''">
                 and TaskNo = #{taskNo,jdbcType=VARCHAR}
             </if>
             <if test="state!= null">
@@ -66,6 +62,9 @@
                 <foreach collection="stateList" item="item" separator="," open="(" close=")">
                     #{item}
                 </foreach>
+            </if>
+            <if test="createUser!= null and createUser!=''">
+                and CreateUser = #{createUser,jdbcType=VARCHAR}
             </if>
         </where>
     </select>
@@ -91,6 +90,9 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="createUser!= null and createUser!=''">
+                and CreateUser = #{createUser,jdbcType=VARCHAR}
+            </if>
         </where>
     </select>
 
@@ -106,7 +108,9 @@
             Operator,
             DeadTime,
             CreateTime,
-            LastUpdateTime
+            LastUpdateTime,
+            CreateUser,
+            LastUpdateUser
         )
         VALUES (
             #{id,jdbcType=BIGINT},
@@ -119,7 +123,9 @@
             #{operator,jdbcType=VARCHAR},
             #{deadTime,jdbcType=TIMESTAMP},
             now(),
-            now()
+            now(),
+            #{createUser,jdbcType=VARCHAR},
+            #{lastUpdateUser,jdbcType=VARCHAR}
         )
     </insert>
 
@@ -135,7 +141,9 @@
             Operator,
             DeadTime,
             CreateTime,
-            LastUpdateTime
+            LastUpdateTime,
+            CreateUser,
+            LastUpdateUser
         )
         VALUES
         <foreach collection ="list" item="taskManager" separator =",">
@@ -150,7 +158,9 @@
             #{taskManager.operator,jdbcType=VARCHAR},
             #{taskManager.deadTime,jdbcType=TIMESTAMP},
             now(),
-            now()
+            now(),
+            #{createUser,jdbcType=VARCHAR},
+            #{lastUpdateUser,jdbcType=VARCHAR}
         )
         </foreach>
     </insert>
@@ -158,13 +168,13 @@
     <update id="update">
         UPDATE taskmanager
         <set>
-            <if test="taskName!= null">
+            <if test="taskName!= null and taskName!=''">
                 TaskName = #{taskName,jdbcType=VARCHAR},
             </if>  
-            <if test="taskNo!= null">
+            <if test="taskNo!= null and taskNo!=''">
                 TaskNo = #{taskNo,jdbcType=VARCHAR},
             </if>  
-            <if test="refProject!= null">
+            <if test="refProject!= null and refProject!=''">
                 RefProject = #{refProject,jdbcType=VARCHAR},
             </if>  
             <if test="state!= null">
@@ -181,6 +191,9 @@
             </if>  
             <if test="deadTime!= null">
                 DeadTime = #{deadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastUpdateUser!= null and lastUpdateUser!=''">
+                LastUpdateUser = #{lastUpdateUser,jdbcType=VARCHAR},
             </if>
             LastUpdateTime = now()
         </set>

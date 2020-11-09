@@ -57,6 +57,25 @@ public class TaskManagerDTO implements Serializable {
      */
     private Timestamp lastUpdateTime;
 
+    private String createUser;
+
+    private String lastUpdateUser;
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    public String getLastUpdateUser() {
+        return lastUpdateUser;
+    }
+
+    public void setLastUpdateUser(String lastUpdateUser) {
+        this.lastUpdateUser = lastUpdateUser;
+    }
 
     /**
      * 获取主键

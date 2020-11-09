@@ -18,8 +18,6 @@ public interface ITaskManagerService {
 
      void insert(TaskManagerDTO taskManager);
 
-     void insertBatch(List<TaskManagerDTO> taskManagers);
-
      void update(TaskManagerDTO taskManager);
 
      void delete(TaskManagerDTO taskManager);

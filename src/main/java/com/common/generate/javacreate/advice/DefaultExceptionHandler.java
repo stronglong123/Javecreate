@@ -53,7 +53,7 @@ public class DefaultExceptionHandler {
      * @return: BaseResult
      */
     @ResponseStatus(HttpStatus.OK)
-    @ExceptionHandler({BusinessException.class})
+    @ExceptionHandler({Exception.class})
     @ResponseBody
     public Result processUnauthenticatedException(HttpServletRequest request, Exception exception) {
         // 获取所有参数

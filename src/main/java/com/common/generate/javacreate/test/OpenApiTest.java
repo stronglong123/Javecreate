@@ -6,6 +6,7 @@ import com.common.generate.javacreate.test.dto.OrderQueryDTO;
 import com.common.generate.javacreate.test.dto.OrderSendSyncDTO;
 import com.common.generate.javacreate.test.dto.PaymentReturnInfoQueryDTO;
 import com.common.generate.javacreate.test.dto.ProductSkuListSO;
+import com.common.generate.javacreate.test.dto.ThirdOrderCancelDTO;
 import com.common.generate.javacreate.test.dto.ThirdReturnOrderQueryDTO;
 import com.common.generate.javacreate.authutils.AuthUtil;
 import com.common.generate.javacreate.utils.HttpUtil;
@@ -27,7 +28,7 @@ public class OpenApiTest {
     private static String baseUrl;
 
     public static void main(String[] args) {
-        baseUrl = getUrl("release");
+        baseUrl = getUrl("test");
         deal("test");
     }
 
@@ -63,7 +64,7 @@ public class OpenApiTest {
     public static void ruike() {
         String appSecret = "75e5038e7397e5fe0ab0360cfe921308";
         String appKey = "3cb482c84106461698d44c8814a64ffd";
-//        getOrderList(appSecret, appKey);
+        getOrderList(appSecret, appKey);
 //        getOrderDetail(appSecret, appKey);
 
 //        getReturnOrderList(appSecret, appKey);
@@ -71,7 +72,7 @@ public class OpenApiTest {
 //        listProductSku(appSecret, appKey);
 //        orderSendSync(appSecret, appKey);
 //        findSplitOrder(appSecret,appKey);
-        findStorePage(appSecret,appKey);
+//        findStorePage(appSecret,appKey);
 
     }
 
@@ -83,11 +84,12 @@ public class OpenApiTest {
 //        getOrderDetail(appSecret, appKey);
 //        getReturnOrderList(appSecret, appKey);
 //        getReturnPaymentState(appSecret, appKey);
-        listProductSku(appSecret, appKey);
+//        listProductSku(appSecret, appKey);
 //        orderSendSync(appSecret, appKey);
 //        findSplitOrder(appSecret, appKey);
 //        directOutStockByOrder(appSecret,appKey);
 //        findStorePage(appSecret,appKey);
+        cancelOrderRequest(appSecret,appKey);
 
     }
 
@@ -114,10 +116,12 @@ public class OpenApiTest {
     public static void getOrderList(String appSecret, String appKey) {
         String url = baseUrl + "/order/getOrderList";
         System.out.println("订单获取" + url);
-        String json = "{\"businessNo\":\"998002201028160595\",\"pageSize\":20,\"orderCreateTimeStart\":\"2020-10-27 00:00:00\",\"orderCreateTimeEnd\":\"2020-11-20 23:59:59\",\"currentPage\":1}";
+        String json = "{\"pageSize\":20,\"orderCreateTimeStart\":\"2020-10-21 00:00:00\",\"orderCreateTimeEnd\":\"2020-11-13 23:59:59\",\"currentPage\":1}";
         OrderQueryDTO orderQueryDTO = JSON.parseObject(json, OrderQueryDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, OrderQueryDTO.class, orderQueryDTO);
         try {
+            System.out.println("url:" + urlWithAuth);
+            System.out.println("data:" + JSON.toJSONString(orderQueryDTO));
             String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(orderQueryDTO));
             System.out.println("订单获取：" + post);
         } catch (Exception e) {
@@ -140,6 +144,26 @@ public class OpenApiTest {
         try {
             String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(orderQueryDTO));
             System.out.println("订单详情获取：" + post);
+        } catch (Exception e) {
+            System.out.println("请求失败:" + e);
+        }
+    }
+
+    /**
+     * 获取订单
+     *
+     * @param appSecret
+     * @param appKey
+     */
+    public static void cancelOrderRequest(String appSecret, String appKey) {
+        String url = baseUrl + "/order/cancelOrderRequest";
+        System.out.println("订单取消：" + url);
+        String json = "{\"businessNo\":\"998002201113100625\"}";
+        ThirdOrderCancelDTO cancelDTO = JSON.parseObject(json, ThirdOrderCancelDTO.class);
+        String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, ThirdOrderCancelDTO.class, cancelDTO);
+        try {
+            String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(cancelDTO));
+            System.out.println("订单取消：" + post);
         } catch (Exception e) {
             System.out.println("请求失败:" + e);
         }

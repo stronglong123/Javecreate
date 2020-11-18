@@ -49,10 +49,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         String className = handlerMethod.getBean().getClass().getName();
 
         log.info("请求类路径:" + className);
-//        if (className.contains("UserLoginInfoController") || className.contains("ExportExcelController")
-//                || uri.contains("registerUser") || uri.contains("syncProductImg") || uri.contains("identifyingCode")
-//                || uri.contains("validateCode") || className.contains("GeeTestLoginController")
-//                || uri.contains("getImageCode") || className.contains("OpenAuthorizationController")) {
+//        if (className.contains("error")) {
 //            return true;
 //        }
 

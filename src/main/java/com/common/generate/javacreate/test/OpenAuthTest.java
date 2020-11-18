@@ -26,8 +26,8 @@ public class OpenAuthTest {
 //    private static final String baseUrl = "http://localhost:40000";
 
     public static void main(String[] args) {
-        yjx();
-
+//        yjx();
+        xls();
     }
 
     public static void jy() {
@@ -44,6 +44,14 @@ public class OpenAuthTest {
 //        findPermissionsByRoleCode(appSecret, appKey);
 //        findPermissionsJsonByRoleCode(appSecret,appKey);
         exportMenuByAppCode(appSecret,appKey);
+    }
+
+    public static void xls() {
+        String appSecret = "11be1659237064a7031ed58bef0c24c9";
+        String appKey = "29637763d82c499282553d425047ebe6";
+        findPermissionsByRoleCode(appSecret, appKey);
+//        findPermissionsJsonByRoleCode(appSecret,appKey);
+//        exportMenuByAppCode(appSecret,appKey);
     }
 
 
@@ -76,11 +84,11 @@ public class OpenAuthTest {
      */
     public static void findPermissionsByRoleCode(String appSecret, String appKey) {
         String url = baseUrl + "/role/findPermissionsByRoleCode";
-        System.out.println("通过角色code查询菜单权限:" + url);
         String json = "{\"appCode\":\"yjpop3\",\"roleCode\":\"TrdDeveloper\",\"serviceId\":\"1081\"}";
         ThirdRoleQueryDTO dto = JSON.parseObject(json, ThirdRoleQueryDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, ThirdRoleQueryDTO.class, dto);
         try {
+            System.out.println("通过角色code查询菜单权限:" + urlWithAuth);
             String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(dto));
             System.out.println("通过角色code查询菜单权限：" + post);
         } catch (Exception e) {

@@ -18,7 +18,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  * @Date 2018/11/30 15:46
  */
 @Configuration
-public class WmsAppBeans {
+public class WebAppBeans {
     @Bean(name = "template")
     public RedisTemplate<String, Object> template(RedisConnectionFactory factory) {
         // 创建RedisTemplate<String, Object>对象

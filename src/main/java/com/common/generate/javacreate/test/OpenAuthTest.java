@@ -19,9 +19,9 @@ import java.util.List;
  */
 public class OpenAuthTest {
 
-    private static final String baseUrl = "http://api.test.yijiupi.com";
+//    private static final String baseUrl = "http://api.test.yijiupi.com";
 //    private static final String baseUrl = "http://api.yijiupi.com";
-//    private static final String baseUrl = "http://api.release.yijiupidev.com";
+    private static final String baseUrl = "http://api.release.yijiupidev.com";
 
 //    private static final String baseUrl = "http://localhost:40000";
 

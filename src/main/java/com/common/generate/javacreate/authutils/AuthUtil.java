@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -47,8 +48,35 @@ public class AuthUtil {
 	public static String getUrlWithAuth(String url, String appSecret, String appKey,Class<?> aClass, Object data) {
 		/**有参加密*/
 		String sign = authWithParams(appSecret, aClass, data);
-		return url + "?sign=" + sign + "&appKey=" + appKey;
+		return url + "?sign=" + "160bcb721e1476e30faadec819842542" + "&appKey=" + appKey;
 	}
+
+
+    /**
+     * 解析参数(三只松鼠)
+     * @param buffer
+     * @param arg
+     */
+    public static void parseFieldInBuffer(StringBuilder buffer, Object arg,String separator) {
+        if (null != arg) {
+            if (isBasicClassType(arg)) {// 基本、包装类型
+                buffer.append(arg);
+                buffer.append(separator);
+            } else {
+                // 非基本、包装类型类型，直接转成json字符串
+                TreeMap<String, Object> treeMap = MyBeanUtil.transBean2TreeMap(arg);
+                for (Map.Entry<String, Object> entry : treeMap.entrySet()) {
+                    buffer.append(entry.getKey());
+                    buffer.append(entry.getValue());
+                }
+//				List<Object> objList = new ArrayList<>(treeMap.values());
+//				for (Object obj:objList) {
+//					buffer.append(obj);
+//					buffer.append(separator);
+//				}
+            }
+        }
+    }
 
 	/**
 	 * 有参加密

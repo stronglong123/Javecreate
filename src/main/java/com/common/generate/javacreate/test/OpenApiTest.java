@@ -28,8 +28,8 @@ public class OpenApiTest {
     private static String baseUrl;
 
     public static void main(String[] args) {
-        baseUrl = getUrl("test");
-        deal("test");
+        baseUrl = getUrl("pre");
+        deal("tss");
     }
 
     public static String getUrl(String system) {
@@ -58,6 +58,9 @@ public class OpenApiTest {
             case "gjp":
                 gjp();
                 break;
+            case "tss":
+                tss();
+                break;
         }
     }
 
@@ -80,7 +83,7 @@ public class OpenApiTest {
     public static void test() {
         String appSecret = "4c41d2fdd2490b70468d1b95e6b2c140";
         String appKey = "e46ef0c5-ae7d-4647-ac3a-e46ef0c5ae7d4647ac3a333864d21adb";
-//        getOrderList(appSecret, appKey);
+        getOrderList(appSecret, appKey);
 //        getOrderDetail(appSecret, appKey);
 //        getReturnOrderList(appSecret, appKey);
 //        getReturnPaymentState(appSecret, appKey);
@@ -89,7 +92,7 @@ public class OpenApiTest {
 //        findSplitOrder(appSecret, appKey);
 //        directOutStockByOrder(appSecret,appKey);
 //        findStorePage(appSecret,appKey);
-        cancelOrderRequest(appSecret,appKey);
+//        cancelOrderRequest(appSecret,appKey);
 
     }
 
@@ -105,6 +108,20 @@ public class OpenApiTest {
 //        findSplitOrder(appSecret,appKey);
         findStorePage(appSecret,appKey);
 
+    }
+
+    public static void tss() {
+        String appSecret = "c91289a5fda435a3a09ff9528864a2c9\n";
+        String appKey = "63750c273b064daa8e0b66e37377b67e";
+//        getOrderList(appSecret, appKey);
+//        getOrderDetail(appSecret, appKey);
+//        getReturnOrderList(appSecret, appKey);
+//        getReturnPaymentState(appSecret, appKey);
+//        listProductSku(appSecret, appKey);
+//        orderSendSync(appSecret,appKey);
+//        findSplitOrder(appSecret,appKey);
+//        findStorePage(appSecret,appKey);
+        cancelOrderRequest(appSecret,appKey);
     }
 
     /**
@@ -158,7 +175,7 @@ public class OpenApiTest {
     public static void cancelOrderRequest(String appSecret, String appKey) {
         String url = baseUrl + "/order/cancelOrderRequest";
         System.out.println("订单取消：" + url);
-        String json = "{\"businessNo\":\"998002201113100625\"}";
+        String json = "{\"businessNo\":\"412032900096\"}";
         ThirdOrderCancelDTO cancelDTO = JSON.parseObject(json, ThirdOrderCancelDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, ThirdOrderCancelDTO.class, cancelDTO);
         try {

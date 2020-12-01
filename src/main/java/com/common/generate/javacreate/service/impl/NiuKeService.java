@@ -28,6 +28,7 @@ public class NiuKeService extends FileService {
         } else {
             builder.append(line);
         }
+
         return builder.toString();
     }
 }

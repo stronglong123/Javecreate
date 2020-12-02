@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.common.generate.javacreate.dao.QuestionBankMapper">
+
+    <resultMap id="questionBankResultMap" type="com.common.generate.javacreate.model.QuestionBankDTO">
+        <id column="id" jdbcType="BIGINT" property="id"/> 
+        <result column="question" jdbcType="VARCHAR" property="question"/> 
+        <result column="keyWord" jdbcType="VARCHAR" property="keyWord"/> 
+        <result column="answer" jdbcType="VARCHAR" property="answer"/> 
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/> 
+        <result column="lastUpdateTime" jdbcType="TIMESTAMP" property="lastUpdateTime"/> 
+        <result column="createUser" jdbcType="VARCHAR" property="createUser"/> 
+        <result column="lastUpdateUser" jdbcType="VARCHAR" property="lastUpdateUser"/>
+    </resultMap>
+
+    <sql id="questionBankColumns">
+        questionbank.Id AS "id",
+        questionbank.Question AS "question",
+        questionbank.KeyWord AS "keyWord",
+        questionbank.Answer AS "answer",
+        questionbank.CreateTime AS "createTime",
+        questionbank.LastUpdateTime AS "lastUpdateTime",
+        questionbank.CreateUser AS "createUser",
+        questionbank.LastUpdateUser AS "lastUpdateUser"
+    </sql>
+
+
+
+    <select id="detail" resultMap="questionBankResultMap">
+        SELECT
+        <include refid="questionBankColumns" />
+        FROM questionbank
+        <where>
+        questionbank.Id = #{id,jdbcType=BIGINT}
+        </where>
+    </select>
+
+    <select id="list" resultMap="questionBankResultMap">
+        SELECT
+        <include refid="questionBankColumns" />
+        FROM questionbank
+        <where>
+            <if test="question!= null and question!=''">
+                Question like concat('%',concat(#{question}),'%')
+            </if>
+            <if test="keyWord!= null and keyWord!=''">
+                KeyWord  like concat('%',concat(#{keyWord}),'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO questionbank(
+            Id,
+            Question,
+            KeyWord,
+            Answer,
+            CreateTime,
+            LastUpdateTime,
+            CreateUser,
+            LastUpdateUser
+        )
+        VALUES (
+            #{id,jdbcType=BIGINT},
+            #{question,jdbcType=VARCHAR},
+            #{keyWord,jdbcType=VARCHAR},
+            #{answer,jdbcType=VARCHAR},
+            now(),
+            now(),
+            #{createUser,jdbcType=VARCHAR},
+            #{lastUpdateUser,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO questionbank(
+            Id,
+            Question,
+            KeyWord,
+            Answer,
+            CreateTime,
+            LastUpdateTime,
+            CreateUser,
+            LastUpdateUser
+        )
+        VALUES
+        <foreach collection ="list" item="questionBank" separator =",">
+        (
+            #{questionBank.id,jdbcType=BIGINT},
+            #{questionBank.question,jdbcType=VARCHAR},
+            #{questionBank.keyWord,jdbcType=VARCHAR},
+            #{questionBank.answer,jdbcType=VARCHAR},
+            now(),
+            now(),
+            #{questionBank.createUser,jdbcType=VARCHAR},
+            #{questionBank.lastUpdateUser,jdbcType=VARCHAR}
+        )
+        </foreach>
+    </insert>
+
+    <update id="update">
+        UPDATE questionbank
+        <set>
+            <if test="question!= null">
+                Question = #{question,jdbcType=VARCHAR},
+            </if>  
+            <if test="keyWord!= null">
+                KeyWord = #{keyWord,jdbcType=VARCHAR},
+            </if>  
+            <if test="answer!= null">
+                Answer = #{answer,jdbcType=VARCHAR},
+            </if>
+            <if test="lastUpdateUser!= null">
+                LastUpdateUser = #{lastUpdateUser,jdbcType=VARCHAR},
+            </if>
+            LastUpdateTime = now()
+        </set>
+        WHERE Id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM questionbank
+        WHERE Id = #{id,jdbcType=BIGINT}
+    </delete>
+
+</mapper>

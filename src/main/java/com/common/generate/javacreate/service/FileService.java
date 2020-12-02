@@ -62,7 +62,6 @@ public abstract class FileService {
                     throw new BusinessValidateException("输出流关闭失败:" + e);
                 }
             }
-
         }
     }
 
@@ -87,6 +86,32 @@ public abstract class FileService {
         }
         return builder.toString();
     }
+
+
+    public void getFileByName(String sourceFileName) {
+        File inFile = FileUtils.getFile(sourceFileName);
+        BufferedReader in = null;
+        System.out.println(JSON.toJSONString(inFile));
+        try {
+            in = new BufferedReader(new FileReader(inFile));
+            String line = "";
+            boolean changeFlag = true;
+            while ((line = in.readLine()) != null) {
+                dealText(line, changeFlag);
+            }
+        } catch (Exception e) {
+            throw new BusinessValidateException("文件读取失败:" + e);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (Exception e) {
+                    throw new BusinessValidateException("输入流关闭失败:" + e);
+                }
+            }
+        }
+    }
+
 
 
 }

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.common.generate.javacreate.dao.DictionaryMapper">
+
+    <resultMap id="dictionaryResultMap" type="com.common.generate.javacreate.model.DictionaryDTO">
+        <id column="id" jdbcType="BIGINT" property="id"/> 
+        <result column="name" jdbcType="VARCHAR" property="name"/> 
+        <result column="alias" jdbcType="VARCHAR" property="alias"/> 
+        <result column="description" jdbcType="VARCHAR" property="description"/> 
+        <result column="source" jdbcType="VARCHAR" property="source"/> 
+        <result column="type" jdbcType="VARCHAR" property="type"/> 
+        <result column="instance" jdbcType="VARCHAR" property="instance"/> 
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/> 
+        <result column="lastUpdateTime" jdbcType="TIMESTAMP" property="lastUpdateTime"/> 
+        <result column="createUser" jdbcType="VARCHAR" property="createUser"/>
+        <result column="lastUpdateUser" jdbcType="VARCHAR" property="lastUpdateUser"/>
+    </resultMap>
+
+    <sql id="dictionaryColumns">
+        dictionary.Id AS "id",
+        dictionary.Name AS "name",
+        dictionary.Alias AS "alias",
+        dictionary.Description AS "description",
+        dictionary.Source AS "source",
+        dictionary.Type AS "type",
+        dictionary.Instance AS "instance",
+        dictionary.CreateTime AS "createTime",
+        dictionary.LastUpdateTime AS "lastUpdateTime",
+        dictionary.CreateUser AS "createUser",
+        dictionary.LastUpdateUser AS "lastUpdateUser"
+    </sql>
+
+    <select id="selectByPrimaryKey" resultMap="dictionaryResultMap">
+        SELECT
+        <include refid="dictionaryColumns" />
+        FROM dictionary
+        <where>
+        dictionary.Id = #{id,jdbcType=BIGINT}
+        </where>
+    </select>
+
+    <select id="pageList" resultMap="dictionaryResultMap">
+        SELECT
+        <include refid="dictionaryColumns"/>
+        FROM dictionary
+        <where>
+            <if test="name!= null and name!=''">
+                and Name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="alias!= null and alias!=''">
+                and Alias = #{alias,jdbcType=VARCHAR}
+            </if>
+            <if test="description!= null and description!=''">
+                and Description = #{description,jdbcType=VARCHAR}
+            </if>
+            <if test="source!= null and source!=''">
+                and Source = #{source,jdbcType=VARCHAR}
+            </if>
+            <if test="type!= null and type!=''">
+                and Type = #{type,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="list" resultMap="dictionaryResultMap">
+        SELECT
+        <include refid="dictionaryColumns" />
+        FROM dictionary
+        <where>
+            <if test="name!= null and name!=''">
+                and Name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="alias!= null and alias!=''">
+                and Alias = #{alias,jdbcType=VARCHAR}
+            </if>
+            <if test="description!= null and description!=''">
+                and Description = #{description,jdbcType=VARCHAR}
+            </if>
+            <if test="source!= null and source!=''">
+                and Source = #{source,jdbcType=VARCHAR}
+            </if>
+            <if test="type!= null and type!=''">
+                and Type = #{type,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO dictionary(
+            Id,
+            Name,
+            Alias,
+            Description,
+            Source,
+            Type,
+            Instance,
+            CreateTime,
+            LastUpdateTime,
+            CreateUser,
+            LastUpdateUser
+        )
+        VALUES (
+            #{id,jdbcType=BIGINT},
+            #{name,jdbcType=VARCHAR},
+            #{alias,jdbcType=VARCHAR},
+            #{description,jdbcType=VARCHAR},
+            #{source,jdbcType=VARCHAR},
+            #{type,jdbcType=VARCHAR},
+            #{instance,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP},
+            #{lastUpdateTime,jdbcType=TIMESTAMP},
+            #{createUser,jdbcType=VARCHAR},
+            #{lastUpdateUser,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <insert id="insertBatch">
+        INSERT INTO dictionary(
+            Id,
+            Name,
+            Alias,
+            Description,
+            Source,
+            Type,
+            Instance,
+            CreateTime,
+            LastUpdateTime,
+            CreateUser,
+            LastUpdateUser
+        )
+        VALUES
+        <foreach collection ="list" item="dictionary" separator =",">
+        (
+            #{dictionary.id,jdbcType=BIGINT},
+            #{dictionary.name,jdbcType=VARCHAR},
+            #{dictionary.alias,jdbcType=VARCHAR},
+            #{dictionary.description,jdbcType=VARCHAR},
+            #{dictionary.source,jdbcType=VARCHAR},
+            #{dictionary.type,jdbcType=VARCHAR},
+            #{dictionary.instance,jdbcType=VARCHAR},
+            #{dictionary.createTime,jdbcType=TIMESTAMP},
+            #{dictionary.lastUpdateTime,jdbcType=TIMESTAMP},
+            #{dictionary.createUser,jdbcType=VARCHAR},
+            #{dictionary.lastUpdateUser,jdbcType=VARCHAR}
+        )
+        </foreach>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective">
+        UPDATE dictionary
+        <set>
+            <if test="id!= null">
+                Id = #{id,jdbcType=BIGINT},
+            </if>  
+            <if test="name!= null">
+                Name = #{name,jdbcType=VARCHAR},
+            </if>  
+            <if test="alias!= null">
+                Alias = #{alias,jdbcType=VARCHAR},
+            </if>  
+            <if test="description!= null">
+                Description = #{description,jdbcType=VARCHAR},
+            </if>  
+            <if test="source!= null">
+                Source = #{source,jdbcType=VARCHAR},
+            </if>  
+            <if test="type!= null">
+                Type = #{type,jdbcType=VARCHAR},
+            </if>  
+            <if test="instance!= null">
+                Instance = #{instance,jdbcType=VARCHAR},
+            </if>  
+            <if test="createTime!= null">
+                CreateTime = #{createTime,jdbcType=TIMESTAMP},
+            </if>  
+            <if test="lastUpdateTime!= null">
+                LastUpdateTime = #{lastUpdateTime,jdbcType=TIMESTAMP},
+            </if>  
+            <if test="createUser!= null">
+                CreateUser = #{createUser,jdbcType=VARCHAR},
+            </if>  
+            <if test="lastUpdateUser!= null">
+                LastUpdateUser = #{lastUpdateUser,jdbcType=VARCHAR},
+            </if> 
+        </set>
+        WHERE Id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteByPrimaryKey">
+        DELETE FROM dictionary
+        WHERE Id = #{id,jdbcType=BIGINT}
+    </delete>
+
+</mapper>

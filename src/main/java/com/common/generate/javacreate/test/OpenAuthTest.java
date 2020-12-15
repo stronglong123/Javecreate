@@ -20,8 +20,9 @@ import java.util.List;
 public class OpenAuthTest {
 
 //    private static final String baseUrl = "http://api.test.yijiupi.com";
-//    private static final String baseUrl = "http://api.yijiupi.com";
-    private static final String baseUrl = "http://api.release.yijiupidev.com";
+    private static final String baseUrl = "https://api.yijiupi.com";
+//    private static final String baseUrl = "http://api.release.yijiupidev.com";
+//    private static final String baseUrl = "http://api.pre.yijiupi.com";
 
 //    private static final String baseUrl = "http://localhost:40000";
 
@@ -84,7 +85,7 @@ public class OpenAuthTest {
      */
     public static void findPermissionsByRoleCode(String appSecret, String appKey) {
         String url = baseUrl + "/role/findPermissionsByRoleCode";
-        String json = "{\"appCode\":\"yjpop3\",\"roleCode\":\"TrdDeveloper\",\"serviceId\":\"1081\"}";
+        String json = "{\"appCode\":\"yjp_retail\",\"roleCode\":\"EasyChainDeveloper\",\"serviceId\":\"1085\"}";
         ThirdRoleQueryDTO dto = JSON.parseObject(json, ThirdRoleQueryDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, ThirdRoleQueryDTO.class, dto);
         try {

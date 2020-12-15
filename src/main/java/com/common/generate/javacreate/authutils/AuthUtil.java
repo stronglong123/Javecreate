@@ -48,7 +48,7 @@ public class AuthUtil {
 	public static String getUrlWithAuth(String url, String appSecret, String appKey,Class<?> aClass, Object data) {
 		/**有参加密*/
 		String sign = authWithParams(appSecret, aClass, data);
-		return url + "?sign=" + "160bcb721e1476e30faadec819842542" + "&appKey=" + appKey;
+		return url + "?sign=" + sign + "&appKey=" + appKey;
 	}
 
 

@@ -1,6 +1,7 @@
 package com.common.generate.javacreate.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.common.generate.javacreate.constants.SystemConstant;
 import com.common.generate.javacreate.model.QuestionBankDTO;
 import com.common.generate.javacreate.model.base.exception.BusinessValidateException;
 import com.common.generate.javacreate.service.FileService;
@@ -36,15 +37,15 @@ public class NiuKeService extends FileService {
                 questionBankDTO = save(questionBankDTO);
             }
             line = line.replace("问题: ", "");
-            builder.append("\r\n").append("问题:").append(line);
+            builder.append(SystemConstant.LINE_FEED_WIN).append("问题:").append(line);
             questionBankDTO.setQuestion(line);
         } else if (line.startsWith("考察点：")) {
             line = line.replace("考察点：", "");
-            builder.append("\r\n").append("考察点：").append(line);
+            builder.append(SystemConstant.LINE_FEED_WIN).append("考察点：").append(line);
             questionBankDTO.setKeyWord(line);
         } else if (line.startsWith("参考回答：")) {
             line = line.replace("参考回答：", "");
-            builder.append("\r\n").append("参考回答：").append(line);
+            builder.append(SystemConstant.LINE_FEED_WIN).append("参考回答：").append(line);
             questionBankDTO.setAnswer(line);
         }
         return questionBankDTO;

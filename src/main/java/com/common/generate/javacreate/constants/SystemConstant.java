@@ -55,4 +55,8 @@ public class SystemConstant {
 
     public static final String FORGET_PASSWORD_PREFIX = "Forget_Password_10_Minutes_";
 
+
+    public static final String LINE_FEED_WIN = "\r\n";
+
+
 }

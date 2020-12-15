@@ -45,13 +45,13 @@
         FROM dictionary
         <where>
             <if test="name!= null and name!=''">
-                and Name = #{name,jdbcType=VARCHAR}
+                and Name like concat('%',concat(#{name}),'%')
             </if>
             <if test="alias!= null and alias!=''">
                 and Alias = #{alias,jdbcType=VARCHAR}
             </if>
             <if test="description!= null and description!=''">
-                and Description = #{description,jdbcType=VARCHAR}
+                and Description like concat('%',concat(#{description}),'%')
             </if>
             <if test="source!= null and source!=''">
                 and Source = #{source,jdbcType=VARCHAR}
@@ -68,13 +68,13 @@
         FROM dictionary
         <where>
             <if test="name!= null and name!=''">
-                and Name = #{name,jdbcType=VARCHAR}
+                and Name like concat('%',concat(#{name}),'%')
             </if>
             <if test="alias!= null and alias!=''">
                 and Alias = #{alias,jdbcType=VARCHAR}
             </if>
             <if test="description!= null and description!=''">
-                and Description = #{description,jdbcType=VARCHAR}
+                and Description like concat('%',concat(#{description}),'%')
             </if>
             <if test="source!= null and source!=''">
                 and Source = #{source,jdbcType=VARCHAR}

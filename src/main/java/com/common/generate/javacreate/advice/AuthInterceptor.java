@@ -49,9 +49,6 @@ public class AuthInterceptor implements HandlerInterceptor {
         String className = handlerMethod.getBean().getClass().getName();
 
         log.info("请求类路径:" + className);
-//        if (className.contains("error")) {
-//            return true;
-//        }
 
         if (this.ignoreInterceptor(handlerMethod)) {
             return true;

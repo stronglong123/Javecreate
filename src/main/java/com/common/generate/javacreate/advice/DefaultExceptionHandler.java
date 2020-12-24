@@ -77,12 +77,12 @@ public class DefaultExceptionHandler {
     private Result getErrorMsg(ExceptionLevel exceptionType, HttpServletRequest request, Map<String, Object> paramMap, Exception e) {
         Result failedResult = null;
         if (ExceptionLevel.ERROR.equals(exceptionType)) {
-            failedResult = RetResponse.makeErrRsp(e.getCause().getMessage(), e.getMessage());
+            failedResult = RetResponse.makeErrRsp(e.getMessage(), e.getMessage());
             LOGGER.info("异常信息:{}", e.getMessage());
         } else if (ExceptionLevel.WARN.equals(exceptionType)) {
             LOGGER.info("WARN 发生错误：{}", e.getMessage());
-            if (null != e.getCause() && StringUtils.isNumeric(e.getCause().getMessage())) {
-                failedResult = RetResponse.makeExceptionRsp(e.getCause().getMessage(), e.getMessage());
+            if (null != e.getCause() && StringUtils.isNumeric(e.getMessage())) {
+                failedResult = RetResponse.makeExceptionRsp(e.getMessage(), e.getMessage());
             } else {
                 failedResult = RetResponse.makeFailRsp(paramMap, e.getMessage());
             }

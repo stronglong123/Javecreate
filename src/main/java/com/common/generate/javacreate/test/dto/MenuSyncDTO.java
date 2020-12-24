@@ -28,7 +28,7 @@ public class MenuSyncDTO implements Serializable {
     /**
      * 排序
      */
-    private int sort;
+    private Integer sort;
     /**
      * 父级code
      */
@@ -97,11 +97,11 @@ public class MenuSyncDTO implements Serializable {
         this.namespace = namespace;
     }
 
-    public int getSort() {
+    public Integer getSort() {
         return sort;
     }
 
-    public void setSort(int sort) {
+    public void setSort(Integer sort) {
         this.sort = sort;
     }
 

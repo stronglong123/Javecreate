@@ -29,7 +29,7 @@ public class OpenApiTest {
     private static String baseUrl;
 
     public static void main(String[] args) {
-        baseUrl = getUrl("test");
+        baseUrl = getUrl("product");
         deal("wdt");
     }
 
@@ -71,16 +71,18 @@ public class OpenApiTest {
     public static void wdt() {
         String appSecret = "f886c70b88d0a13eefcde3f36f940bc2";
         String appKey = "7ef15e875c4f4962b60778f4dfd3dcfe";
+
 //        getOrderList(appSecret, appKey);
 //        getOrderDetail(appSecret, appKey);
 
 //        getReturnOrderList(appSecret, appKey);
 //        getReturnPaymentState(appSecret, appKey);
 //        listProductSku(appSecret, appKey);
-        orderSendSync(appSecret, appKey);
-//        orderShipping(appSecret, appKey);
+//        orderSendSync(appSecret, appKey);
+        orderShipping(appSecret, appKey);
 //        findSplitOrder(appSecret,appKey);
 //        findStorePage(appSecret,appKey);
+//        logisticsCompany(appSecret, appKey);
 
     }
 
@@ -145,6 +147,28 @@ public class OpenApiTest {
         cancelOrderRequest(appSecret,appKey);
     }
 
+
+
+    /**
+     * 获取快递信息
+     *
+     * @param appSecret
+     * @param appKey
+     */
+    public static void logisticsCompany(String appSecret, String appKey) {
+        String url = baseUrl + "/logisticsCompany/list";
+        System.out.println("获取快递信息" + url);
+        String json = "{}";
+        String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey);
+        try {
+            System.out.println("url:" + urlWithAuth);
+            String post = HttpUtil.post(urlWithAuth, "{}");
+            System.out.println("订单获取：" + post);
+        } catch (Exception e) {
+            System.out.println("请求失败:" + e);
+        }
+    }
+
     /**
      * 获取订单
      *
@@ -176,7 +200,7 @@ public class OpenApiTest {
     public static void getOrderDetail(String appSecret, String appKey) {
         String url = baseUrl + "/order/getOrderDetail";
         System.out.println("订单详情获取" + url);
-        String json = "{\"businessNo\":\"998033700008\"}";
+        String json = "{\"businessNo\":\"998010800006\"}";
         OrderQueryDTO orderQueryDTO = JSON.parseObject(json, OrderQueryDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, OrderQueryDTO.class, orderQueryDTO);
         try {
@@ -313,7 +337,7 @@ public class OpenApiTest {
     public static void orderShipping(String appSecret, String appKey) {
         String url = baseUrl + "/order/orderShipping";
         System.out.println("订单发货同步：" + url);
-        String json = "{ \"businessNo\" : \"404033500516\", \"logisticsCompany\" : \"韵达快递\", \"logisticsCompanyCode\" : \"001\", \"logisticsNo\" : \"4310617028377\", \"sid\" : \"test\", \"systemCode\" : \"韵达快递\", \"timestamp\" : 1607668735 }";
+        String json = "{ \"omsOrderId\" : \"omsOrderId\", \"businessNo\" : \"998016100017-2\", \"logisticsCompany\" : \"韵达快递\", \"logisticsCompanyCode\" : \"YD\", \"logisticsNo\" : \"11111\"}";
         OrderLogisticsSyncDTO dto = JSON.parseObject(json, OrderLogisticsSyncDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, OrderLogisticsSyncDTO.class, dto);
         try {
@@ -336,41 +360,41 @@ public class OpenApiTest {
         String url = baseUrl + "/order/orderSendSync";
         System.out.println("订单发货同步：" + url);
 //        String json = "{\n" +
-//                "    \"businessNo\": \"998033700009\",\n" +
+//                "    \"businessNo\": \"998010800006\",\n" +
 //                "    \"logstics\": [\n" +
 //                "        {\n" +
-//                "            \"logisticsCompany\": \"顺丰速运\",\n" +
-//                "            \"logisticsCompanyCode\": \"SF\",\n" +
-//                "            \"logisticsNo\": \"24312424\",\n" +
-//                "            \"subOrderNo\": \"998033700009--1\",\n" +
+////                "            \"logisticsCompany\": \"顺丰速运\",\n" +
+////                "            \"logisticsCompanyCode\": \"SF\",\n" +
+////                "            \"logisticsNo\": \"24312424\",\n" +
+//                "            \"subOrderNo\": \"998010800006--1\",\n" +
 //                "            \"subOrderItems\": [\n" +
 //                "                {\n" +
-//                "                    \"orderItemId\": 998001201202143969\n" +
+//                "                    \"orderItemId\": 998120041711630312\n" +
 //                "                }\n" +
 //                "            ],\n" +
 //                "        },\n" +
 //                "        {\n" +
-//                "            \"logisticsCompany\": \"顺丰速运\",\n" +
-//                "            \"logisticsCompanyCode\": \"SF\",\n" +
-//                "            \"logisticsNo\": \"5424133\",\n" +
-//                "            \"subOrderNo\": \"998033700008--2\",\n" +
+////                "            \"logisticsCompany\": \"顺丰速运\",\n" +
+////                "            \"logisticsCompanyCode\": \"SF\",\n" +
+////                "            \"logisticsNo\": \"5424133\",\n" +
+//                "            \"subOrderNo\": \"998010800006--2\",\n" +
 //                "            \"subOrderItems\": [\n" +
 //                "                {\n" +
-//                "                    \"orderItemId\": 998001201202143969\n" +
+//                "                    \"orderItemId\": 998120041711630322\n" +
 //                "                }\n" +
 //                "            ],\n" +
 //                "        }\n" +
 //                "    ],\n" +
-//                "    \"subOrderSize\": 1\n" +
+//                "    \"subOrderSize\": 2\n" +
 //                "}";
         String json ="{\n" +
-                "    \"businessNo\": \"175033500145-2\",\n" +
+                "    \"businessNo\": \"998016100017-2\",\n" +
                 "    \"logstics\": [\n" +
                 "        {\n" +
-                "            \"logisticsCompany\": \"韵达快递\",\n" +
-                "            \"logisticsCompanyCode\": \"001\",\n" +
-                "            \"logisticsNo\": \"4310617028378\",\n" +
-                "            \"subOrderNo\": \"175033500145-2\"\n" +
+//                "            \"logisticsCompany\": \"韵达快递\",\n" +
+//                "            \"logisticsCompanyCode\": \"001\",\n" +
+//                "            \"logisticsNo\": \"4310617028378\",\n" +
+                "            \"subOrderNo\": \"998016100017-2\"\n" +
                 "        }\n" +
                 "    ],\n" +
                 "    \"subOrderSize\": \"1\"\n" +

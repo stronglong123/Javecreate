@@ -50,6 +50,13 @@ public class AuthUtil {
 		String sign = authWithParams(appSecret, aClass, data);
 		return url + "?sign=" + sign + "&appKey=" + appKey;
 	}
+    public static String getUrlWithAuth(String url, String appSecret, String appKey) {
+        /**有参加密*/
+        String sign = authWithNoParams(appSecret);
+        return url + "?sign=" + sign + "&appKey=" + appKey;
+    }
+
+
 
 
     /**
@@ -126,20 +133,23 @@ public class AuthUtil {
      * @return
      */
     public static String getAuth(String appSecret, Class<?> aClass, Object arg) {
-        Field[] fields = aClass.getDeclaredFields();
-        JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(arg));
         StringBuilder buffer = new StringBuilder();
-        List<Field> fieldList = new ArrayList<>(Arrays.asList(fields));
-        List<Field> sortedFieldList = fieldList.stream().sorted(Comparator.comparing(Field::getName)).collect(Collectors.toList());
-        for (Field field : sortedFieldList) {
-            String name = field.getName();
-            if (jsonObject.get(name) != null) {
-                parseFieldInBuffer(buffer, jsonObject.get(name));
+        if(aClass!=null){
+            Field[] fields = aClass.getDeclaredFields();
+            JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(arg));
+            List<Field> fieldList = new ArrayList<>(Arrays.asList(fields));
+            List<Field> sortedFieldList = fieldList.stream().sorted(Comparator.comparing(Field::getName)).collect(Collectors.toList());
+            for (Field field : sortedFieldList) {
+                String name = field.getName();
+                if (jsonObject.get(name) != null) {
+                    parseFieldInBuffer(buffer, jsonObject.get(name));
+                }
+            }
+            if (buffer.length() > 0) {
+                buffer.deleteCharAt(buffer.length() - 1);
             }
         }
-        if (buffer.length() > 0) {
-            buffer.deleteCharAt(buffer.length() - 1);
-        }
+
         String signInit = buffer.toString();
         LOG.info("签名初始拼接信息:" + signInit);
         String sign = MD5Utils.getMD5(signInit + appSecret);

@@ -26,7 +26,6 @@ public class DictionaryController {
     @Autowired
     private IDictionaryService dictionaryService;
 
-    @IgnoreAuthInterceptor
     @PostMapping("/dictionary/pageList")
     public PageList<DictionaryDTO> pageList(@RequestBody DictionaryQueryDTO dictionary) {
         LOGGER.info("查询参数：{}", JSON.toJSONString(dictionary));
@@ -41,7 +40,7 @@ public class DictionaryController {
         return true;
     }
 
-    @PostMapping("/dictionary/dictionary/insertBatch")
+    @PostMapping("/dictionary/insertBatch")
     public Boolean insertBatch(@RequestBody List<DictionaryDTO> dictionarys) {
         LOGGER.info("批量新增：{}", JSON.toJSONString(dictionarys));
         dictionaryService.insertBatch(dictionarys);

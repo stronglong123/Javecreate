@@ -29,8 +29,8 @@ public class OpenApiTest {
     private static String baseUrl;
 
     public static void main(String[] args) {
-        baseUrl = getUrl("product");
-        deal("wdt");
+        baseUrl = getUrl("pre");
+        deal("ruike");
     }
 
     public static String getUrl(String system) {
@@ -87,8 +87,11 @@ public class OpenApiTest {
     }
 
     public static void ruike() {
-        String appSecret = "75e5038e7397e5fe0ab0360cfe921308";
-        String appKey = "3cb482c84106461698d44c8814a64ffd";
+//        String appSecret = "75e5038e7397e5fe0ab0360cfe921308";
+//        String appKey = "3cb482c84106461698d44c8814a64ffd";
+
+        String appSecret = "083bb928434cd43a9ec297b6a56435ae";
+        String appKey = "a56b7ace805d4d18ae787e72e847ac79";
         getOrderList(appSecret, appKey);
 //        getOrderDetail(appSecret, appKey);
 
@@ -178,7 +181,7 @@ public class OpenApiTest {
     public static void getOrderList(String appSecret, String appKey) {
         String url = baseUrl + "/order/getOrderList";
         System.out.println("订单获取" + url);
-        String json = "{\"pageSize\":20,\"lastUpdateTimeStart\":\"2020-11-10 00:03:04\",\"lastUpdateTimeEnd\":\"2020-12-04 23:59:59\",\"currentPage\":1}";
+        String json = "{\"currentPage\":1,\"lastUpdateTimeEnd\":\"2021-01-09 15:54:08\",\"lastUpdateTimeStart\":\"2021-01-09 15:44:09\",\"pageSize\":100,\"states\":[3]}";
         OrderQueryDTO orderQueryDTO = JSON.parseObject(json, OrderQueryDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, OrderQueryDTO.class, orderQueryDTO);
         try {

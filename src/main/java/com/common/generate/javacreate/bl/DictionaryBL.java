@@ -35,22 +35,18 @@ public class DictionaryBL {
         return list;
     }
     
-    @Transactional
     public void insert(DictionaryDTO dictionary) {
         dictionaryMapper.insert(dictionary);
     }
     
-    @Transactional
     public void insertBatch(List<DictionaryDTO> dictionarys){
         dictionaryMapper.insertBatch(dictionarys);
     }
     
-    @Transactional
     public void updateByPrimaryKeySelective(DictionaryDTO dictionary) {
         dictionaryMapper.updateByPrimaryKeySelective(dictionary);
     }
     
-    @Transactional
     public void deleteByPrimaryKey(Long id) {
         dictionaryMapper.deleteByPrimaryKey(id);
     }

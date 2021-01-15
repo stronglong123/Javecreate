@@ -1,6 +1,7 @@
 package com.common.generate.javacreate.test;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.common.generate.javacreate.test.dto.MenuSyncDTO;
 import com.common.generate.javacreate.test.dto.ThirdMenuItemDTO;
 import com.common.generate.javacreate.test.dto.ThirdMenuSyncDTO;
@@ -29,7 +30,30 @@ public class OpenAuthTest {
 
     public static void main(String[] args) {
 //        yjx();
-        crm();
+//        crm();
+        test();
+    }
+
+    /**
+     * 菜单同步
+     *
+     * @param appSecret
+     * @param appKey
+     */
+    public static void test() {
+        String appSecret = "803ca158-eae5-4797-8eb7-99231cd71152";
+        String appKey ="5b194941-ad61-40ee-9cba-8687f879b4de";
+        String url = "http://localhost:8081/pdd/control/decrypt/v1/receiverPhone";
+        String json = "{\"accessToken\":\"c58624d39e2d48fbab5d5bb78965c7e9361a8c40\",\"orderStatus\":\"1\",\"pageSize\":20,\"refundStatus\":1,\"isLuckyFlag\":1,\"startUpdatedAt\":\"1609291501\",\"endUpdatedAt\":\"1609291520\",\"order_sn\":\"123456\",\"encryptData\":\"1233455\"}";
+        JSONObject jsonObject = JSON.parseObject(json);
+        String sign = AuthUtil.getAuth(appSecret, jsonObject);
+        url = url + "?sign=" + sign + "&appKey=" + appKey;
+        try {
+            String post = HttpUtil.post(url, JSON.toJSONString(jsonObject));
+            System.out.println("返回结果：" + post);
+        } catch (Exception e) {
+            System.out.println("请求失败:" + e);
+        }
     }
 
     public static void jy() {

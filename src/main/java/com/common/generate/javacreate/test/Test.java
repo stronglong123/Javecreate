@@ -9,11 +9,16 @@ import com.common.generate.javacreate.test.dto.ThirdSSCancelOrderDTO;
 import com.common.generate.javacreate.utils.DateUtils;
 import com.common.generate.javacreate.utils.HttpUtil;
 import com.common.generate.javacreate.utils.Md5Utils;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -21,18 +26,80 @@ import java.util.stream.Collectors;
  * @date 2020/8/12 13:55
  */
 public class Test {
+
+
+    private static String matchKey(String name,String key){
+        Pattern bugNumber = Pattern.compile("\\s*([0-9]+)(?i)" + key);
+        // find the bug#
+        Matcher matcher = bugNumber.matcher(name);
+        if(matcher.find()){
+            return matcher.group(1);
+        }
+        return null;
+    }
+
+
     public static void main(String[] args){
-//        List<OrderSendSyncDTO> list =new ArrayList<>();
-//        String s = Md5Utils.encrytMD5("123456");
-//        System.out.println(s);
-//        String json ="{\"pageSize\":\"10\",\"currentPage\":\"1\",\"orderCreateTimeStart\":\"1602604800000\",\"orderCreateTimeEnd\":\"1602518400000\",\"states\":[5]}";
-//        OrderQueryDTO permissionDTO = JSON.parseObject(json, OrderQueryDTO.class);
-//        System.out.println(JSON.toJSONString(permissionDTO));
-//        AuthUtil.getAuth("1234", OrderQueryDTO.class,permissionDTO);
-        Test test = new Test();
-        test.test();
+        System.out.println(DateUtils.getTimeByDate("2021-01-10 15:10:00"));
+        System.out.println(DateUtils.getTimeByDate("2021-01-10 15:40:00"));
+
+//        System.out.println(String.valueOf(null));
+//        BigDecimal skuPrice =BigDecimal.ONE;
+//        Long price = skuPrice == null ? 0L : (skuPrice.multiply(BigDecimal.valueOf(100)).longValue());
+//        System.out.println(price);
 
 
+//        List<String> list =new ArrayList<>();
+//        System.out.println(list.get(0));
+//        String subject ="茅台天朝上品贵人53度500ml（1*6）";
+//        String key = matchKey(subject, "度");
+//        System.out.println(key);
+//
+////        String subject = "1234Bug- description";
+//        Pattern bugNumber = Pattern.compile("\\s*([0-9]+)(?i)度");
+//        // find the bug#
+//        Matcher matcher = bugNumber.matcher(subject);
+//        while (matcher.find()) {
+//            System.out.println(matcher.group(1));
+//        }
+
+
+//
+//
+//        Pattern p = Pattern.compile("[^0-9]+度");
+//        System.out.println(p.toString());
+//        Matcher m = p.matcher(name);
+////        System.out.println(m.group());
+//        String s1 = m.replaceAll("");
+//        System.out.println(s1);
+//
+//
+////        String kgs2 = k.replaceAll("").trim();
+//////        System.out.println(kgs2);
+////        Pattern pattern = Pattern.compile("\\d+度");
+////        Matcher matcher = pattern.matcher(name);
+////        System.out.println(name.replaceAll("\\d+度",""));
+////        String all = matcher.replaceAll("");// 不属于任何匹配的字符被直接添加到结果字符串
+////        System.out.println("phone:" + all);
+////        String phoneString = "哈哈,1388888额9999";
+////        String s = Pattern.compile("[^0-9]").matcher(name).replaceAll("");
+////        System.out.println(s);
+//
+//
+////        String str = "hello8023.1314world"; //要截取的字符串
+////        Match m = Regex.Match(str, "\\d+(\\.\\d+){0,1}");
+////        double.TryParse(m.Groups[0].ToString(), out d);
+////        Console.WriteLine(d);
+////        Console.ReadKey();
+//
+//        String s = "A876X";
+//// 把要匹配的字符串写成正则表达式，然后要提取的字符使用括号括起来
+//// 在这里，我们要提取最后一个数字，正则规则就是“一个数字加上大于等于0个非数字再加上结束符”
+//        Pattern pattern = Pattern.compile("(\\d)[^\\d]*$");
+//        Matcher matcher = pattern.matcher(name);
+//        if(matcher.find())
+//            System.out.println(matcher.group(1));
+////        REGEXP_REPLACE(REGEXP_SUBSTR('12月最低消费20元','[0-9]+元'),'[^0-9]')
     }
 
     /**

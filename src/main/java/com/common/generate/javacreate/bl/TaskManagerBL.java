@@ -40,7 +40,6 @@ public class TaskManagerBL {
         return new PageList<>(list);
     }
 
-    @Transactional
     public void insert(TaskManagerDTO taskManager) {
         Integer userId = userInfoUtils.getUser().getId();
         taskManager.setId(UUIDUtil.getUuid());
@@ -55,14 +54,12 @@ public class TaskManagerBL {
     }
 
 
-    @Transactional
     public void update(TaskManagerDTO taskManager) {
         Integer userId = userInfoUtils.getUser().getId();
         taskManager.setLastUpdateUser(userId.toString());
         taskManagerMapper.update(taskManager);
     }
 
-    @Transactional
     public void delete(TaskManagerDTO taskManager) {
         taskManagerMapper.delete(taskManager);
     }

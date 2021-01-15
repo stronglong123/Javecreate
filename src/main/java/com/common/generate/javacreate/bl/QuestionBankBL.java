@@ -34,7 +34,6 @@ public class QuestionBankBL {
         return new PageList<>(list);
     }
 
-    @Transactional
     public void insert(QuestionBankDTO questionBank) {
         if (questionBank.getId() == null) {
             questionBank.setId(UUIDUtil.getUuid());
@@ -42,18 +41,15 @@ public class QuestionBankBL {
         questionBankMapper.insert(questionBank);
     }
 
-    @Transactional
     public void insertBatch(List<QuestionBankDTO> questionBanks) {
         questionBanks.stream().filter(it->it.getId()==null).forEach(it->it.setId(UUIDUtil.getUuid()));
         questionBankMapper.insertBatch(questionBanks);
     }
 
-    @Transactional
     public void update(QuestionBankDTO questionBank) {
         questionBankMapper.update(questionBank);
     }
 
-    @Transactional
     public void delete(QuestionBankDTO questionBank) {
         questionBankMapper.delete(questionBank);
     }

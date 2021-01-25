@@ -21,17 +21,17 @@ import java.util.List;
  */
 public class OpenAuthTest {
 
-    private static final String baseUrl = "http://api.test.yijiupi.com";
+//    private static final String baseUrl = "http://api.test.yijiupi.com";
 //    private static final String baseUrl = "https://api.yijiupi.com";
-//    private static final String baseUrl = "http://api.release.yijiupidev.com";
+    private static final String baseUrl = "http://api.release.yijiupidev.com";
 //    private static final String baseUrl = "http://api.pre.yijiupi.com";
 
 //    private static final String baseUrl = "http://localhost:40000";
 
     public static void main(String[] args) {
 //        yjx();
-//        crm();
-        test();
+        xls();
+//        test();
     }
 
     /**
@@ -84,8 +84,8 @@ public class OpenAuthTest {
         String appSecret = "333ba1308f704e2c9008253c4fa129af";
         String appKey = "e280a7427be24c9bb6ef2ef61b92c770";
         //        findPermissionsByRoleCode(appSecret, appKey);
-        addPermissionsForRoleCode(appSecret, appKey);
-//        findPermissionsByRoleCode(appSecret, appKey);
+//        addPermissionsForRoleCode(appSecret, appKey);
+        findPermissionsByRoleCode(appSecret, appKey);
 //        findPermissionsJsonByRoleCode(appSecret,appKey);
 //        exportMenuByAppCode(appSecret,appKey);
     }

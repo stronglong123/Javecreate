@@ -40,8 +40,23 @@ public class Test {
 
 
     public static void main(String[] args){
-        System.out.println(DateUtils.getTimeByDate("2021-01-10 15:10:00"));
-        System.out.println(DateUtils.getTimeByDate("2021-01-10 15:40:00"));
+        String json ="{\"omsOrderId\":998000210207145746,\"omsOrderItems\":[{\"deliveryCount\":\"查\",\"omsOrderItemId\":998001210207144764,\"orderCount\":2.000000,\"productSkuId\":4762841767152294336}]}";
+        Map<String, Long> map = JSON.parseObject(json, Map.class);
+        Long omsOrderId = map.get("omsOrderId");
+        System.out.println("得到消息，快递直发订单发货，{}"+json);
+        System.out.println(omsOrderId);
+
+
+
+//        List<Byte> orderStates = Arrays.asList((byte)1);
+//        orderStates.add((byte)2);
+//        Long value  =null;
+//
+//        System.out.println(String.valueOf(value));
+//        System.out.println(value.toString());
+//
+//        System.out.println(DateUtils.getTimeByDate("2021-01-10 15:10:00"));
+//        System.out.println(DateUtils.getTimeByDate("2021-01-10 15:40:00"));
 
 //        System.out.println(String.valueOf(null));
 //        BigDecimal skuPrice =BigDecimal.ONE;

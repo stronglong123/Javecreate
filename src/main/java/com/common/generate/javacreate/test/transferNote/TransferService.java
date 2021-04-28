@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @Service
 public class TransferService {
 
-    private static final String token = "08b1567a-fd15-4d3f-a8f3-bd87da43cd02";
+    private static final String token = "88649b0d-8255-40a0-a071-c8ed7d5e97c7";
 
     private static final String baseUrl = "https://wms.yijiupi.com/supplyChain/";
 
@@ -45,12 +45,15 @@ public class TransferService {
     public void findTransferError() {
         List<ErrorResult> allResult = new ArrayList<>();
         List<TransferNoteDTO> transferNoteDTOS = listTransferNote();
+        if(CollectionUtils.isEmpty(transferNoteDTOS)){
+            return;
+        }
         /**倒数锁*/
         /**定义线程池大小为5*/
         ExecutorService pool = Executors.newFixedThreadPool(10);
         //结束的倒数锁
         final CountDownLatch latch = new CountDownLatch(transferNoteDTOS.size());
-        for (int i = 1; i <= transferNoteDTOS.size(); i++) {
+        for (int i = 0; i < transferNoteDTOS.size(); i++) {
             int finalI = i;
             Runnable runnable = () -> {
                 try {
@@ -82,40 +85,44 @@ public class TransferService {
     }
 
 
-//    public void findTransferError2() {
-//        List<ErrorResult> allResult = new ArrayList<>();
-//        List<TransferNoteDTO> transferNoteDTOS = listTransferNote();
-//        for (TransferNoteDTO transferNoteDTO : transferNoteDTOS) {
-//            if(transferNoteDTO.getOrgId()==999||transferNoteDTO.getOrgId()==998||transferNoteDTO.getInOrgId()==999||transferNoteDTO.getInOrgId()==998){
-//                continue;
-//            }
-//            List<OutStockOrderDTO> outStocks = findOutStock(transferNoteDTO.getOrgId(), transferNoteDTO.getOutWarehouseId(), transferNoteDTO.getTransferNo());
-//            List<InStockApplyDTO> inStockApplys = findInStockApply(transferNoteDTO.getInOrgId(), transferNoteDTO.getInWarehouseId(), transferNoteDTO.getTransferNo());
-//            for (InStockApplyDTO inStockApplyDTO : inStockApplys) {
-//                String relatedNoteNO = inStockApplyDTO.getRelatedNoteNO();
-//                OutStockOrderDTO outStockOrderDTO = outStocks.stream().filter(it -> it.getRefOrderNo().equals(relatedNoteNO)).findFirst().orElse(null);
-//                if (outStockOrderDTO == null) {
-//                    System.out.println(inStockApplyDTO.getBusinessNO() + "调拨入库申请单没有对应单号");
-//                }
-//                List<OutStockOrderItemDTO> outStockOrderItemDTOS = outStockOrderDTO.getOutStockOrderItemDTOS();
-//                List<InStockItemApplyDTO> applyItems = inStockApplyDTO.getItems();
-//                List<TransferNoteItemDTO> transferNoteItems = transferNoteDTO.getTransferNoteItems();
-//                List<ErrorResult> error = findError(outStockOrderItemDTOS, applyItems, transferNoteItems);
-//                System.out.println("比对数据：" + JSON.toJSONString(error));
-//                List<ErrorResult> collect = error.stream().filter(ErrorResult::isError).collect(Collectors.toList());
-//                System.out.println("比对结果：" + JSON.toJSONString(collect));
-//                if (CollectionUtils.isNotEmpty(collect)) {
-//                    collect.forEach(it -> it.setTransferNo(transferNoteDTO.getTransferNo()));
-//                    allResult.addAll(collect);
-//                }
-//            }
+    public void findTransferError2() {
+        List<ErrorResult> allResult = new ArrayList<>();
+        List<TransferNoteDTO> transferNoteDTOS = listTransferNote();
+        for (TransferNoteDTO transferNoteDTO : transferNoteDTOS) {
+            if(transferNoteDTO.getOrgId()==999||transferNoteDTO.getOrgId()==998||transferNoteDTO.getInOrgId()==999||transferNoteDTO.getInOrgId()==998){
+                continue;
+            }
+            List<OutStockOrderDTO> outStocks = findOutStock(transferNoteDTO.getOrgId(), transferNoteDTO.getOutWarehouseId(), transferNoteDTO.getTransferNo());
+            List<InStockApplyDTO> inStockApplys = findInStockApply(transferNoteDTO.getInOrgId(), transferNoteDTO.getInWarehouseId(), transferNoteDTO.getTransferNo());
+            for (InStockApplyDTO inStockApplyDTO : inStockApplys) {
+                String relatedNoteNO = inStockApplyDTO.getRelatedNoteNO();
+                OutStockOrderDTO outStockOrderDTO = outStocks.stream().filter(it -> it.getRefOrderNo().equals(relatedNoteNO)).findFirst().orElse(null);
+                if (outStockOrderDTO == null) {
+                    System.out.println(inStockApplyDTO.getBusinessNO() + "调拨入库申请单没有对应单号");
+                }
+                List<OutStockOrderItemDTO> outStockOrderItemDTOS = outStockOrderDTO.getOutStockOrderItemDTOS();
+                List<InStockItemApplyDTO> applyItems = inStockApplyDTO.getItems();
+                List<TransferNoteItemDTO> transferNoteItems = transferNoteDTO.getTransferNoteItems();
+                List<ErrorResult> error = findError(outStockOrderItemDTOS, applyItems, transferNoteItems);
+                System.out.println("比对数据：" + JSON.toJSONString(error));
+                List<ErrorResult> collect = error.stream().filter(ErrorResult::isError).collect(Collectors.toList());
+                System.out.println("比对结果：" + JSON.toJSONString(collect));
+                if (CollectionUtils.isNotEmpty(collect)) {
+                    collect.forEach(it -> it.setTransferNo(transferNoteDTO.getTransferNo()));
+                    allResult.addAll(collect);
+                }
+            }
 //            findTransferError(transferNoteDTO);
-//        }
-//        Map<String, List<ErrorResult>> transferError = allResult.stream().collect(Collectors.groupingBy(ErrorResult::getTransferNo));
-//        System.out.println("最终比对结果：" + JSON.toJSONString(transferError));
+        }
+        Map<String, List<ErrorResult>> transferError = allResult.stream().filter(it -> !getExcludeNo().contains(it.getTransferNo())).collect(Collectors.groupingBy(ErrorResult::getTransferNo));
+        System.out.println("最终比对结果：" + JSON.toJSONString(transferError));
 //        setSql(transferError);
-//        setTransferNo(allResult);
-//    }
+        setTransferNo(allResult);
+    }
+
+    private List<String> getExcludeNo(){
+        return Arrays.asList("XC202101280074");
+    }
 
     public List<ErrorResult> findTransferError(TransferNoteDTO transferNoteDTO) {
         List<ErrorResult> allResult =new ArrayList<>();
@@ -162,18 +169,18 @@ public class TransferService {
             errorResult.setProductName(values.get(0).getProductName());
 
             errorResult.setError(false);
-//            if (checkError(outErrorResults, inApplyErrorResults)) {
-//                errorResult.setOutErrorResults(outErrorResults);
-//                errorResult.setInApplyErrorResults(inApplyErrorResults);
-//                errorResult.setError(true);
-//                errorResults.add(errorResult);
-//            }
-            if (!errorResult.isError() && checkCountError(inApplyErrorResults, transferItems)) {
+            if (checkError(outErrorResults, inApplyErrorResults)) {
+                errorResult.setOutErrorResults(outErrorResults);
+                errorResult.setInApplyErrorResults(inApplyErrorResults);
                 errorResult.setError(true);
-                List<InApplyErrorResult> collect = inApplyErrorResults.stream().filter(it -> it.getTranferItemInUnitTotalCount() != null).collect(Collectors.toList());
-                errorResult.setInApplyErrorResults(collect);
                 errorResults.add(errorResult);
             }
+//            if (!errorResult.isError() && checkCountError(inApplyErrorResults, transferItems)) {
+//                errorResult.setError(true);
+//                List<InApplyErrorResult> collect = inApplyErrorResults.stream().filter(it -> it.getTranferItemInUnitTotalCount() != null).collect(Collectors.toList());
+//                errorResult.setInApplyErrorResults(collect);
+//                errorResults.add(errorResult);
+//            }
         }
         return errorResults;
     }
@@ -236,8 +243,11 @@ public class TransferService {
             errorResult.setInApplyItemId(applyItem.getId());
             errorResult.setInApplySecOwnerId(applyItem.getSecOwnerId());
             errorResult.setInApplyUnitTotalCount(applyItem.getApplyUnitTotalCount());
+            errorResult.setInApplyUnitTotalCount(applyItem.getApplyUnitTotalCount());
+
+
             errorResult.setApplyHasInPackageCount(applyItem.getInStockPackageCount());
-            errorResult.setApplyHasInUnitCount(applyItem.getApplyUnitCount());
+            errorResult.setApplyHasInUnitCount(applyItem.getInStockUnitCount());
             errorResult.setApplyHasInUnitTotalCount(applyItem.getInStockUnitTotalCount());
             errorResult.setBusinessItemId(applyItem.getBusinessItemId());
             errorResult.setSpecQuantity(applyItem.getSpecQuantity());
@@ -293,10 +303,10 @@ public class TransferService {
      */
     public List<TransferNoteDTO> listTransferNote() {
         TransferNoteQueryDTO queryDTO = new TransferNoteQueryDTO();
-//        queryDTO.setTransferNo("XC202101260069");
+        queryDTO.setTransferNo("XC202101210005");
         queryDTO.setPageNum(1);
         queryDTO.setPageSize(1000);
-        queryDTO.setState((byte) 5);
+//        queryDTO.setState((byte)6);
 //        queryDTO.setTransferNo("XC202101290035");
         String url = "transfernote/getTransferNoteList";
         String dataList = pageList(url, JSON.toJSONString(queryDTO));
@@ -352,15 +362,14 @@ public class TransferService {
 
 
     public void setSql(Map<String, List<ErrorResult>> resultMap) {
-        for (Map.Entry<String, List<ErrorResult>> stringListEntry : resultMap.entrySet()) {
-
-        }
         Map<String,String> sqlMap =new HashMap<>();
 
-
+        StringBuilder builder = new StringBuilder();
         for (Map.Entry<String, List<ErrorResult>> entry : resultMap.entrySet()) {
+            String transferNo = entry.getKey();
+            List<String> list = Arrays.asList("");
+
             List<ErrorResult> errorResults = entry.getValue();
-            StringBuilder builder = new StringBuilder();
             for (ErrorResult errorResult : errorResults) {
                 if (CollectionUtils.isEmpty(errorResult.getInApplyErrorResults())) {
                     continue;
@@ -383,13 +392,14 @@ public class TransferService {
                 }
 
             }
-            sqlMap.put(entry.getKey(),builder.toString());
+            sqlMap.put(transferNo,builder.toString());
         }
-        System.out.println("sql脚本" + JSON.toJSONString(sqlMap));
+        System.out.println("sql脚本" + JSON.toJSONString(builder));
     }
 
     private String getNameSpace(String transferNo){
-        List<String> one  = Arrays.asList("XC202006300004",
+        List<String> one  = Arrays.asList(
+                "XC202006300004",
                 "XC201910150080",
                 "XC201911080047",
                 "XC202001200014",
@@ -406,7 +416,8 @@ public class TransferService {
                 "XC202101160034",
                 "XC202101250027",
                 "XC202007130046");
-        List<String> two  = Arrays.asList("XC202010240041",
+        List<String> two  = Arrays.asList(
+                "XC202010240041",
                 "XC202011160019",
                 "XC201911060074",
                 "XC202006040014",
@@ -457,7 +468,7 @@ public class TransferService {
         });
         System.out.println("全部调拨单单号：" + JSON.toJSONString(allTransferNo));
         System.out.println("有入库调拨单单号：" + JSON.toJSONString(inStockTransferNo));
-
+        String json ="[{\"businessId\":\"66cda3c3731a44b0926b8ab8c6c705c4\",\"businessNO\":\"DBRS9913202102020001\",\"businessTime\":1612252025000,\"businessType\":1,\"cityId\":991,\"createTime\":1612252025000,\"fillSkuInfoBySpec\":false,\"fromCityId\":991,\"fromStoreHouseId\":9911,\"id\":4888426302437866310,\"isDelete\":0,\"items\":[{\"applyPackageCount\":2.000000,\"applyUnitCount\":1.000000,\"applyUnitTotalCount\":13.000000,\"brandName\":\"测试品牌\",\"businessId\":\"66cda3c3731a44b0926b8ab8c6c705c4\",\"businessItemId\":\"99101909241058616\",\"category\":\"饮料\",\"channel\":0,\"cityId\":991,\"createTime\":1612252025000,\"dayOfShelfLife\":0,\"id\":4888426302443637150,\"inStockApplyId\":4888426302437866310,\"inStockPackageCount\":0.000000,\"inStockUnitCount\":0.000000,\"inStockUnitTotalCount\":0.000000,\"isDelete\":0,\"isGift\":0,\"lastUpdateTime\":1612252025000,\"notInStockPackageCount\":2.000000,\"notInStockUnitCount\":1.000000,\"ownerName\":\"易久批\",\"packageName\":\"件\",\"payAmount\":21.670000,\"price\":0.000000,\"priceUnit\":\"件\",\"productInfoId\":122779,\"productName\":\"条码重复[研发专用02]\",\"productSkuId\":99100127076637,\"productSpecificationId\":127076,\"source\":0,\"specQuantity\":6.000000,\"specificationText\":\"6瓶/件\",\"totalAmount\":21.670000,\"unitName\":\"瓶\"}],\"lastUpdateTime\":1612252025000,\"orderAmount\":21.666667,\"payAmount\":21.666667,\"productCount\":1,\"productPackageCount\":2.000000,\"productUnitCount\":1.000000,\"relatedNoteId\":\"1612252025280772700\",\"relatedNoteNO\":\"XC201909240023\",\"state\":0,\"stateDescription\":\"待入库\",\"storeHouseId\":\"9913\"}]";
 
     }
 

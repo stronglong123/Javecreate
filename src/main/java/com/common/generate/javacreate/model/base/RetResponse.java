@@ -28,6 +28,10 @@ public class RetResponse {
         return new Result<T>().setCode(ResultCode.INTERNAL_SERVER_ERROR).setResult(FAIL).setData(data).setMsg(msg);
     }
 
+    public static <T> Result<T> makeErrRsp() {
+        return new Result<T>().setCode(ResultCode.INTERNAL_SERVER_ERROR).setResult(FAIL).setData(null).setMsg(null);
+    }
+
     public static <T> Result<T> makeFailRsp(T data, String msg) {
         return new Result<T>().setCode(ResultCode.FAIL).setResult(FAIL).setData(data).setMsg(msg);
     }

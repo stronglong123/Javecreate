@@ -29,8 +29,8 @@ public class OpenApiTest {
     private static String baseUrl;
 
     public static void main(String[] args) {
-        baseUrl = getUrl("pre");
-        deal("ruike");
+        baseUrl = getUrl("product");
+        deal("rq");
     }
 
     public static String getUrl(String system) {
@@ -64,22 +64,66 @@ public class OpenApiTest {
                 break;
             case "wdt":
                 wdt();
+            case "yd":
+                yd();
+            case "rq":
+                rq();
                 break;
         }
     }
 
-    public static void wdt() {
-        String appSecret = "f886c70b88d0a13eefcde3f36f940bc2";
-        String appKey = "7ef15e875c4f4962b60778f4dfd3dcfe";
 
-//        getOrderList(appSecret, appKey);
-//        getOrderDetail(appSecret, appKey);
+
+    public static void rq() {
+        String appKey = "c7e7848230da4885b63159b74b771c37";
+        String appSecret = "8ca90846a0d8f2c4a6331b5c90b69ab7";
+
+        getOrderList(appSecret, appKey);
+        getOrderDetail(appSecret, appKey);
 
 //        getReturnOrderList(appSecret, appKey);
 //        getReturnPaymentState(appSecret, appKey);
 //        listProductSku(appSecret, appKey);
 //        orderSendSync(appSecret, appKey);
-        orderShipping(appSecret, appKey);
+//        orderShipping(appSecret, appKey);
+//        findSplitOrder(appSecret,appKey);
+//        findStorePage(appSecret,appKey);
+//        logisticsCompany(appSecret, appKey);
+
+    }
+
+
+    public static void yd() {
+        String appKey = "64c25c3c9f9342968ef41d656a3849af";
+        String appSecret = "e2aeddc072ffeaf641b5316cffe73426";
+
+        getOrderList(appSecret, appKey);
+        getOrderDetail(appSecret, appKey);
+
+//        getReturnOrderList(appSecret, appKey);
+//        getReturnPaymentState(appSecret, appKey);
+//        listProductSku(appSecret, appKey);
+//        orderSendSync(appSecret, appKey);
+//        orderShipping(appSecret, appKey);
+//        findSplitOrder(appSecret,appKey);
+//        findStorePage(appSecret,appKey);
+//        logisticsCompany(appSecret, appKey);
+
+    }
+
+
+    public static void wdt() {
+        String appSecret = "f886c70b88d0a13eefcde3f36f940bc2";
+        String appKey = "7ef15e875c4f4962b60778f4dfd3dcfe";
+
+        getOrderList(appSecret, appKey);
+        getOrderDetail(appSecret, appKey);
+
+//        getReturnOrderList(appSecret, appKey);
+//        getReturnPaymentState(appSecret, appKey);
+//        listProductSku(appSecret, appKey);
+//        orderSendSync(appSecret, appKey);
+//        orderShipping(appSecret, appKey);
 //        findSplitOrder(appSecret,appKey);
 //        findStorePage(appSecret,appKey);
 //        logisticsCompany(appSecret, appKey);
@@ -106,14 +150,17 @@ public class OpenApiTest {
 
 
     public static void test() {
-        String appSecret = "4c41d2fdd2490b70468d1b95e6b2c140";
-        String appKey = "e46ef0c5-ae7d-4647-ac3a-e46ef0c5ae7d4647ac3a333864d21adb";
-//        getOrderList(appSecret, appKey);
+//        String appSecret = "4c41d2fdd2490b70468d1b95e6b2c140";
+//        String appKey = "e46ef0c5-ae7d-4647-ac3a-e46ef0c5ae7d4647ac3a333864d21adb";
+
+        String appSecret = "b34e01415c8f9af33db00c24e91d58c2";
+        String appKey = "65c8545eb443409d97ef0f78a4411ffb";
+        getOrderList(appSecret, appKey);
 //        getOrderDetail(appSecret, appKey);
 //        getReturnOrderList(appSecret, appKey);
 //        getReturnPaymentState(appSecret, appKey);
 //        listProductSku(appSecret, appKey);
-        orderSendSync(appSecret, appKey);
+//        orderSendSync(appSecret, appKey);
 //        findSplitOrder(appSecret, appKey);
 //        directOutStockByOrder(appSecret,appKey);
 //        findStorePage(appSecret,appKey);
@@ -181,8 +228,9 @@ public class OpenApiTest {
     public static void getOrderList(String appSecret, String appKey) {
         String url = baseUrl + "/order/getOrderList";
         System.out.println("订单获取" + url);
-        String json = "{\"currentPage\":1,\"lastUpdateTimeEnd\":\"2021-01-09 15:54:08\",\"lastUpdateTimeStart\":\"2021-01-09 15:44:09\",\"pageSize\":100,\"states\":[3]}";
+        String json = "{\"currentPage\":1,\"orderCreateTimeStart\":\"2021-03-10 12:21:00\",\"orderCreateTimeEnd\":\"2021-03-11 15:21:00\",\"pageSize\":20}";
         OrderQueryDTO orderQueryDTO = JSON.parseObject(json, OrderQueryDTO.class);
+//        orderQueryDTO.setBusinessNo("428107000056-2");
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, OrderQueryDTO.class, orderQueryDTO);
         try {
             System.out.println("url:" + urlWithAuth);
@@ -203,7 +251,7 @@ public class OpenApiTest {
     public static void getOrderDetail(String appSecret, String appKey) {
         String url = baseUrl + "/order/getOrderDetail";
         System.out.println("订单详情获取" + url);
-        String json = "{\"businessNo\":\"998010800006\"}";
+        String json = "{\"businessNo\":\"428107000056-2\"}";
         OrderQueryDTO orderQueryDTO = JSON.parseObject(json, OrderQueryDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, OrderQueryDTO.class, orderQueryDTO);
         try {

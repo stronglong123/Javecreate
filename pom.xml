@@ -15,8 +15,8 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <dubbo.starter.version>0.2.0</dubbo.starter.version>
     </properties>
-
     <dependencies>
         <!-- starter包 -->
         <dependency>
@@ -105,6 +105,16 @@
             <version>1.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba.boot</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>${dubbo.starter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jianggujin</groupId>
+            <artifactId>IKAnalyzer-lucene</artifactId>
+            <version>8.0.0</version>
+        </dependency>
         <dependency>
             <groupId>com.janeluo</groupId>
             <artifactId>ikanalyzer</artifactId>

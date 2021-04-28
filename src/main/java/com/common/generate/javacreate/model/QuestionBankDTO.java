@@ -22,7 +22,7 @@ public class QuestionBankDTO implements Serializable {
      */
     private String keyWord;
     /**
-     * 
+     * 参考答案
      */
     private String answer;
     /**

@@ -6,6 +6,7 @@ package com.common.generate.javacreate.utils;
 import com.alibaba.fastjson.JSON;
 import com.common.generate.javacreate.model.base.exception.BusinessException;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -137,11 +138,58 @@ public class HttpClientUtils {
 	}
 
 
+	public static String doGetWithToken(String token, String url){
+		CloseableHttpResponse response = null;
+		CloseableHttpClient client = HttpClients.createDefault();
+		String responseContent = null; // 响应内容
+		try {
+			HttpGet get = new HttpGet(url);
+			get.setHeader("Content-Type", "application/json;charset=utf8");
+			get.addHeader("token", token);
+			response = client.execute(get);
+			System.out.println(JSON.toJSONString(response));
+			if (response.getStatusLine().getStatusCode() == 200) {
+				org.apache.http.HttpEntity entity = response.getEntity();
+				responseContent = EntityUtils.toString(entity, "UTF-8");
+				LOGGER.info("responseContent:" + responseContent);
+
+			}
+			if (response != null) {
+				response.close();
+			}
+			if (client != null) {
+				client.close();
+			}
+		}catch (Exception e){
+			throw new BusinessException("请求失败:" + e.getMessage());
+		}finally {
+			// 释放资源
+			try {
+				if (client != null) {
+					client.close();
+				}
+			} catch (IOException e) {
+				LOGGER.error("关闭client出错", e);
+			}
+
+			try {
+				if (response != null) {
+					response.close();
+				}
+			} catch (IOException e) {
+				LOGGER.error("关闭response出错", e);
+			}
+		}
+		return responseContent;
+	}
+
+
     public static String doPostWithToken(String token, String url,String body) {
         CloseableHttpResponse response = null;
         CloseableHttpClient client = HttpClients.createDefault();
         String responseContent = null; // 响应内容
         try {
+
             HttpPost post = new HttpPost(url);
             System.out.println("要发送的数据" + body);
             StringEntity myEntity = new StringEntity(body, ContentType.APPLICATION_JSON); // 构造请求数据

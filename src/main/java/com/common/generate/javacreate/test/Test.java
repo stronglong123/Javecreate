@@ -3,6 +3,7 @@ package com.common.generate.javacreate.test;
 import com.alibaba.fastjson.JSON;
 import com.common.generate.javacreate.authutils.AuthUtil;
 import com.common.generate.javacreate.authutils.MD5Utils;
+import com.common.generate.javacreate.model.CategoryDTO;
 import com.common.generate.javacreate.test.dto.OrderQueryDTO;
 import com.common.generate.javacreate.test.dto.OrderSendSyncDTO;
 import com.common.generate.javacreate.test.dto.ThirdSSCancelOrderDTO;
@@ -10,13 +11,19 @@ import com.common.generate.javacreate.utils.DateUtils;
 import com.common.generate.javacreate.utils.HttpUtil;
 import com.common.generate.javacreate.utils.Md5Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.Regex;
+import org.springframework.data.relational.core.sql.In;
 
 import java.math.BigDecimal;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observer;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -40,12 +47,70 @@ public class Test {
 
 
     public static void main(String[] args){
-        String json ="{\"omsOrderId\":998000210207145746,\"omsOrderItems\":[{\"deliveryCount\":\"查\",\"omsOrderItemId\":998001210207144764,\"orderCount\":2.000000,\"productSkuId\":4762841767152294336}]}";
-        Map<String, Long> map = JSON.parseObject(json, Map.class);
-        Long omsOrderId = map.get("omsOrderId");
-        System.out.println("得到消息，快递直发订单发货，{}"+json);
-        System.out.println(omsOrderId);
 
+        Integer integer = Integer.valueOf("111111111111111111");
+
+        Map<String, String> map = new HashMap<>();
+        System.out.println(map.get("1"));
+
+        Map<String, String> map2 = new HashMap<>();
+        map2.putAll(map);
+        System.out.println(JSON.toJSONString(map2));
+
+
+//        Map<Long, String> map = new TreeMap<>((p1, p2) -> {
+//            if (p1 == null) {
+//                return 1;
+//            }
+//            if (p2 == null) {
+//                return -1;
+//            }
+//            return p1.compareTo(p2);
+//        });
+//        map.put(null,"2");
+//        map.put(1L,"1");
+//
+//
+//        for (Map.Entry entry : map.entrySet()) {
+//            if(entry.getKey()==null){
+//                System.out.println(entry.getValue());
+//            }
+//        }
+
+
+
+//        System.out.println(JSON.toJSONString(list));
+//        LinkedHashMap<String,String> linkedHashMapmap =new LinkedHashMap<>();
+//        linkedHashMapmap.put("c","e");
+//        linkedHashMapmap.put("a","b");
+//        linkedHashMapmap.put("b","d");
+//        linkedHashMapmap.put("a","c");
+//        linkedHashMapmap.put("a","d");
+//
+//        System.out.println(JSON.toJSONString(linkedHashMapmap));
+//        System.out.println(linkedHashMapmap.get("d"));
+//        for (Map.Entry<String, String> entry : linkedHashMapmap.entrySet()) {
+//            System.out.println(entry);
+//        }
+//        System.out.println("___________________________________________________________________________");
+//        HashMap<String,String> map =new HashMap<>();
+//        map.put("c","e");
+//        map.put("a","b");
+//        map.put("b","d");
+//        map.put("a","c");
+//        map.put("a","d");
+//        System.out.println(JSON.toJSONString(map));
+//        System.out.println(map.get("d"));
+
+
+
+//        for (Map.Entry<String, String> entry : map.entrySet()) {
+//            System.out.println(entry);
+//        }//        String json ="{\"omsOrderId\":998000210207145746,\"omsOrderItems\":[{\"deliveryCount\":\"查\",\"omsOrderItemId\":998001210207144764,\"orderCount\":2.000000,\"productSkuId\":4762841767152294336}]}";
+//        Map<String, Long> map = JSON.parseObject(json, Map.class);
+//        Long omsOrderId = map.get("omsOrderId");
+//        System.out.println("得到消息，快递直发订单发货，{}"+json);
+//        System.out.println(omsOrderId);
 
 
 //        List<Byte> orderStates = Arrays.asList((byte)1);

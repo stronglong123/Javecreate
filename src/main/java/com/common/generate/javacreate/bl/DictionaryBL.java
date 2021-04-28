@@ -1,5 +1,6 @@
 package com.common.generate.javacreate.bl;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.common.generate.javacreate.dao.DictionaryMapper;
 import com.common.generate.javacreate.model.DictionaryDTO;
 import com.common.generate.javacreate.model.DictionaryQueryDTO;
@@ -7,9 +8,10 @@ import com.common.generate.javacreate.model.base.search.PageList;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.logging.Handler;
 
 /**
  * @author xialei
@@ -19,7 +21,8 @@ import java.util.List;
 public class DictionaryBL {
     @Autowired
     private DictionaryMapper dictionaryMapper;
-    
+
+
     public DictionaryDTO selectByPrimaryKey(Long id){
         return dictionaryMapper.selectByPrimaryKey(id);
     }

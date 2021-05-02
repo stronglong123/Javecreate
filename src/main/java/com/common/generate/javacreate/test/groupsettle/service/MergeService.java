@@ -35,14 +35,18 @@ import java.util.stream.Collectors;
 public class MergeService {
 
     public static void main(String[] args) throws Exception {
-        List<ErpProductOwnerDTO> result = new ArrayList<>();
-        List<ErpProductOwnerDTO> jiesuanOrder = getJiesuanChuOrder();
-        List<ErpProductOwnerDTO> jiesuanRuOrder = getJiesuanRuOrder();
+//        List<ErpProductOwnerDTO> jiesuanOrder = getJiesuanChuOrder();
+//        List<ErpProductOwnerDTO> jiesuanRuOrder = getJiesuanRuOrder();
 //        List<ErpProductOwnerDTO> chayiOrder = getChayiOrder();
 
-        System.out.println("结算出：" + JSON.toJSONString(jiesuanOrder));
+//        System.out.println("结算出：" + JSON.toJSONString(jiesuanOrder));
 //        System.out.println("结算入："+JSON.toJSONString(jiesuanRuOrder));
 //        System.out.println("差异："+JSON.toJSONString(chayiOrder));
+
+        Map<String, List<Long>> warehouseProduct = getChayiWarehouseProduct();
+
+        Map<String, String> secOwnerMap = findSaleProductSecOwner(723, 7231, new HashSet<>(), warehouseProduct.get(String.valueOf(7231)));
+        System.out.println(JSON.toJSONString(secOwnerMap));
 
     }
 

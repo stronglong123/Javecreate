@@ -344,6 +344,15 @@ public class DateUtils {
         return list;
     }
 
+
+    public static String date2String(Date date){
+        if(date==null){
+            return "";
+        }
+        SimpleDateFormat sf = new SimpleDateFormat(DATETIME_FORMATTER);
+        return sf.format(date);
+    }
+
     public static void main(String[] args) {
         System.out.println(DateUtils.getQuartList());
     }

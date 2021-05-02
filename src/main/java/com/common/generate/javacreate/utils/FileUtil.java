@@ -126,7 +126,9 @@ public class FileUtil {
      *
      * @param fileName 文件名
      */
-    public static void readFileByLines(String fileName) {
+    public static String readFileByLines(String fileName) {
+        StringBuilder stringBuilder =new StringBuilder();
+
         File file = new File(fileName);
         BufferedReader reader = null;
         try {
@@ -138,6 +140,7 @@ public class FileUtil {
             while ((tempString = reader.readLine()) != null) {
                 // 显示行号
                 System.out.println("line " + line + ": " + tempString);
+                stringBuilder.append(tempString);
                 line++;
             }
             reader.close();
@@ -151,6 +154,7 @@ public class FileUtil {
                 }
             }
         }
+        return stringBuilder.toString();
     }
 
     /**

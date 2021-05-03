@@ -10,6 +10,9 @@ import java.math.BigDecimal;
 public class SettleOrderItemSecOwnerDTO implements Serializable {
 
     private static final long serialVersionUID = 7352783705341496007L;
+
+    private Long id;
+
     private Long productSkuId;
     private BigDecimal specQuantity;
     private Long productOwnerId;
@@ -31,6 +34,14 @@ public class SettleOrderItemSecOwnerDTO implements Serializable {
     private String orderCompleteTime;
     private String orderNo;
     private Byte orderType;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getOrderNo() {
         return orderNo;

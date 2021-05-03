@@ -20,7 +20,7 @@ import java.util.Map;
 public class BaseUtils {
 
     private static String baseUrl = "http://wms.pre.yijiupi.com/supplyChain/";
-    private static final String token = "bf1d7005-db0f-4ea4-93f7-2432ea9a1e6c";
+    private static final String token = "53f99b04-016a-415a-8b02-69a4ec8f6eb6";
 
 
 
@@ -47,16 +47,16 @@ public class BaseUtils {
     }
 
 
-    public static List<WarehouseDTO> getJiezhuanWarehouse(){
-        List<String> warehouseIds =Arrays.asList("4051","4251","7001","4571","4011","4211","7006","4651","1021","1141",
-                "4291","1181","7041","1211","7516","7131","7211","4021","4221","1031","1591","7051","7691","1191","4061",
-                "1101","4731","4031","4671","1121","1681","7061"
-                ,"4191","7141","7581","1091","7231","4041","7111","4121","4001","1011","1131","1051","1171","7031","1001");
+    public static List<WarehouseDTO> getJiezhuanWarehouse(List<Integer> warehouseIds){
+//        List<String> warehouseIds =Arrays.asList("4051","4251","7001","4571","4011","4211","7006","4651","1021","1141",
+//                "4291","1181","7041","1211","7516","7131","7211","4021","4221","1031","1591","7051","7691","1191","4061",
+//                "1101","4731","4031","4671","1121","1681","7061"
+//                ,"4191","7141","7581","1091","7231","4041","7111","4121","4001","1011","1131","1051","1171","7031","1001");
         List<WarehouseDTO> warehouseDTOS =new ArrayList<>();
-        for (String warehouseId : warehouseIds) {
+        for (Integer warehouseId : warehouseIds) {
             WarehouseDTO warehouseDTO = new WarehouseDTO();
-            warehouseDTO.setWarehouseId(Integer.valueOf(warehouseId));
-            String orgId = warehouseId.substring(0, 3);
+            warehouseDTO.setWarehouseId(warehouseId);
+            String orgId = warehouseId.toString().substring(0, 3);
             warehouseDTO.setOrgId(Integer.valueOf(orgId));
             warehouseDTOS.add(warehouseDTO);
         }

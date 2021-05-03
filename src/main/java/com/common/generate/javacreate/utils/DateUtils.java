@@ -37,6 +37,18 @@ public class DateUtils {
     }
 
     /**
+     * 获得当前日期 yyyy-MM-dd HH:mm:ss
+     *
+     * @return 2019-08-27 14:12:40
+     */
+    public static String getCurrentTimes() {
+        // 小写的hh取得12小时，大写的HH取的是24小时
+        SimpleDateFormat df = new SimpleDateFormat(DATETIMES_FORMATTER);
+        Date date = new Date();
+        return df.format(date);
+    }
+
+    /**
      * 获取系统当前时间戳
      *
      * @return 1566889186583

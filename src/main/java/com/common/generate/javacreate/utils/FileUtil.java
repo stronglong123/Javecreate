@@ -3,9 +3,12 @@ package com.common.generate.javacreate.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.io.Reader;
 
@@ -202,6 +205,34 @@ public class FileUtil {
             System.out.println("当前字节输入流中的字节数为:" + in.available());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+    /**使用FileOutputStream来写入txt文件
+     * @param txtPath txt文件路径
+     * @param content 需要写入的文本
+     */
+    public static void writeTxt(String txtPath, String content) {
+        FileWriter fw = null;
+        PrintWriter pw = null;
+        try {
+            //如果文件存在，则追加内容；如果文件不存在，则创建文件
+            File f = new File(txtPath);
+            fw = new FileWriter(f, true);
+            pw = new PrintWriter(fw);
+            pw.println(content);
+            pw.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fw.flush();
+                pw.close();
+                fw.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

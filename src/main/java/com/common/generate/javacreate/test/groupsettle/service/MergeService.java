@@ -181,6 +181,7 @@ public class MergeService {
     public static Map<String, String> findSaleProductSecOwner(Integer orgId, Integer warehouseId, Set<String> secOwnerList, List<Long> skuIds) {
         /**查询销售出库单*/
         List<OrderAllPageDTO> orderList = listSaleOrder(orgId, warehouseId);
+        System.out.println("销售出和退货入:"+ JSON.toJSONString(orderList));
         List<SettleOrderItemSecOwnerDTO> dtoList = orderList.stream()
                 .filter(it -> CollectionUtils.isNotEmpty(it.getItems()))
                 .flatMap(it -> it.getItems().stream())

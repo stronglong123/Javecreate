@@ -35,6 +35,16 @@ public class SettleOrderItemSecOwnerDTO implements Serializable {
     private String orderNo;
     private Byte orderType;
 
+    private Integer warehouseId;
+
+    public Integer getWarehouseId() {
+        return warehouseId;
+    }
+
+    public void setWarehouseId(Integer warehouseId) {
+        this.warehouseId = warehouseId;
+    }
+
     public Long getId() {
         return id;
     }

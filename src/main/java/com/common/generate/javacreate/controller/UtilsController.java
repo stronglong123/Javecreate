@@ -11,11 +11,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.sound.midi.Soundbank;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 工具类
@@ -50,6 +55,32 @@ public class UtilsController {
 //            data = data.replaceAll(paramsDTO.getOldParam(), StringUtils.isEmpty(paramsDTO.getNewParam())?"":paramsDTO.getNewParam());
 //        }
 //        return RetResponse.makeOKRsp(data);
+    }
+
+    @GetMapping("/util/jmeter")
+    public Result<String> jmeter() {
+        Long begin = System.currentTimeMillis();
+        ReentrantLock lock = new ReentrantLock();
+        Map<String, Object> map = new HashMap<>();
+        map.put("status", 1);
+        try {
+            lock.lock();
+            // 休眠100毫秒
+            TimeUnit.MILLISECONDS.sleep(100);
+            // 查询操作
+            logger.error(Thread.currentThread().getName());
+        } catch (InterruptedException e) {
+
+            e.printStackTrace();
+        } finally {
+
+            lock.unlock();
+        }
+        Long end = System.currentTimeMillis();
+        if (end - begin > 200) {
+            throw new RuntimeException("接口超时抛出异常");
+        }
+        return RetResponse.makeOKRsp("true");
     }
 
 

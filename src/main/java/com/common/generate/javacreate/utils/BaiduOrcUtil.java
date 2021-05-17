@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baidu.aip.ocr.AipOcr;
 import com.common.generate.javacreate.model.BaiduOrcResultDTO;
 import com.common.generate.javacreate.model.base.exception.BusinessValidateException;
-import com.taobao.pac.sdk.cp.PacClient;
+//import com.taobao.pac.sdk.cp.PacClient;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;

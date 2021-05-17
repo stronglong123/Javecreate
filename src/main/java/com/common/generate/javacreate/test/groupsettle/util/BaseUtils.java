@@ -20,7 +20,7 @@ import java.util.Map;
 public class BaseUtils {
 
     private static String baseUrl = "http://wms.pre.yijiupi.com/supplyChain/";
-    private static final String token = "53f99b04-016a-415a-8b02-69a4ec8f6eb6";
+    public static final String token = "d21eeb51-47ae-4ae1-b0a5-7f916cdab39d";
 
 
 
@@ -67,6 +67,8 @@ public class BaseUtils {
     public static List<WarehouseDTO> getJiesuanWarehouse(){
         List<Integer> warehouseIds =Arrays.asList(1141,1031,1181,1191,1591,1681,4001,4021,4031,4041,4051,4061,4121,4191,4211,4571,4651,4731,
                 7001,7041,7111,7131,7211,7231);
+
+        warehouseIds = Arrays.asList(1031);
         List<WarehouseDTO> warehouseDTOS =new ArrayList<>();
         for (Integer warehouseId : warehouseIds) {
             WarehouseDTO warehouseDTO = new WarehouseDTO();
@@ -76,6 +78,16 @@ public class BaseUtils {
             warehouseDTOS.add(warehouseDTO);
         }
         return warehouseDTOS;
+    }
+
+
+
+    public static String postRequest(String url, String body) {
+        url = baseUrl + url;
+        String resultstr = HttpClientUtils.doPostWithToken(token, url, body);
+        Result result = JSON.parseObject(resultstr, Result.class);
+        Object data = result.getData();
+        return JSON.toJSONString(data);
     }
 
 

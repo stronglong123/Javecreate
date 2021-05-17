@@ -151,9 +151,9 @@ public class AuthUtil {
         }
 
         String signInit = buffer.toString();
-        LOG.info("签名初始拼接信息:" + signInit);
+        System.out.println("签名初始拼接信息:" + signInit);
         String sign = MD5Utils.getMD5(signInit + appSecret);
-        LOG.info("签名最终信息:" + sign);
+        System.out.println("签名最终信息:" + sign);
         return sign;
     }
 

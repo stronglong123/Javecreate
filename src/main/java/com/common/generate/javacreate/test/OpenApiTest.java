@@ -30,7 +30,7 @@ public class OpenApiTest {
 
     public static void main(String[] args) {
         baseUrl = getUrl("product");
-        deal("rq");
+        deal("test");
     }
 
     public static String getUrl(String system) {
@@ -153,8 +153,8 @@ public class OpenApiTest {
 //        String appSecret = "4c41d2fdd2490b70468d1b95e6b2c140";
 //        String appKey = "e46ef0c5-ae7d-4647-ac3a-e46ef0c5ae7d4647ac3a333864d21adb";
 
-        String appSecret = "b34e01415c8f9af33db00c24e91d58c2";
-        String appKey = "65c8545eb443409d97ef0f78a4411ffb";
+        String appSecret = "761f34725006ee79069773f971ea5344";
+        String appKey = "7ed411e9ce1f41248cd90b878b7f8346";
         getOrderList(appSecret, appKey);
 //        getOrderDetail(appSecret, appKey);
 //        getReturnOrderList(appSecret, appKey);

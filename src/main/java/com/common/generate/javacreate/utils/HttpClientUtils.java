@@ -67,7 +67,6 @@ public class HttpClientUtils {
 		} catch (Exception e) {
 			LOGGER.error("POST请求出错,url:" + url + "参数：" + body, e);
 		}
-
 		return null;
 	}
 
@@ -191,13 +190,12 @@ public class HttpClientUtils {
         try {
 
             HttpPost post = new HttpPost(url);
-            System.out.println("要发送的数据" + body);
+            System.out.println("要发送的数据：" + body);
             StringEntity myEntity = new StringEntity(body, ContentType.APPLICATION_JSON); // 构造请求数据
             post.setHeader("Content-Type", "application/json;charset=utf8");
             post.addHeader("token",token);
             post.setEntity(myEntity); // 设置请求体
             response = client.execute(post);
-            System.out.println(JSON.toJSONString(response));
             if (response.getStatusLine().getStatusCode() == 200) {
                 org.apache.http.HttpEntity entity = response.getEntity();
                 responseContent = EntityUtils.toString(entity, "UTF-8");
@@ -232,6 +230,56 @@ public class HttpClientUtils {
         }
         return responseContent;
     }
+
+
+
+	public static String doPostWithCookie(String cookie, String url,String body) {
+		CloseableHttpResponse response = null;
+		CloseableHttpClient client = HttpClients.createDefault();
+		String responseContent = null; // 响应内容
+		try {
+
+			HttpPost post = new HttpPost(url);
+			System.out.println("要发送的数据：" + body);
+			StringEntity myEntity = new StringEntity(body, ContentType.APPLICATION_JSON); // 构造请求数据
+			post.setHeader("Content-Type", "application/json;charset=utf8");
+			post.addHeader("Cookie",cookie);
+			post.setEntity(myEntity); // 设置请求体
+			response = client.execute(post);
+			if (response.getStatusLine().getStatusCode() == 200) {
+				org.apache.http.HttpEntity entity = response.getEntity();
+				responseContent = EntityUtils.toString(entity, "UTF-8");
+				LOGGER.info("responseContent:" + responseContent);
+
+			}
+			if (response != null) {
+				response.close();
+			}
+			if (client != null) {
+				client.close();
+			}
+		} catch (Exception e) {
+			throw new BusinessException("erp请求失败:" + e.getMessage());
+		} finally {
+			// 释放资源
+			try {
+				if (client != null) {
+					client.close();
+				}
+			} catch (IOException e) {
+				LOGGER.error("关闭client出错", e);
+			}
+
+			try {
+				if (response != null) {
+					response.close();
+				}
+			} catch (IOException e) {
+				LOGGER.error("关闭response出错", e);
+			}
+		}
+		return responseContent;
+	}
 	
 	public static String doPost(String url, String body, HttpHeaders headers) {
 		try {

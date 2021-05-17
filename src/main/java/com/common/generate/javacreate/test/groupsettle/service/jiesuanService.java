@@ -13,6 +13,8 @@ import org.springframework.beans.BeanUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -25,13 +27,20 @@ import java.util.stream.Collectors;
  * @date 2021/4/30 22:26
  */
 public class jiesuanService {
-    private static String baseUrl = "http://wms.pre.yijiupi.com/supplyChain/";
-    private static final String token = "cbedd29c-5223-4809-91aa-763d276aed4a";
 
 
     public static void main(String[] args) throws Exception {
-        listALLGroupSettleOrder();
+
+        Map<String,List<ErpProductOwnerDTO>> map =new HashMap<>();
+        List<WarehouseDTO> jiezhuanWarehouse = BaseUtils.getJiesuanWarehouse();
+        for (WarehouseDTO warehouseDTO : jiezhuanWarehouse) {
+            List<ErpProductOwnerDTO> erpProductOwnerDTOS = listsingleGroupSettleOrder(warehouseDTO.getOrgId(), warehouseDTO.getWarehouseId(), null);
+            map.put(warehouseDTO.getWarehouseId().toString(),erpProductOwnerDTOS);
+        }
+        System.out.println(JSON.toJSONString(map));
+
 //        lsitAllSku();
+//        listALLGroupSettleOrder();
     }
 
 
@@ -39,7 +48,8 @@ public class jiesuanService {
         List<WarehouseDTO> jiezhuanWarehouse = BaseUtils.getJiesuanWarehouse();
         Set<Long> skuIdAll = new HashSet<>();
         Set<Integer> warehouseAll = new HashSet<>();
-
+        Map<String,List<String>> orderNoMap=new HashMap<>();
+        List<String>  orderNoList =new ArrayList<>();
         for (WarehouseDTO warehouseDTO : jiezhuanWarehouse) {
             List<OrderAllPageDTO> listorder = listorder(warehouseDTO.getOrgId(), warehouseDTO.getWarehouseId());
             if (CollectionUtils.isNotEmpty(listorder)) {
@@ -50,10 +60,73 @@ public class jiesuanService {
                 skuIdAll.addAll(skuIds);
                 Set<Integer> warehouse = listorder.stream().map(it -> it.getWarehouseId()).collect(Collectors.toSet());
                 warehouseAll.addAll(warehouse);
+                Set<String> orderNos = listorder.stream().map(it -> it.getBusinessNo()).collect(Collectors.toSet());
+                orderNoList.addAll(orderNos);
+                orderNoMap.put(warehouseDTO.getWarehouseId().toString(),new ArrayList<>(orderNos));
             }
         }
         System.out.println("所有的skuId："+JSON.toJSONString(skuIdAll));
         System.out.println("所有的仓库id："+JSON.toJSONString(warehouseAll));
+        System.out.println("所有单号:"+JSON.toJSONString(orderNoList));
+        System.out.println("所有单号:"+JSON.toJSONString(orderNoMap));
+
+    }
+
+
+    /**
+     * 查询结算出和结算入数据
+     */
+    public static List<ErpProductOwnerDTO> listsingleGroupSettleOrder(Integer orgId,Integer warehouseId,Integer orderSource) throws Exception {
+        /**获取结算出入*/
+        List<ErpProductOwnerDTO> result = listAllGroupSettleOrder(orgId, warehouseId, 111);
+        List<ErpProductOwnerDTO> mtList = listAllGroupSettleOrder(orgId, warehouseId, 110);
+        /**添加美团明细*/
+        if(CollectionUtils.isNotEmpty(mtList)){
+            result.addAll(mtList);
+        }
+        System.out.println("结算单：" + JSON.toJSONString(result));
+
+
+//        /**获取差异单*/
+        List<ErpProductOwnerDTO> chayiErpList = chayiService.getChayiOrderByWarehouseId(orgId, warehouseId);
+        System.out.println("差异单：" + JSON.toJSONString(chayiErpList));
+        /**添加差异明细*/
+        if(CollectionUtils.isNotEmpty(chayiErpList)){
+            result.addAll(chayiErpList);
+        }
+
+        System.out.println("合并前：" + JSON.toJSONString(result));
+
+        /**合并数量,产品加规格分组，每组根据出入加减*/
+        result = margeCountBySec(result);
+        System.out.println(JSON.toJSONString(result));
+
+        Set<Long> skuIds = result.stream().map(it -> it.getProductSkuId()).collect(Collectors.toSet());
+        Set<Long> ownerIds = result.stream().map(it -> it.getErrorWmsOwnerId()).collect(Collectors.toSet());
+        result = result.stream().sorted(Comparator.comparing(it -> it.getProductSkuId())).collect(Collectors.toList());
+        List<ErpProductOwnerDTO> error = result.stream().filter(it -> it.getSpecId() == null).collect(Collectors.toList());
+
+        System.out.println("规格为空：" + JSON.toJSONString(error));
+        System.out.println("所有货主数据数据：" + JSON.toJSONString(ownerIds));
+        System.out.println("所有sku数据：" + JSON.toJSONString(skuIds));
+        addTrueOwner(orgId,warehouseId,new ArrayList<>(skuIds),result);
+        System.out.println("所有数据：" + JSON.toJSONString(result));
+
+        result = result.stream().filter(it -> !it.getTureErpOwnerId().contains("(" + it.getErrorWmsOwnerId() + ")")).collect(Collectors.toList());
+        System.out.println("异常数据：" + JSON.toJSONString(result));
+        return result;
+    }
+
+
+    public static void addTrueOwner(Integer orgId,Integer warehouseId,List<Long> skuIds,List<ErpProductOwnerDTO> result){
+        Map<String, String> owerMap = BaseUtils.getErpOwner();
+        Set<String> secOwnerList =new HashSet<>();
+        Map<String, String> productSecOwner =  MergeService.findSaleProductSecOwner(orgId, warehouseId, secOwnerList, skuIds);
+        result.forEach(it -> {
+            String owner = productSecOwner.get(it.getProductSkuId().toString());
+            it.setTureWmsOwnerId(owner);
+            it.setTureErpOwnerId(BaseUtils.getErpOwnerString(owerMap, owner));
+        });
 
     }
 
@@ -66,10 +139,12 @@ public class jiesuanService {
         for (WarehouseDTO warehouseDTO : jiezhuanWarehouse) {
             List<ErpProductOwnerDTO> dtos = listAllGroupSettleOrder(warehouseDTO.getOrgId(), warehouseDTO.getWarehouseId(),111);
             result.addAll(dtos);
+
+            List<ErpProductOwnerDTO> mtlist = listAllGroupSettleOrder(warehouseDTO.getOrgId(), warehouseDTO.getWarehouseId(), 110);
+            result.addAll(mtlist);
         }
 
-        List<ErpProductOwnerDTO> dtos = listAllGroupSettleOrder(400, 4001, 110);
-        result.addAll(dtos);
+
 
         /**合并数量,产品加规格分组，每组根据出入加减*/
         result = margeCount(result);
@@ -96,6 +171,9 @@ public class jiesuanService {
 
         /**获取结算单*/
         List<OrderAllPageDTO> orderAllPageDTOS = listorder(orgId, warehosueId,ordersource);
+        if(CollectionUtils.isEmpty(orderAllPageDTOS)){
+            return Collections.emptyList();
+        }
         /**wms货主和erp货主对应关系*/
         Map<String, String> erpOwnerMap = BaseUtils.getErpOwner();
         /**产品skuid和规格id对应关系*/
@@ -210,7 +288,30 @@ public class jiesuanService {
             result.add(dto);
         }
 
+        return result;
+    }
 
+    public static List<ErpProductOwnerDTO> margeCountBySec(List<ErpProductOwnerDTO> list) {
+        List<Integer> outOrderTypes =Arrays.asList(77,81);
+
+        List<ErpProductOwnerDTO> result = new ArrayList<>();
+        List<ErpProductOwnerDTO> collect = list.stream().filter(it -> it.getUnitTotalCount() == null).collect(Collectors.toList());
+        System.out.println(JSON.toJSONString("数量为空："+JSON.toJSONString(collect)));
+        /**合并数量,产品加规格分组，每组根据出入加减*/
+        Map<String, List<ErpProductOwnerDTO>> map = list.stream().filter(it -> it.getUnitTotalCount() != null).collect(Collectors.groupingBy(it -> it.getProductSkuId() + "_" + it.getErrorWmsOwnerId()));
+        for (List<ErpProductOwnerDTO> value : map.values()) {
+            BigDecimal outCount = value.stream().filter(it->outOrderTypes.contains(it.getOrderType())).map(ErpProductOwnerDTO::getUnitTotalCount).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal inCount = value.stream().filter(it->it.getOrderType().equals(78)).map(ErpProductOwnerDTO::getUnitTotalCount).reduce(BigDecimal.ZERO, BigDecimal::add);
+            ErpProductOwnerDTO dto = new ErpProductOwnerDTO();
+            BeanUtils.copyProperties(value.get(0), dto);
+            dto.setOrderType(null);
+            dto.setInCount(inCount);
+            dto.setOutCount(outCount);
+            dto.setUnitTotalCount(outCount.subtract(inCount));
+            if (dto.getUnitTotalCount() != null && dto.getUnitTotalCount().compareTo(BigDecimal.ZERO) != 0) {
+                result.add(dto);
+            }
+        }
 
         return result;
     }
@@ -234,7 +335,7 @@ public class jiesuanService {
 
     public static List<OrderAllPageDTO> listorder(Integer orgId, Integer warehosueId) {
         String url = "order/listGroupSettleOrder";
-        String body = "{\"pageSize\":200,\"orgId\":" + orgId + ",\"warehouseIds\":[" + warehosueId + "],\"orderCreateTimeStart\":\"2021-03-30 00:00:00\",\"orderCreateTimeEnd\":\"2021-04-30 23:59:59\",\"orderSource\":\"110\",\"currentPage\":1,\"orderTypes\":[77,78],\"states\":[7,10]}";
+        String body = "{\"pageSize\":200,\"orgId\":" + orgId + ",\"warehouseIds\":[" + warehosueId + "],\"orderCreateTimeStart\":\"2021-03-30 00:00:00\",\"orderCreateTimeEnd\":\"2021-04-30 23:59:59\",\"orderSource\":\"111\",\"currentPage\":1,\"orderTypes\":[77,78],\"states\":[7,10]}";
         String dataList = BaseUtils.pageList(url, body);
         List<OrderAllPageDTO> orderAllPageDTOS = JSON.parseArray(dataList, OrderAllPageDTO.class);
         return orderAllPageDTOS;

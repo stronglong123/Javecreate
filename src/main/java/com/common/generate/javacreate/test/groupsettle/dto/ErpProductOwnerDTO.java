@@ -46,6 +46,26 @@ public class ErpProductOwnerDTO implements Serializable {
 
     private Long omsItemId;
 
+    private BigDecimal outCount;
+
+    private BigDecimal inCount;
+
+    public BigDecimal getOutCount() {
+        return outCount;
+    }
+
+    public void setOutCount(BigDecimal outCount) {
+        this.outCount = outCount;
+    }
+
+    public BigDecimal getInCount() {
+        return inCount;
+    }
+
+    public void setInCount(BigDecimal inCount) {
+        this.inCount = inCount;
+    }
+
     public Integer getIsDiff() {
         return isDiff;
     }

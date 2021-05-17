@@ -48,23 +48,19 @@ public class OrderPageParamDTO implements Serializable {
     /**
      * 单据下单开始时间
      */
-    @JsonDeserialize(using = CustomJsonDateDeserializer.class)
-    private Date orderCreateTimeStart;
+    private String orderCreateTimeStart;
     /**
      * 单据下单结束时间
      */
-    @JsonDeserialize(using = CustomJsonDateDeserializer.class)
-    private Date orderCreateTimeEnd;
+    private String orderCreateTimeEnd;
     /**
      * 单据下单开始时间
      */
-    @JsonDeserialize(using = CustomJsonDateDeserializer.class)
-    private Date lastUpdateTimeStart;
+    private String lastUpdateTimeStart;
     /**
      * 单据下单结束时间
      */
-    @JsonDeserialize(using = CustomJsonDateDeserializer.class)
-    private Date lastUpdateTimeEnd;
+    private String lastUpdateTimeEnd;
     /**
      * 订单状态
      */
@@ -274,35 +270,35 @@ public class OrderPageParamDTO implements Serializable {
         this.contactPhones = contactPhones;
     }
 
-    public Date getOrderCreateTimeStart() {
+    public String getOrderCreateTimeStart() {
         return orderCreateTimeStart;
     }
 
-    public void setOrderCreateTimeStart(Date orderCreateTimeStart) {
+    public void setOrderCreateTimeStart(String orderCreateTimeStart) {
         this.orderCreateTimeStart = orderCreateTimeStart;
     }
 
-    public Date getOrderCreateTimeEnd() {
+    public String getOrderCreateTimeEnd() {
         return orderCreateTimeEnd;
     }
 
-    public void setOrderCreateTimeEnd(Date orderCreateTimeEnd) {
+    public void setOrderCreateTimeEnd(String orderCreateTimeEnd) {
         this.orderCreateTimeEnd = orderCreateTimeEnd;
     }
 
-    public Date getLastUpdateTimeStart() {
+    public String getLastUpdateTimeStart() {
         return lastUpdateTimeStart;
     }
 
-    public void setLastUpdateTimeStart(Date lastUpdateTimeStart) {
+    public void setLastUpdateTimeStart(String lastUpdateTimeStart) {
         this.lastUpdateTimeStart = lastUpdateTimeStart;
     }
 
-    public Date getLastUpdateTimeEnd() {
+    public String getLastUpdateTimeEnd() {
         return lastUpdateTimeEnd;
     }
 
-    public void setLastUpdateTimeEnd(Date lastUpdateTimeEnd) {
+    public void setLastUpdateTimeEnd(String lastUpdateTimeEnd) {
         this.lastUpdateTimeEnd = lastUpdateTimeEnd;
     }
 

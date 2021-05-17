@@ -5,10 +5,14 @@ import com.common.generate.javacreate.test.groupsettle.dto.CommOrderDTO;
 import com.common.generate.javacreate.test.groupsettle.dto.CommOrderItemDTO;
 import com.common.generate.javacreate.test.groupsettle.dto.CommOrderItemDetailDTO;
 import com.common.generate.javacreate.test.groupsettle.dto.ErpProductOwnerDTO;
+import com.common.generate.javacreate.test.groupsettle.dto.GroupSettleOrderQueryDTO;
+import com.common.generate.javacreate.test.groupsettle.dto.OutStockApplyDTO;
+import com.common.generate.javacreate.test.groupsettle.dto.OutStockItemApplyDTO;
 import com.common.generate.javacreate.test.groupsettle.util.BaseUtils;
 import com.common.generate.javacreate.utils.DateUtils;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +28,40 @@ public class chayiService {
 
     public static void main(String[] args) {
         getErpProductOwner();
+    }
+
+
+
+
+    public static List<ErpProductOwnerDTO> getChayiOrderByWarehouseId(Integer orgId,Integer warehouseId){
+        /**获取差异单*/
+        List<ErpProductOwnerDTO> chayiErpList =new ArrayList<>();
+
+        List<OutStockApplyDTO> allChayiChu =new ArrayList<>();
+        List<GroupSettleOrderQueryDTO> grouplist = finderrorbygroubill.grouplist(warehouseId);
+        for (GroupSettleOrderQueryDTO dto : grouplist) {
+            List<OutStockApplyDTO> chayuChu = finderrorbygroubill.getChayuChu(dto.getSettleNo(), orgId, warehouseId, null);
+            allChayiChu.addAll(chayuChu);
+        }
+
+        List<OutStockItemApplyDTO> itemApplyDTOS = allChayiChu.stream().flatMap(it -> it.getOutStockItemApplyDTOS().stream()).collect(Collectors.toList());
+        Map<String, List<OutStockItemApplyDTO>> chayiMap = itemApplyDTOS.stream().collect(Collectors.groupingBy(it -> it.getProductSkuId() + "_" + it.getSecOwnerId()));
+        for (List<OutStockItemApplyDTO> value : chayiMap.values()) {
+            OutStockItemApplyDTO outStockItemApplyDTO = value.get(0);
+            BigDecimal addCount = value.stream().map(it -> it.getUnitTotalCount()).reduce(BigDecimal.ZERO, BigDecimal::add);
+            ErpProductOwnerDTO erpProductOwnerDTO = new ErpProductOwnerDTO();
+            erpProductOwnerDTO.setOrderType(81);
+            erpProductOwnerDTO.setUnitTotalCount(addCount);
+            erpProductOwnerDTO.setErrorWmsOwnerId(outStockItemApplyDTO.getSecOwnerId());
+            erpProductOwnerDTO.setProductSkuId(outStockItemApplyDTO.getProductSkuId());
+            erpProductOwnerDTO.setProductName(outStockItemApplyDTO.getProductName());
+            erpProductOwnerDTO.setWarehouseId(warehouseId);
+            erpProductOwnerDTO.setOrgId(orgId);
+            erpProductOwnerDTO.setSpecId(outStockItemApplyDTO.getProductSpecificationId());
+            chayiErpList.add(erpProductOwnerDTO);
+        }
+
+        return chayiErpList;
     }
 
 

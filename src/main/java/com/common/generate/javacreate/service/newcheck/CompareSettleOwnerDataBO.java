@@ -46,7 +46,7 @@ public class CompareSettleOwnerDataBO implements Serializable {
 
 	private String suggestOwnerIds;
 
-	private Long errorOwnerId;
+	private String errorOwnerId;
 	
 	/**
 	 * 库存数量
@@ -84,11 +84,11 @@ public class CompareSettleOwnerDataBO implements Serializable {
 	private BigDecimal ortherStoreMinUnitTotalCount = BigDecimal.ZERO;
 
 
-	public Long getErrorOwnerId() {
+	public String getErrorOwnerId() {
 		return errorOwnerId;
 	}
 
-	public void setErrorOwnerId(Long errorOwnerId) {
+	public void setErrorOwnerId(String errorOwnerId) {
 		this.errorOwnerId = errorOwnerId;
 	}
 

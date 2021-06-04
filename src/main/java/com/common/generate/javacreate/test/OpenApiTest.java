@@ -30,7 +30,7 @@ public class OpenApiTest {
 
     public static void main(String[] args) {
         baseUrl = getUrl("product");
-        deal("test");
+        deal("cst");
     }
 
     public static String getUrl(String system) {
@@ -68,8 +68,17 @@ public class OpenApiTest {
                 yd();
             case "rq":
                 rq();
+            case "cst":
+                cst();
                 break;
         }
+    }
+
+
+    public static void cst(){
+        String appKey = "7ed411e9ce1f41248cd90b878b7f8346";
+        String appSecret = "761f34725006ee79069773f971ea5344";
+        orderSendSync(appSecret,appKey);
     }
 
 
@@ -450,15 +459,34 @@ public class OpenApiTest {
                 "    ],\n" +
                 "    \"subOrderSize\": \"1\"\n" +
                 "}";
+
+        json ="{\n" +
+                "    \"businessNo\": \"998114700028\",\n" +
+                "    \"logistics\": [\n" +
+                "        {\n" +
+                "            \"logisticsCompany\": \"百世快递\",\n" +
+                "            \"logisticsCompanyCode\": \"HTKY\",\n" +
+                "            \"logisticsNo\": \"JST_LId20210508092530856\",\n" +
+                "            \"subOrderItems\": [\n" +
+                "                {\n" +
+                "                    \"logisticsCount\": 1,\n" +
+                "                    \"productSkuId\": \"4924235105564473810\"\n" +
+                "                }\n" +
+                "            ],\n" +
+                "            \"subOrderNo\": \"998114700028\"\n" +
+                "        }\n" +
+                "    ],\n" +
+                "    \"subOrderSize\": 1\n" +
+                "}";
         OrderSendSyncDTO dto = JSON.parseObject(json, OrderSendSyncDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, OrderSendSyncDTO.class, dto);
-        try {
-            System.out.println("订单发货同步参数：" + JSON.toJSONString(dto));
-            String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(dto));
-            System.out.println("订单发货同步：" + post);
-        } catch (Exception e) {
-            System.out.println("请求失败:" + e);
-        }
+//        try {
+//            System.out.println("订单发货同步参数：" + JSON.toJSONString(dto));
+//            String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(dto));
+//            System.out.println("订单发货同步：" + post);
+//        } catch (Exception e) {
+//            System.out.println("请求失败:" + e);
+//        }
     }
 
     /**

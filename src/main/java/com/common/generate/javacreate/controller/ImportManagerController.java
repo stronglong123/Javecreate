@@ -17,35 +17,27 @@ import com.common.generate.javacreate.test.dto.ErpResultDTO;
 import com.common.generate.javacreate.test.groupsettle.dto.GroupSettleOrderBillDTO;
 import com.common.generate.javacreate.test.groupsettle.service.finderrorbygroubill;
 import com.common.generate.javacreate.utils.ExcelUtils;
-import com.common.generate.javacreate.utils.StringUtil;
-import com.common.generate.javacreate.utils.excel.XlsViewMap;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author xialei
@@ -87,17 +79,6 @@ public class ImportManagerController {
         return "true";
     }
 
-    /**
-     * 下载货主批量导入模板
-     */
-    @GetMapping(value = "/templates/download")
-    public String downloadCargoOwner(Model model) {
-        model.addAttribute("dataList", Collections.emptyList());
-        model.addAttribute("Fields", "");
-        model.addAttribute("DisplayNames", "货主名称,货主编码,类型:经销商/供应商,联系人,电话");
-        model.addAttribute("fileName", "货主批量导入.xls");
-        return XlsViewMap.VIEW_NAME;
-    }
 
 
     @SuppressWarnings({"unchecked", "rawtypes"})

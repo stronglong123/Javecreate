@@ -144,8 +144,6 @@ public class jiesuanService {
             result.addAll(mtlist);
         }
 
-
-
         /**合并数量,产品加规格分组，每组根据出入加减*/
         result = margeCount(result);
         System.out.println(JSON.toJSONString(result));
@@ -445,6 +443,35 @@ public class jiesuanService {
         map.put(4903302845124561758L, 6021L);
         map.put(4911289297360599187L, 74902L);
         return map;
+    }
+
+
+
+
+    /**
+     * 查询结算出和结算入数据
+     */
+    public static List<Long> listALLGroupSettleOrderSku(List<Integer> warehouseIds) {
+        List<OrderAllPageDTO> result = new ArrayList<>();
+        List<WarehouseDTO> jiezhuanWarehouse = BaseUtils.getWarehouse(warehouseIds);
+        for (WarehouseDTO warehouseDTO : jiezhuanWarehouse) {
+            List<OrderAllPageDTO> dtos = listorder(warehouseDTO.getOrgId(), warehouseDTO.getWarehouseId(), 111);
+            if(CollectionUtils.isNotEmpty(dtos)){
+                result.addAll(dtos);
+            }
+            List<OrderAllPageDTO> mtlist = listorder(warehouseDTO.getOrgId(), warehouseDTO.getWarehouseId(), 110);
+            if(CollectionUtils.isNotEmpty(mtlist)){
+                result.addAll(mtlist);
+            }
+        }
+        if(CollectionUtils.isEmpty(result)){
+            return Collections.emptyList();
+        }
+
+        Set<Long> skuIds = result.stream().filter(it -> CollectionUtils.isNotEmpty(it.getItems())).flatMap(it -> it.getItems().stream()).map(it -> it.getProductSkuId()).collect(Collectors.toSet());
+        System.out.println("所有sku数据：" + JSON.toJSONString(skuIds));
+        return new ArrayList<>(skuIds);
+
     }
 
 

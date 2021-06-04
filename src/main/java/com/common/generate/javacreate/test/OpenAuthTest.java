@@ -29,8 +29,8 @@ public class OpenAuthTest {
 //    private static final String baseUrl = "http://localhost:40000";
 
     public static void main(String[] args) {
-//        yjx();
-        xls();
+        yjx();
+//        xls();
 //        test();
     }
 
@@ -69,7 +69,9 @@ public class OpenAuthTest {
         String appKey = "390a540add6e4a28be57b1cdeacbd0a2";
 //        findPermissionsByRoleCode(appSecret, appKey);
 //        findPermissionsJsonByRoleCode(appSecret,appKey);
-        exportMenuByAppCode(appSecret,appKey);
+//        exportMenuByAppCode(appSecret,appKey);
+        findRoleOrgsByUserId(appSecret,appKey);
+
     }
 
     public static void xls() {
@@ -78,6 +80,7 @@ public class OpenAuthTest {
         findPermissionsByRoleCode(appSecret, appKey);
 //        findPermissionsJsonByRoleCode(appSecret,appKey);
 //        exportMenuByAppCode(appSecret,appKey);
+//        findRoleOrgsByUserId(appSecret,appKey);
     }
 
     public static void crm() {
@@ -242,6 +245,27 @@ public class OpenAuthTest {
             menuSyncDTO.setParentCode(parentCode);
         }
         return menuSyncDTO;
+    }
+
+
+    /**
+     * 通过角色code查询菜单权限
+     *
+     * @param appSecret
+     * @param appKey
+     */
+    public static void findRoleOrgsByUserId(String appSecret, String appKey) {
+        String url = baseUrl + "/role/findRoleOrgsByUserId";
+        System.out.println("通过角色查询组织:" + url);
+        String json = "{\"refUserId\":\"27418\"}";//dealer_protal dealer_manager     dealer_app
+        ThirdRoleQueryDTO dto = JSON.parseObject(json, ThirdRoleQueryDTO.class);
+        String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, ThirdRoleQueryDTO.class, dto);
+        try {
+            String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(dto));
+            System.out.println("通过角色查询组织：" + post);
+        } catch (Exception e) {
+            System.out.println("请求失败:" + e);
+        }
     }
 
 

@@ -365,6 +365,21 @@ public class DateUtils {
         return sf.format(date);
     }
 
+
+    public static Date string2Date(String dateStr) {
+        SimpleDateFormat sf = new SimpleDateFormat(DATETIME_FORMATTER);
+        //使用SimpleDateFormat的parse()方法生成Date
+        Date date = null;
+        try {
+            date = sf.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //打印Date
+//        System.out.println(date);
+        return date;
+    }
+
     public static void main(String[] args) {
         System.out.println(DateUtils.getQuartList());
     }

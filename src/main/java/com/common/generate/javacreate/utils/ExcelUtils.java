@@ -272,16 +272,16 @@ public class ExcelUtils {
      */
     private static <T> List<T> readExcel(Class<T> classzz, Workbook workbook, List<ExcelHead> excelHeads) throws
             Exception {
-        List<String> needList = Arrays.asList("结算出-汇总", "结算入-汇总", "其他入-汇总", "其他出-汇总","其他入-明细-修复货主","其他入-汇总-修复货主");
+//        List<String> needList = Arrays.asList("结算出-汇总", "结算入-汇总", "其他入-汇总", "其他出-汇总","其他入-汇总-修复货主","其他入-汇总-修复货主");
 
         List<T> beans = new ArrayList<T>();
         int sheetNum = workbook.getNumberOfSheets();
         for (int sheetIndex = 0; sheetIndex < sheetNum; sheetIndex++) {
             Sheet sheet = workbook.getSheetAt(sheetIndex);
             String sheetName = sheet.getSheetName();
-            if(!needList.contains(sheetName)){
-                continue;
-            }
+//            if(!needList.contains(sheetName)){
+//                continue;
+//            }
             int firstRowNum = sheet.getFirstRowNum();
             int lastRowNum = sheet.getLastRowNum();
             Row head = sheet.getRow(firstRowNum);

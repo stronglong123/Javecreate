@@ -237,4 +237,14 @@ public class FileUtil {
     }
 
 
+    /**
+     * 简化写法
+     */
+    public static String getFileType(String originalFilename) {
+        //获取文件的后缀名
+        String suffix = originalFilename.substring(originalFilename.lastIndexOf(".")+1).toLowerCase();
+        return suffix;
+    }
+
+
 }

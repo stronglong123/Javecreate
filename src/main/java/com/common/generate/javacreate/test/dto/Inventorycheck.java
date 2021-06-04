@@ -14,6 +14,8 @@ public class Inventorycheck implements Serializable {
      * id
      */
     private Long id;
+
+    private Byte orderType;
     /**
      * 城市id
      */
@@ -53,7 +55,7 @@ public class Inventorycheck implements Serializable {
     /**
      * 二级货主id
      */
-    private Long secOwnerId;
+    private String secOwnerId;
     /**
      * 二级货主名
      */
@@ -91,6 +93,97 @@ public class Inventorycheck implements Serializable {
      */
     private Timestamp lastUpdateTime;
 
+    private BigDecimal costPrice;
+
+    private Integer needFix;
+
+
+
+//    private String trueOwnerId;
+
+    private Integer userId;
+
+    private String companyCode;
+
+    private String trueOwnerId;
+
+
+    private String errorOwnerId;
+
+
+    private String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTrueOwnerId() {
+        return trueOwnerId;
+    }
+
+    public void setTrueOwnerId(String trueOwnerId) {
+        this.trueOwnerId = trueOwnerId;
+    }
+
+    public String getErrorOwnerId() {
+        return errorOwnerId;
+    }
+
+    public void setErrorOwnerId(String errorOwnerId) {
+        this.errorOwnerId = errorOwnerId;
+    }
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+//    public String getTrueOwnerId() {
+//        return trueOwnerId;
+//    }
+//
+//    public void setTrueOwnerId(String trueOwnerId) {
+//        this.trueOwnerId = trueOwnerId;
+//    }
+
+    public Byte getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(Byte orderType) {
+        this.orderType = orderType;
+    }
+
+    public BigDecimal getCostPrice() {
+        return costPrice;
+    }
+
+    public void setCostPrice(BigDecimal costPrice) {
+        this.costPrice = costPrice;
+    }
+
+    public Integer getNeedFix() {
+        return needFix;
+    }
+
+    public void setNeedFix(Integer needFix) {
+        this.needFix = needFix;
+    }
 
     /**
      * 获取id
@@ -175,11 +268,11 @@ public class Inventorycheck implements Serializable {
     /**
      * 获取二级货主id
      */
-    public void setSecOwnerId (Long secOwnerId) {this.secOwnerId = secOwnerId;} 
+    public void setSecOwnerId (String secOwnerId) {this.secOwnerId = secOwnerId;}
     /**
      * 设置二级货主id
      */
-    public Long getSecOwnerId(){ return secOwnerId;} 
+    public String getSecOwnerId(){ return secOwnerId;}
     /**
      * 获取二级货主名
      */

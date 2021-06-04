@@ -20,7 +20,7 @@ import java.util.Map;
 public class BaseUtils {
 
     private static String baseUrl = "http://wms.pre.yijiupi.com/supplyChain/";
-    public static final String token = "d21eeb51-47ae-4ae1-b0a5-7f916cdab39d";
+    public static final String token = "7518232620993247602";
 
 
 
@@ -55,7 +55,24 @@ public class BaseUtils {
         List<WarehouseDTO> warehouseDTOS =new ArrayList<>();
         for (Integer warehouseId : warehouseIds) {
             WarehouseDTO warehouseDTO = new WarehouseDTO();
-            warehouseDTO.setWarehouseId(warehouseId);
+            warehouseDTO.setWarehouseId(Integer.valueOf(warehouseId));
+            String orgId = warehouseId.toString().substring(0, 3);
+            warehouseDTO.setOrgId(Integer.valueOf(orgId));
+            warehouseDTOS.add(warehouseDTO);
+        }
+        return warehouseDTOS;
+    }
+
+
+    public static List<WarehouseDTO> getJiezhuanWarehouse2(){
+        List<String> warehouseIds =Arrays.asList("4051","4251","7001","4571","4011","4211","7006","4651","1021","1141",
+                "4291","1181","7041","1211","7516","7131","7211","4021","4221","1031","1591","7051","7691","1191","4061",
+                "1101","4731","4031","4671","1121","1681","7061"
+                ,"4191","7141","7581","1091","7231","4041","7111","4121","4001","1011","1131","1051","1171","7031","1001");
+        List<WarehouseDTO> warehouseDTOS =new ArrayList<>();
+        for (String warehouseId : warehouseIds) {
+            WarehouseDTO warehouseDTO = new WarehouseDTO();
+            warehouseDTO.setWarehouseId(Integer.valueOf(warehouseId));
             String orgId = warehouseId.toString().substring(0, 3);
             warehouseDTO.setOrgId(Integer.valueOf(orgId));
             warehouseDTOS.add(warehouseDTO);
@@ -68,7 +85,7 @@ public class BaseUtils {
         List<Integer> warehouseIds =Arrays.asList(1141,1031,1181,1191,1591,1681,4001,4021,4031,4041,4051,4061,4121,4191,4211,4571,4651,4731,
                 7001,7041,7111,7131,7211,7231);
 
-        warehouseIds = Arrays.asList(1031);
+//        warehouseIds = Arrays.asList(1031);
         List<WarehouseDTO> warehouseDTOS =new ArrayList<>();
         for (Integer warehouseId : warehouseIds) {
             WarehouseDTO warehouseDTO = new WarehouseDTO();
@@ -79,6 +96,20 @@ public class BaseUtils {
         }
         return warehouseDTOS;
     }
+
+
+    public static List<WarehouseDTO> getWarehouse(List<Integer> warehouseIds){
+        List<WarehouseDTO> warehouseDTOS =new ArrayList<>();
+        for (Integer warehouseId : warehouseIds) {
+            WarehouseDTO warehouseDTO = new WarehouseDTO();
+            warehouseDTO.setWarehouseId(Integer.valueOf(warehouseId));
+            String orgId = warehouseId.toString().substring(0, 3);
+            warehouseDTO.setOrgId(Integer.valueOf(orgId));
+            warehouseDTOS.add(warehouseDTO);
+        }
+        return warehouseDTOS;
+    }
+
 
 
 

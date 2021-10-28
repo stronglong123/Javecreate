@@ -50,8 +50,11 @@ public class XlsView extends AbstractXlsView {
                                       HttpServletResponse response) throws Exception {
 
         @SuppressWarnings("unchecked")
+		/**内容*/
         List<?> voList = (List<?>) model.get("dataList");
+        /**表头*/
         Class<?> c = (Class<?>) model.get("FlectClass");
+        /**文件名*/
         String fileName = (String) model.get("fileName");
         // create excel xls sheet
         Sheet sheet = workbook.createSheet(fileName);

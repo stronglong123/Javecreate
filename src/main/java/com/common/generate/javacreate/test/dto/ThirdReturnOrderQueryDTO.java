@@ -68,6 +68,25 @@ public class ThirdReturnOrderQueryDTO implements Serializable {
      */
     private Integer pageSize;
 
+    private String lastUpdateTimeStart;
+    private String lastUpdateTimeEnd;
+
+    public String getLastUpdateTimeStart() {
+        return lastUpdateTimeStart;
+    }
+
+    public void setLastUpdateTimeStart(String lastUpdateTimeStart) {
+        this.lastUpdateTimeStart = lastUpdateTimeStart;
+    }
+
+    public String getLastUpdateTimeEnd() {
+        return lastUpdateTimeEnd;
+    }
+
+    public void setLastUpdateTimeEnd(String lastUpdateTimeEnd) {
+        this.lastUpdateTimeEnd = lastUpdateTimeEnd;
+    }
+
     public Integer getOrgId() {
         return orgId;
     }

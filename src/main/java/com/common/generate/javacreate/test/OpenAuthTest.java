@@ -2,6 +2,8 @@ package com.common.generate.javacreate.test;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.common.generate.javacreate.enums.OrderTypeEnum;
+import com.common.generate.javacreate.test.dto.AuthroleQueryDTO;
 import com.common.generate.javacreate.test.dto.MenuSyncDTO;
 import com.common.generate.javacreate.test.dto.ThirdMenuItemDTO;
 import com.common.generate.javacreate.test.dto.ThirdMenuSyncDTO;
@@ -10,6 +12,7 @@ import com.common.generate.javacreate.test.dto.ThirdRoleQueryDTO;
 import com.common.generate.javacreate.authutils.AuthUtil;
 import com.common.generate.javacreate.utils.HttpUtil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -21,7 +24,7 @@ import java.util.List;
  */
 public class OpenAuthTest {
 
-//    private static final String baseUrl = "http://api.test.yijiupi.com";
+//    private static final String baseUrl = "http://api.test.yijiupidev.com";
 //    private static final String baseUrl = "https://api.yijiupi.com";
     private static final String baseUrl = "http://api.release.yijiupidev.com";
 //    private static final String baseUrl = "http://api.pre.yijiupi.com";
@@ -29,9 +32,10 @@ public class OpenAuthTest {
 //    private static final String baseUrl = "http://localhost:40000";
 
     public static void main(String[] args) {
-        yjx();
+//        ls();
 //        xls();
 //        test();
+        erp();
     }
 
     /**
@@ -70,16 +74,18 @@ public class OpenAuthTest {
 //        findPermissionsByRoleCode(appSecret, appKey);
 //        findPermissionsJsonByRoleCode(appSecret,appKey);
 //        exportMenuByAppCode(appSecret,appKey);
-        findRoleOrgsByUserId(appSecret,appKey);
+//        findRoleOrgsByUserId(appSecret,appKey);
+//        findPermissionsByUserId(appSecret,appKey);
+        listAuthRoleIdByQuery(appSecret,appKey);
 
     }
 
     public static void xls() {
         String appSecret = "11be1659237064a7031ed58bef0c24c9";
         String appKey = "29637763d82c499282553d425047ebe6";
-        findPermissionsByRoleCode(appSecret, appKey);
+//        findPermissionsByRoleCode(appSecret, appKey);
 //        findPermissionsJsonByRoleCode(appSecret,appKey);
-//        exportMenuByAppCode(appSecret,appKey);
+        exportMenuByAppCode(appSecret,appKey);
 //        findRoleOrgsByUserId(appSecret,appKey);
     }
 
@@ -92,6 +98,28 @@ public class OpenAuthTest {
 //        findPermissionsJsonByRoleCode(appSecret,appKey);
 //        exportMenuByAppCode(appSecret,appKey);
     }
+    public static void ls() {
+        String appSecret = "3cb1860a9707dffa2b0b9baad58a714e";
+        String appKey = "ebb054bb82e64d8c8dc2daa95cbf89e8";
+        //        findPermissionsByRoleCode(appSecret, appKey);
+//        addPermissionsForRoleCode(appSecret, appKey);
+        findPermissionsByRoleCode(appSecret, appKey);
+//        findPermissionsJsonByRoleCode(appSecret,appKey);
+//        exportMenuByAppCode(appSecret,appKey);
+    }
+
+
+    public static void erp() {
+        String appSecret = "08639b2aa1e13122404c2e7dc3da590d";
+        String appKey = "c24100b971da488691cfa7e4fb0a0d01";
+        //        findPermissionsByRoleCode(appSecret, appKey);
+//        addPermissionsForRoleCode(appSecret, appKey);
+//        findPermissionsByRoleCode(appSecret, appKey);
+//        findPermissionsJsonByRoleCode(appSecret,appKey);
+        exportMenuByAppCode(appSecret,appKey);
+    }
+
+
 
 
 
@@ -143,7 +171,7 @@ public class OpenAuthTest {
      */
     public static void findPermissionsByRoleCode(String appSecret, String appKey) {
         String url = baseUrl + "/role/findPermissionsByRoleCode";
-        String json = "{\"appCode\":\"yjp_retail\",\"roleCode\":\"EasyChainDeveloper\",\"serviceId\":\"1085\"}";
+        String json = "{\"appCode\":\"erp_yjc\",\"roleCode\":\"PurchasingManager\",\"serviceId\":\"13\"}";
         ThirdRoleQueryDTO dto = JSON.parseObject(json, ThirdRoleQueryDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, ThirdRoleQueryDTO.class, dto);
         try {
@@ -164,7 +192,7 @@ public class OpenAuthTest {
     public static void exportMenuByAppCode(String appSecret, String appKey) {
         String url = baseUrl + "/role/exportMenuByAppCode";
         System.out.println("通过角色code查询菜单权限:" + url);
-        String json = "{\"appCode\":\"dealer_protal\"}";//dealer_protal dealer_manager     dealer_app
+        String json = "{\"appCode\":\"erp_yjc\"}";//dealer_protal dealer_manager     dealer_app
         ThirdRoleQueryDTO dto = JSON.parseObject(json, ThirdRoleQueryDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, ThirdRoleQueryDTO.class, dto);
         try {
@@ -260,6 +288,49 @@ public class OpenAuthTest {
         String json = "{\"refUserId\":\"27418\"}";//dealer_protal dealer_manager     dealer_app
         ThirdRoleQueryDTO dto = JSON.parseObject(json, ThirdRoleQueryDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, ThirdRoleQueryDTO.class, dto);
+        try {
+            String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(dto));
+            System.out.println("通过角色查询组织：" + post);
+        } catch (Exception e) {
+            System.out.println("请求失败:" + e);
+        }
+    }
+
+
+
+    /**
+     * 通过角色code查询菜单权限
+     *
+     * @param appSecret
+     * @param appKey
+     */
+    public static void findPermissionsByUserId(String appSecret, String appKey) {
+        String url = baseUrl + "/role/findPermissionsByUserId";
+        System.out.println("通过角色查询组织:" + url);
+        String json = "{\"refUserId\":\"27418\",\"warehouseId\":\"998\"}";//dealer_protal dealer_manager     dealer_app
+        ThirdRoleQueryDTO dto = JSON.parseObject(json, ThirdRoleQueryDTO.class);
+        String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, ThirdRoleQueryDTO.class, dto);
+        try {
+            String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(dto));
+            System.out.println("通过角色查询组织：" + post);
+        } catch (Exception e) {
+            System.out.println("请求失败:" + e);
+        }
+    }
+
+
+    /**
+     * 通过角色code查询菜单权限
+     *
+     * @param appSecret
+     * @param appKey
+     */
+    public static void listAuthRoleIdByQuery(String appSecret, String appKey) {
+        String url = baseUrl + "/role/listAuthRoleIdByQuery";
+        System.out.println("通过角色查询组织:" + url);
+        String json = "{\"roleCode\":\"OPAdmin\",\"type\":\"2\"}";//dealer_protal dealer_manager     dealer_app
+        AuthroleQueryDTO dto = JSON.parseObject(json, AuthroleQueryDTO.class);
+        String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, AuthroleQueryDTO.class, dto);
         try {
             String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(dto));
             System.out.println("通过角色查询组织：" + post);

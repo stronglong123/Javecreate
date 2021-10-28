@@ -2,6 +2,7 @@ package com.common.generate.javacreate.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
@@ -254,6 +255,20 @@ public class DateUtils {
         return sdf.format(date);
     }
 
+    /**
+     * 获取当前日期前一天
+     *
+     * @return 2019-08-26
+     */
+    public static String getBeforeDay(Date date,Integer count) {
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMATTER);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, -count);
+        date = calendar.getTime();
+        return sdf.format(date);
+    }
+
 
     /**
      * 获取最近七天
@@ -365,8 +380,21 @@ public class DateUtils {
         return sf.format(date);
     }
 
-
     public static Date string2Date(String dateStr) {
+        SimpleDateFormat sf = new SimpleDateFormat(DATE_FORMATTER);
+        //使用SimpleDateFormat的parse()方法生成Date
+        Date date = null;
+        try {
+            date = sf.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //打印Date
+        return date;
+    }
+
+
+    public static Date string2DateTime(String dateStr) {
         SimpleDateFormat sf = new SimpleDateFormat(DATETIME_FORMATTER);
         //使用SimpleDateFormat的parse()方法生成Date
         Date date = null;
@@ -376,11 +404,9 @@ public class DateUtils {
             e.printStackTrace();
         }
         //打印Date
-//        System.out.println(date);
         return date;
     }
 
     public static void main(String[] args) {
-        System.out.println(DateUtils.getQuartList());
     }
 }

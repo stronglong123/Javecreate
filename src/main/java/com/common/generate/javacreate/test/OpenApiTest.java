@@ -7,7 +7,9 @@ import com.common.generate.javacreate.test.dto.OrderQueryDTO;
 import com.common.generate.javacreate.test.dto.OrderSendSyncDTO;
 import com.common.generate.javacreate.test.dto.PaymentReturnInfoQueryDTO;
 import com.common.generate.javacreate.test.dto.ProductSkuListSO;
+import com.common.generate.javacreate.test.dto.StocksDTO;
 import com.common.generate.javacreate.test.dto.ThirdOrderCancelDTO;
+import com.common.generate.javacreate.test.dto.ThirdProductInventoryDTO;
 import com.common.generate.javacreate.test.dto.ThirdReturnOrderQueryDTO;
 import com.common.generate.javacreate.authutils.AuthUtil;
 import com.common.generate.javacreate.utils.HttpUtil;
@@ -21,7 +23,7 @@ import java.util.Arrays;
 public class OpenApiTest {
 
 
-    private static final String TESTBASEURL = "http://api.test.yijiupi.com";
+    private static final String TESTBASEURL = "http://api.test.yijiupidev.com";
     private static final String RELEASEBASEURL = "http://api.release.yijiupidev.com";
     private static final String PRODUCTBASEURL = "https://api.yijiupi.com";
     private static final String PREBASEURL = "http://api.pre.yijiupi.com";
@@ -29,13 +31,13 @@ public class OpenApiTest {
     private static String baseUrl;
 
     public static void main(String[] args) {
-        baseUrl = getUrl("product");
-        deal("cst");
+        baseUrl = getUrl("release");
+        deal("ywqs");
     }
 
     public static String getUrl(String system) {
         switch (system) {
-            case "test":
+            case "tmp":
                 return TESTBASEURL;
             case "release":
                 return RELEASEBASEURL;
@@ -53,7 +55,7 @@ public class OpenApiTest {
             case "ruike":
                 ruike();
                 break;
-            case "test":
+            case "tmp":
                 test();
                 break;
             case "gjp":
@@ -71,14 +73,46 @@ public class OpenApiTest {
             case "cst":
                 cst();
                 break;
+            case "qst2":
+                qst2();
+            case "test":
+                test2();
+            case "ywqs":
+                ywqs();
         }
+    }
+
+    public static void ywqs(){
+        String appKey = "bc7381239d99417b97e7c3c929bfc497";
+        String appSecret = "ecdb0c21f229a5f5f98483d6e67747ff";
+        orderSendSync(appSecret,appKey);
+
+    }
+
+    public static void test2(){
+        String appKey = "d94d3b2202f64154be6f6b6836cd9bda";
+        String appSecret = "caa8a3d08c114eb8c616a67bed2820f0";
+        stockchangesync(appSecret,appKey);
+//        getOrderList(appSecret, appKey);
+
+    }
+
+    public static void qst2(){
+        String appKey = "5da604e287c342f38a6908c76688dd99";
+        String appSecret = "f08057be12121bf8d5c3f63ce927b825";
+        inventorySync(appSecret,appKey);
     }
 
 
     public static void cst(){
-        String appKey = "7ed411e9ce1f41248cd90b878b7f8346";
-        String appSecret = "761f34725006ee79069773f971ea5344";
-        orderSendSync(appSecret,appKey);
+        String appKey = "1b963b7047f04e5682707e1786a248c6";
+        String appSecret = "255443efa500e1b31da32693f57188fe";
+        getOrderList(appSecret, appKey);
+
+        getReturnOrderList(appSecret,appKey);
+        getReturnPaymentState(appSecret, appKey);
+
+//        orderSendSync(appSecret,appKey);
     }
 
 
@@ -145,7 +179,7 @@ public class OpenApiTest {
 
         String appSecret = "083bb928434cd43a9ec297b6a56435ae";
         String appKey = "a56b7ace805d4d18ae787e72e847ac79";
-        getOrderList(appSecret, appKey);
+//        getOrderList(appSecret, appKey);
 //        getOrderDetail(appSecret, appKey);
 
 //        getReturnOrderList(appSecret, appKey);
@@ -154,6 +188,7 @@ public class OpenApiTest {
 //        orderSendSync(appSecret, appKey);
 //        findSplitOrder(appSecret,appKey);
 //        findStorePage(appSecret,appKey);
+        logisticsCompany(appSecret,appKey);
 
     }
 
@@ -180,12 +215,12 @@ public class OpenApiTest {
     public static void gjp() {
         String appSecret = "0a9257677ca7143799a6bc625ed2574a";
         String appKey = "ff431ba1da5249d398940657785140a1";
-//        getOrderList(appSecret, appKey);
+        getOrderList(appSecret, appKey);
 //        getOrderDetail(appSecret, appKey);
 //        getReturnOrderList(appSecret, appKey);
 //        getReturnPaymentState(appSecret, appKey);
 //        listProductSku(appSecret, appKey);
-        orderSendSync(appSecret,appKey);
+//        orderSendSync(appSecret,appKey);
 //        findSplitOrder(appSecret,appKey);
 //        findStorePage(appSecret,appKey);
 //        cancelOrderRequest(appSecret,appKey);
@@ -237,9 +272,10 @@ public class OpenApiTest {
     public static void getOrderList(String appSecret, String appKey) {
         String url = baseUrl + "/order/getOrderList";
         System.out.println("订单获取" + url);
-        String json = "{\"currentPage\":1,\"orderCreateTimeStart\":\"2021-03-10 12:21:00\",\"orderCreateTimeEnd\":\"2021-03-11 15:21:00\",\"pageSize\":20}";
+        String json = "{\"currentPage\":1,\"orderCreateTimeStart\":\"2021-06-01 12:21:00\",\"orderCreateTimeEnd\":\"2021-06-30 15:21:00\",\"pageSize\":20}";
         OrderQueryDTO orderQueryDTO = JSON.parseObject(json, OrderQueryDTO.class);
-//        orderQueryDTO.setBusinessNo("428107000056-2");
+//        orderQueryDTO.setBusinessNo("769115400038");
+        orderQueryDTO.setBusinessTypes(Arrays.asList((byte) 1,(byte)2));
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, OrderQueryDTO.class, orderQueryDTO);
         try {
             System.out.println("url:" + urlWithAuth);
@@ -303,9 +339,9 @@ public class OpenApiTest {
 //        String json = "{\"refNo\":\"TEST99802960001\",\"currentPage\":1,\"orderCreateTimeStart\":\"2020:10:15 14:12:49\",\"orderCreateTimeEnd\":\"2020:11:14 00:00:00\",\"pageSize\":20}";
         String json = "{\n" +
                 "    \"currentPage\": 1,\n" +
-                "    \"orderCreateTimeEnd\": \"2020-11-05 23:59:59\",\n" +
-                "    \"orderCreateTimeStart\": \"2020-10-20 00:00:00\",\n" +
-                "    \"businessNo\": \"998030000002\",\n" +
+                "    \"lastUpdateTimeEnd\": \"2021-06-22 11:54:11\",\n" +
+                "    \"lastUpdateTimeStart\": \"2021-06-21 17:01:46\",\n" +
+                "    \"businessNo\": \"\",\n" +
                 "    \"pageSize\": 10,\n" +
                 "}";
         ThirdReturnOrderQueryDTO dto = JSON.parseObject(json, ThirdReturnOrderQueryDTO.class);
@@ -331,7 +367,7 @@ public class OpenApiTest {
     public static void getReturnPaymentState(String appSecret, String appKey) {
         String url = baseUrl + "/order/getReturnPaymentState";
         System.out.println("获取退款状态" + url);
-        String json = "{\"orderNo\":\"998030000001\"}";
+        String json = "{\"orderNo\":\"769114900034\"}";
         PaymentReturnInfoQueryDTO dto = JSON.parseObject(json, PaymentReturnInfoQueryDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, PaymentReturnInfoQueryDTO.class, dto);
         try {
@@ -478,15 +514,30 @@ public class OpenApiTest {
                 "    ],\n" +
                 "    \"subOrderSize\": 1\n" +
                 "}";
+
+        json ="{\n" +
+                "    \"address\": \"https://api.yijiupi.com/\",\n" +
+                "    \"businessNo\": \"\",\n" +
+                "    \"logstics\": [\n" +
+                "        {\n" +
+                "            \"logisticsCompany\": \"线下物流（京东快递）\",\n" +
+                "            \"logisticsCompanyCode\": \"011\",\n" +
+                "            \"logisticsNo\": \"\",\n" +
+                "            \"subOrderNo\": \"\"\n" +
+                "        }\n" +
+                "    ],\n" +
+                "    \"subOrderSize\": \"1\"\n" +
+                "}";
         OrderSendSyncDTO dto = JSON.parseObject(json, OrderSendSyncDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, OrderSendSyncDTO.class, dto);
-//        try {
-//            System.out.println("订单发货同步参数：" + JSON.toJSONString(dto));
-//            String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(dto));
-//            System.out.println("订单发货同步：" + post);
-//        } catch (Exception e) {
-//            System.out.println("请求失败:" + e);
-//        }
+        try {
+            System.out.println("订单发货同步参数：" + JSON.toJSONString(dto));
+            System.out.println(urlWithAuth);
+            String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(dto));
+            System.out.println("订单发货同步：" + post);
+        } catch (Exception e) {
+            System.out.println("请求失败:" + e);
+        }
     }
 
     /**
@@ -529,6 +580,70 @@ public class OpenApiTest {
             System.out.println("请求失败:" + e);
         }
     }
+
+
+
+    /**
+     * 查询库存
+     *
+     * @param appSecret
+     * @param appKey
+     */
+    public static void inventorySync(String appSecret, String appKey) {
+        String url = baseUrl + "/inventory/inventorySync";
+        System.out.println("查询库存：" + url);
+        ThirdProductInventoryDTO dto =new ThirdProductInventoryDTO();
+        dto.setSkuIdList(Arrays.asList(4926830063474766082L));
+        String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, ThirdProductInventoryDTO.class, dto);
+        try {
+            String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(dto));
+            System.out.println("查询库存：" + post);
+        } catch (Exception e) {
+            System.out.println("请求失败:" + e);
+        }
+    }
+
+
+    /**
+     * 查询库存
+     *
+     * @param appSecret
+     * @param appKey
+     */
+    public static void logisticsCompanyList(String appSecret, String appKey) {
+        String url = baseUrl + "/logisticsCompany/list";
+        System.out.println("查询库存：" + url);
+        String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey);
+        try {
+            String post = HttpUtil.post(urlWithAuth, null);
+            System.out.println("查询库存：" + post);
+        } catch (Exception e) {
+            System.out.println("请求失败:" + e);
+        }
+    }
+
+
+    /**
+     * 查询库存
+     *
+     * @param appSecret
+     * @param appKey
+     */
+    public static void stockchangesync(String appSecret, String appKey) {
+        String url = baseUrl + "/stockchange/sync";
+        System.out.println("查询库存：" + url);
+        String json ="{\"hasSyncSaleStock\":true,\"stocks\":[{\"productSkuId\":99800095458978,\"stockNum\":1000}]}";
+        StocksDTO dto =JSON.parseObject(json, StocksDTO.class);
+        String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, StocksDTO.class, dto);
+        System.out.println(urlWithAuth);
+        try {
+            String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(dto));
+            System.out.println("查询库存：" + post);
+        } catch (Exception e) {
+            System.out.println("请求失败:" + e);
+        }
+    }
+
 
 
 

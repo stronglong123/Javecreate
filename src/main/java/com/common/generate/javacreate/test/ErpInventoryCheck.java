@@ -6,6 +6,12 @@ import com.common.generate.javacreate.model.base.Result;
 import com.common.generate.javacreate.service.newcheck.DataDTO;
 import com.common.generate.javacreate.test.dto.InventoryDetailDTO;
 import com.common.generate.javacreate.test.dto.Inventorycheck;
+import com.common.generate.javacreate.test.dto.ProductSkuDTO;
+import com.common.generate.javacreate.test.dto.SettleOrderItemDetailDTO;
+import com.common.generate.javacreate.test.dto.SettleOrderUpdateDTO;
+import com.common.generate.javacreate.test.dto.SettleSkuOrderUpdateDTO;
+import com.common.generate.javacreate.test.dto.SettlementOrderCreateDTO;
+import com.common.generate.javacreate.test.dto.SettlementOrderItemCreateDTO;
 import com.common.generate.javacreate.test.groupsettle.dto.GroupSettleOrderDetailDTO;
 import com.common.generate.javacreate.test.groupsettle.dto.GroupSettleOrderPageParamDTO;
 import com.common.generate.javacreate.test.groupsettle.dto.GroupSettleOrderQueryDTO;
@@ -16,13 +22,19 @@ import com.common.generate.javacreate.test.groupsettle.util.BaseUtils;
 import com.common.generate.javacreate.utils.DateUtils;
 import com.common.generate.javacreate.utils.ExcelUtils;
 import com.common.generate.javacreate.utils.HttpClientUtils;
+import com.common.generate.javacreate.utils.StringUtil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.FileInputStream;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +50,8 @@ public class ErpInventoryCheck {
     private static final String cookie = "YJPID=4db0147aacf3453ab3103a6aed1f6743; JSESSIONID=F9D2BE160607C3EA98F91396076F9D82; acw_tc=2760820e16221660894535844ed618fde01386b5250e18ff2b7b387366fce0";
     private static final String baseUrl = "http://scop.pre.yijiupi.com/";
 
+
+
     public static void main(String[] args) throws Exception {
 //        findCanOffset();
 //        getInventoryDetail();
@@ -51,57 +65,269 @@ public class ErpInventoryCheck {
 
     public static void pushToErp2() throws Exception {
         String filePath = "C:\\Users\\Administrator\\Desktop\\5-20差异数据.xlsx";
-        filePath = "C:\\Users\\Administrator\\Desktop\\团购二级货主修复\\5-26-1二级货主.xlsx";
+        filePath = "C:\\Users\\Administrator\\Desktop\\团购二级货主修复\\重推erp数据2.xlsx";
 
         FileInputStream file = new FileInputStream(filePath);
         List<Inventorycheck> list = ExcelUtils.readExcelToEntity(Inventorycheck.class, file, "5-26-1二级货主.xlsx");
-
         List<Inventorycheck> dtos = list.stream().filter(it -> it.getNeedFix() != null && it.getNeedFix().equals(1)).collect(Collectors.toList());
-
+        Map<Long, ProductSkuDTO> skuMap = getskuMap();
+        dtos.forEach(it -> {
+            ProductSkuDTO productSkuDTO = skuMap.get(it.getProductSkuId());
+            it.setSpecQuantity(productSkuDTO.getPackageQuantity().stripTrailingZeros());
+            it.setSpecName(productSkuDTO.getSpecificationName());
+            it.setProductSpecificationId(productSkuDTO.getProductSpecificationId());
+            it.setPackageName(productSkuDTO.getPackageName());
+            it.setUnitName(productSkuDTO.getUnitName());
+            it.setOrgId(Integer.valueOf(it.getWarehouseId().toString().substring(0, 3)));
+            it.setProductName(it.getProductName());
+            it.setOwnerId(it.getOwnerId());
+            it.setCreateTime(DateUtils.getCurrentTime());
+            it.setLastUpdateTime(DateUtils.getCurrentTime());
+            it.setCreateTime("2021-07-19 00:00:00");
+            it.setLastUpdateTime("2021-07-19 00:00:00");
+        });
         System.out.println(JSON.toJSONString(dtos));
+
+
         List<SettleOrderCompleteMqDTO> result = new ArrayList<>();
+        List<SettlementOrderCreateDTO> result2 = new ArrayList<>();
+
         for (Inventorycheck dto : dtos) {
-            result.add(convertComplete(dto,1));
-            result.add(convertComplete(dto,2));
+            if ("出".equals(dto.getType())) {
+                result.add(convertComplete(dto, 1));
+                result2.add(convertOtherInOut(dto, 2));
+            }
+            if ("入".equals(dto.getType())) {
+                result.add(convertComplete(dto, 2));
+                result2.add(convertOtherInOut(dto, 1));
+            }
         }
-        System.out.println(JSON.toJSONString(result));
+        System.out.println("结算单:" + JSON.toJSONString(result));
+
+        System.out.println("其他出入:" + JSON.toJSONString(result2));
+
+        createSql(dtos);
+
+        updateData(dtos);
+
     }
 
 
-    private static SettleOrderCompleteMqDTO convertComplete(Inventorycheck dto,Integer type){
+    private static void updateData(List<Inventorycheck> dtos ){
+        List<SettleOrderUpdateDTO> settleOrderUpdateDTOS =new ArrayList<>();
+        List<SettleOrderUpdateDTO> settleOrderUpdateDTOS2 =new ArrayList<>();
+
+        List<SettleSkuOrderUpdateDTO> settleSkuOrderUpdateDTOS =new ArrayList<>();
+
+        dtos.stream().filter(it -> it.getSqlType().equals(1)).forEach(it -> {
+            SettleOrderUpdateDTO settleOrderUpdateDTO = new SettleOrderUpdateDTO();
+            settleOrderUpdateDTO.setId(it.getSettleId());
+            if (it.getType().equals("入")) {
+                settleOrderUpdateDTO.setSettleAmount(it.getTotalAmount().negate());
+            }else {
+                settleOrderUpdateDTO.setSettleAmount(it.getTotalAmount());
+            }
+            settleOrderUpdateDTOS.add(settleOrderUpdateDTO);
+        });
+
+        dtos.stream().filter(it -> it.getSqlType().equals(2)).forEach(it -> {
+            SettleOrderUpdateDTO settleOrderUpdateDTO = new SettleOrderUpdateDTO();
+            settleOrderUpdateDTO.setId(it.getSettleId());
+            if (it.getType().equals("入")) {
+                settleOrderUpdateDTO.setSettleAmount(it.getTotalAmount().negate());
+            }else {
+                settleOrderUpdateDTO.setSettleAmount(it.getTotalAmount());
+            }
+            settleOrderUpdateDTOS2.add(settleOrderUpdateDTO);
+
+            SettleSkuOrderUpdateDTO settleSkuOrderUpdateDTO =new SettleSkuOrderUpdateDTO();
+            settleSkuOrderUpdateDTO.setId(it.getGroupOrderSkuId());
+            BigDecimal[] counts = it.getDiffTotalCount().divideAndRemainder(it.getSpecQuantity(), new MathContext(2, RoundingMode.HALF_UP));
+            BigDecimal bigCount = counts[0];
+            BigDecimal unitCount = counts[1];
+
+            if (it.getType().equals("入")) {
+                settleSkuOrderUpdateDTO.setStorePackageCount(bigCount);
+                settleSkuOrderUpdateDTO.setStoreUnitCount(unitCount);
+                settleSkuOrderUpdateDTO.setSaleStorePackageCount(bigCount);
+                settleSkuOrderUpdateDTO.setSaleStoreUnitCount(unitCount);
+                settleSkuOrderUpdateDTO.setSettleAmount(it.getTotalAmount().negate());
+            }else {
+                settleSkuOrderUpdateDTO.setDeliverPackageCount(bigCount);
+                settleSkuOrderUpdateDTO.setDeliverUnitCount(unitCount);
+                settleSkuOrderUpdateDTO.setSaleDeliverPackageCount(bigCount);
+                settleSkuOrderUpdateDTO.setSaleDeliverUnitCount(unitCount);
+                settleSkuOrderUpdateDTO.setSettleAmount(it.getTotalAmount());
+            }
+            settleSkuOrderUpdateDTOS.add(settleSkuOrderUpdateDTO);
+        });
+
+        System.out.println("order:"+JSON.toJSONString(settleOrderUpdateDTOS));
+        System.out.println("order2:"+JSON.toJSONString(settleOrderUpdateDTOS2));
+
+        System.out.println("ordersku:"+JSON.toJSONString(settleSkuOrderUpdateDTOS));
+
+    }
+
+
+    private static void createSql(List<Inventorycheck> dtos) {
+        List<String> skuItemSqls = new ArrayList<>();
+        List<String> skuSqls = new ArrayList<>();
+        List<String> orderBillSqls = new ArrayList<>();
+        List<String> orderBillOwnerSqls = new ArrayList<>();
+
+        List<String> groupBillSqls = new ArrayList<>();
+
+
+        List<String> updateSkuSqls = new ArrayList<>();
+        List<String> updateOrderBillSqls = new ArrayList<>();
+        List<String> updateGroupBillSqls = new ArrayList<>();
+
+        List<SettleOrderUpdateDTO> settleOrderUpdateDTOS =new ArrayList<>();
+        for (Inventorycheck dto : dtos) {
+            if (dto.getSqlType() == null) {
+                return;
+            }
+            if (dto.getSqlType().equals(1)) {
+                createInsertSql(dto, skuItemSqls, skuSqls, orderBillSqls,orderBillOwnerSqls, groupBillSqls);
+            } else {
+                createUpdateSql(dto, updateSkuSqls,updateOrderBillSqls, updateGroupBillSqls);
+            }
+        }
+
+        System.out.println("#新增 group_settle_order_sku:" + JSON.toJSONString(skuSqls));
+        System.out.println("#新增 group_settle_order_sku_item:" + JSON.toJSONString(skuItemSqls));
+        System.out.println("#新增 group_settle_order_bill:" + JSON.toJSONString(orderBillSqls));
+        System.out.println("#新增 group_settle_order_bill_owner:" + JSON.toJSONString(orderBillOwnerSqls));
+        System.out.println("#新增变更账单 groupBillSqls:" + JSON.toJSONString(groupBillSqls));
+
+        System.out.println("#修改 group_settle_order_sku:" + JSON.toJSONString(updateSkuSqls));
+        System.out.println("#修改变更账单 group_settle_order:" + JSON.toJSONString(updateGroupBillSqls));
+
+    }
+
+    private static void createUpdateSql(Inventorycheck dto, List<String> skuSqls,List<String> orderBillSqls, List<String> groupBillSqls) {
+        skuSqls.add(CreateSqlUtil.updateSkuSql(dto));
+        orderBillSqls.add(CreateSqlUtil.updateOrderBillSql(dto));
+        groupBillSqls.add(CreateSqlUtil.createGroupBillSql(dto));
+    }
+
+    private static void createInsertSql(Inventorycheck dto, List<String> skuItemSqls, List<String> skuSqls, List<String> orderBillSqls,
+                                        List<String> orderBillOwnerSqls, List<String> groupBillSqls) {
+
+//        skuSqls.add(CreateSqlUtil.createSkuSql(dto));
+//
+//        skuItemSqls.add(CreateSqlUtil.createSkuItemSql(dto));
+//
+//        orderBillSqls.add(CreateSqlUtil.createOrderBillSql(dto));
+//
+//        orderBillOwnerSqls.add(CreateSqlUtil.createOrderBillOwnerSql(dto));
+
+        groupBillSqls.add(CreateSqlUtil.createGroupBillSql(dto));
+
+    }
+
+
+
+
+    private static SettlementOrderCreateDTO convertOtherInOut(Inventorycheck dto, Integer type) {
+        SettlementOrderCreateDTO createDTO = new SettlementOrderCreateDTO();
+        /**出*/
+        if (type == 1) {
+            createDTO.setOrderType((byte) 64);
+            createDTO.setChannelNo(110);
+            createDTO.setOrderAmount(BigDecimal.ZERO);
+            createDTO.setWarehouseId(dto.getWarehouseId());
+            createDTO.setOrgId(Integer.valueOf(dto.getWarehouseId().toString().substring(0, 3)));
+            createDTO.setRelatedNoteNO(dto.getSettleNo());
+
+            SettlementOrderItemCreateDTO itemCreateDTO = new SettlementOrderItemCreateDTO();
+            itemCreateDTO.setProductSkuId(dto.getProductSkuId());
+            itemCreateDTO.setProductName(dto.getProductName());
+            itemCreateDTO.setMinUnitTotalCount(dto.getDiffTotalCount());
+            itemCreateDTO.setTotalAmount(BigDecimal.ZERO);
+
+            SettleOrderItemDetailDTO itemDetailDTO = new SettleOrderItemDetailDTO();
+            if (StringUtils.isNotEmpty(dto.getTrueOwnerId())) {
+                itemDetailDTO.setSecOwnerId(Long.valueOf(dto.getTrueOwnerId()));
+            }
+            itemDetailDTO.setUnitTotalCount(dto.getDiffTotalCount());
+            itemCreateDTO.setDetails(Collections.singletonList(itemDetailDTO));
+            createDTO.setItems(Collections.singletonList(itemCreateDTO));
+        } else {
+            /**入*/
+            createDTO.setOrderType((byte) 89);
+            createDTO.setChannelNo(110);
+            createDTO.setOrderAmount(BigDecimal.ZERO);
+            createDTO.setWarehouseId(dto.getWarehouseId());
+            createDTO.setOrgId(Integer.valueOf(dto.getWarehouseId().toString().substring(0, 3)));
+            createDTO.setRelatedNoteNO(dto.getSettleNo());
+            SettlementOrderItemCreateDTO itemCreateDTO = new SettlementOrderItemCreateDTO();
+            itemCreateDTO.setProductSkuId(dto.getProductSkuId());
+            itemCreateDTO.setProductName(dto.getProductName());
+            itemCreateDTO.setMinUnitTotalCount(dto.getDiffTotalCount());
+            itemCreateDTO.setTotalAmount(BigDecimal.ZERO);
+
+            SettleOrderItemDetailDTO itemDetailDTO = new SettleOrderItemDetailDTO();
+            if (StringUtils.isNotEmpty(dto.getTrueOwnerId())) {
+                itemDetailDTO.setSecOwnerId(Long.valueOf(dto.getTrueOwnerId()));
+            }
+            itemDetailDTO.setUnitTotalCount(dto.getDiffTotalCount());
+            itemCreateDTO.setDetails(Collections.singletonList(itemDetailDTO));
+            createDTO.setItems(Collections.singletonList(itemCreateDTO));
+        }
+        return createDTO;
+    }
+
+
+    private static SettleOrderCompleteMqDTO convertComplete(Inventorycheck dto, Integer type) {
+        Long settleId = dto.getSettleId();
+//        String substringSettleId = String.valueOf(settleId).substring(0, 17);
         SettleOrderCompleteMqDTO completeMqDTO = new SettleOrderCompleteMqDTO();
         BigDecimal diffTotalCount = dto.getDiffTotalCount();
         completeMqDTO.setCompanyCode(dto.getCompanyCode());
         completeMqDTO.setOrderSource((byte) 0);
         completeMqDTO.setUserId(dto.getUserId());
         completeMqDTO.setWarehouseId(dto.getWarehouseId());
-        completeMqDTO.setOrgId(Integer.valueOf(dto.getWarehouseId().toString().substring(0,3)));
+        completeMqDTO.setOrgId(Integer.valueOf(dto.getWarehouseId().toString().substring(0, 3)));
         completeMqDTO.setOrderCreateTime(dto.getDate());
-        completeMqDTO.setOrderCompleteTime(DateUtils.getCurrentTime());
-
+        completeMqDTO.setOrderCompleteTime(dto.getCompleteTime());
+        completeMqDTO.setOrderAmount(dto.getTotalAmount());
+        completeMqDTO.setPayableAmount(dto.getTotalAmount());
+        completeMqDTO.setOmsOrderId(settleId);
         OrderCompleteItemMqDTO itemMqDTO = new OrderCompleteItemMqDTO();
+        itemMqDTO.setOrderItemId(dto.getGroupOrderSkuId());
         itemMqDTO.setMinUnitTotalCount(diffTotalCount);
         itemMqDTO.setProductSkuId(dto.getProductSkuId());
         itemMqDTO.setProductName(dto.getProductName());
         itemMqDTO.setSellPrice(dto.getCostPrice());
-        if (type ==2) {
+        if (type == 2) {
+            completeMqDTO.setOrderNo(dto.getSettleNo() + "-4");
             completeMqDTO.setOrderType((byte) 78);
-            completeMqDTO.setState((byte)10);
+            completeMqDTO.setState((byte) 10);
             OrderItemProductOwnerDTO ownerDTO = new OrderItemProductOwnerDTO();
             ownerDTO.setCount(diffTotalCount);
-            if (!dto.getTrueOwnerId().equals("0") && !dto.getTrueOwnerId().equals("NULL") && !dto.getTrueOwnerId().equals("null")) {
+            if (StringUtils.isNotEmpty(dto.getTrueOwnerId()) && !dto.getTrueOwnerId().equals("0") && !dto.getTrueOwnerId().equals("NULL") && !dto.getTrueOwnerId().equals("null")) {
+                ownerDTO.setSecOwnerId(dto.getTrueOwnerId());
+            }
+            itemMqDTO.setTotalAmount(dto.getTotalAmount());
+            itemMqDTO.setPayableAmount(dto.getTotalAmount());
+            itemMqDTO.setSecOwnerDetail(Arrays.asList(ownerDTO));
+        } else {
+            completeMqDTO.setOrderNo(dto.getSettleNo() + "-3");
+            completeMqDTO.setOrderType((byte) 77);
+            completeMqDTO.setState((byte) 7);
+            OrderItemProductOwnerDTO ownerDTO = new OrderItemProductOwnerDTO();
+            ownerDTO.setCount(diffTotalCount);
+//            if (StringUtils.isNotEmpty(dto.getErrorOwnerId()) && !dto.getErrorOwnerId().equals("0") && !dto.getErrorOwnerId().equals("NULL") && !dto.getErrorOwnerId().equals("null")) {
+//                ownerDTO.setSecOwnerId(dto.getErrorOwnerId());
+//            }
+            if (StringUtils.isNotEmpty(dto.getTrueOwnerId()) && !dto.getTrueOwnerId().equals("0") && !dto.getTrueOwnerId().equals("NULL") && !dto.getTrueOwnerId().equals("null")) {
                 ownerDTO.setSecOwnerId(dto.getTrueOwnerId());
             }
             itemMqDTO.setSecOwnerDetail(Arrays.asList(ownerDTO));
-        } else {
-            completeMqDTO.setOrderType((byte) 77);
-            completeMqDTO.setState((byte)7);
-            OrderItemProductOwnerDTO ownerDTO = new OrderItemProductOwnerDTO();
-            ownerDTO.setCount(diffTotalCount);
-            if (!dto.getErrorOwnerId().equals("0") && !dto.getErrorOwnerId().equals("NULL") && !dto.getErrorOwnerId().equals("null")) {
-                ownerDTO.setSecOwnerId(dto.getErrorOwnerId());
-            }
-            itemMqDTO.setSecOwnerDetail(Arrays.asList(ownerDTO));
+            itemMqDTO.setTotalAmount(dto.getTotalAmount());
+            itemMqDTO.setPayableAmount(dto.getTotalAmount());
         }
         completeMqDTO.setItems(Arrays.asList(itemMqDTO));
         return completeMqDTO;
@@ -195,9 +421,9 @@ public class ErpInventoryCheck {
         /**过滤skuId*/
         List<Long> skuList = getSkuList(needWarehouse);
         List<Inventorycheck> notExistskuDTOs = dtos.stream().filter(it -> !skuList.contains(it.getProductSkuId())).collect(Collectors.toList());
-        System.out.println("需要过滤的产品:"+JSON.toJSONString(notExistskuDTOs));
+        System.out.println("需要过滤的产品:" + JSON.toJSONString(notExistskuDTOs));
 
-        List<Inventorycheck> existskuDTOs= dtos;
+        List<Inventorycheck> existskuDTOs = dtos;
 //        List<Inventorycheck> existskuDTOs = dtos.stream().filter(it -> skuList.contains(it.getProductSkuId())).collect(Collectors.toList());
 //        System.out.println("过滤产品后:"+JSON.toJSONString(existskuDTOs));
 
@@ -206,10 +432,10 @@ public class ErpInventoryCheck {
 //        System.out.println("今日处理异常："+JSON.toJSONString(collect3));
 
 
-        List<Inventorycheck>  notGroupList =new ArrayList<>();
+        List<Inventorycheck> notGroupList = new ArrayList<>();
         notGroupList.addAll(collect);
         notGroupList.addAll(notExistskuDTOs);
-        System.out.println("过滤总数："+JSON.toJSONString(notGroupList));
+        System.out.println("过滤总数：" + JSON.toJSONString(notGroupList));
 
 
         Map<String, List<Inventorycheck>> collect2 = dtos.stream().collect(Collectors.groupingBy(it -> String.valueOf(it.getWarehouseId())));
@@ -224,9 +450,9 @@ public class ErpInventoryCheck {
             }
         }
         Map<String, List<Inventorycheck>> listMap = result.stream().collect(Collectors.groupingBy(it -> String.valueOf(it.getWarehouseId())));
-        System.out.println("可抵消数据:"+JSON.toJSONString(listMap));
+        System.out.println("可抵消数据:" + JSON.toJSONString(listMap));
 
-        return  existskuDTOs;
+        return existskuDTOs;
     }
 
 
@@ -320,7 +546,812 @@ public class ErpInventoryCheck {
 
 
 
+    public static Map<Long, ProductSkuDTO> getskuMap() {
+        String json = "[\n" +
+                "    {\n" +
+                "        \"cityId\": 119,\n" +
+                "        \"defaultImageFileId\": \"51554\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 17.5,\n" +
+                "        \"length\": 29.5,\n" +
+                "        \"monthOfShelfLife\": 10,\n" +
+                "        \"name\": \"雀巢咖啡丝滑拿铁268ml（1*15）\",\n" +
+                "        \"ownerName\": \"易酒批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 15.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"雀巢\",\n" +
+                "        \"productInfoId\": 2109,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 11900002112931,\n" +
+                "        \"productSpecificationId\": 2112,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"11900002112931\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClassId\": 4729627948466035355,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易酒批\",\n" +
+                "        \"specificationName\": \"15瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"29.5*18.5*17.5\",\n" +
+                "        \"weight\": 4.7,\n" +
+                "        \"width\": 18.5\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 119,\n" +
+                "        \"defaultImageFileId\": \"46673\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 6,\n" +
+                "        \"name\": \"伊利金典纯牛奶250ml（1*12）\",\n" +
+                "        \"ownerName\": \"易酒批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 12.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"伊利\",\n" +
+                "        \"productInfoId\": 6651,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 11900006670219,\n" +
+                "        \"productSpecificationId\": 6670,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"11900006670219\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClass\": \"纯牛奶\",\n" +
+                "        \"secondStatisticsClassId\": 4729628135724931723,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易酒批\",\n" +
+                "        \"specificationName\": \"12瓶/件\",\n" +
+                "        \"statisticsClass\": \"牛奶乳品\",\n" +
+                "        \"statisticsClassId\": 4729627946540849811,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0*0*0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 121,\n" +
+                "        \"defaultImageFileId\": \"3531567\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 18,\n" +
+                "        \"name\": \"红牛250ml（1*24）\",\n" +
+                "        \"ownerName\": \"易酒批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 24.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"红牛\",\n" +
+                "        \"productInfoId\": 2254,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 12100002257692,\n" +
+                "        \"productSpecificationId\": 2257,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"12100002257692\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClassId\": 4729627945517439640,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易酒批\",\n" +
+                "        \"specificationName\": \"24瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0*0*0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 404,\n" +
+                "        \"defaultImageFileId\": \"3531567\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 18,\n" +
+                "        \"name\": \"红牛250ml（1*24）\",\n" +
+                "        \"ownerName\": \"易酒批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 24.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"红牛\",\n" +
+                "        \"productInfoId\": 2254,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 40400002257302,\n" +
+                "        \"productSpecificationId\": 2257,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"40400002257302\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClassId\": 4729627945517439640,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易酒批\",\n" +
+                "        \"specificationName\": \"24瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0*0*0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 471,\n" +
+                "        \"defaultImageFileId\": \"51554\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 17.5,\n" +
+                "        \"length\": 29.5,\n" +
+                "        \"monthOfShelfLife\": 10,\n" +
+                "        \"name\": \"[下架]雀巢咖啡丝滑拿铁268ml（1*15）\",\n" +
+                "        \"ownerName\": \"易酒批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 15.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"雀巢\",\n" +
+                "        \"productInfoId\": 2109,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 47100002112418,\n" +
+                "        \"productSpecificationId\": 2112,\n" +
+                "        \"productState\": 0,\n" +
+                "        \"refProductSkuId\": \"47100002112418\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClassId\": 4729627948466035355,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易酒批\",\n" +
+                "        \"specificationName\": \"15瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"29.5*18.5*17.5\",\n" +
+                "        \"weight\": 4.7,\n" +
+                "        \"width\": 18.5\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 713,\n" +
+                "        \"defaultImageFileId\": \"9425911\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 10,\n" +
+                "        \"name\": \"脉动青柠口味600ml（1*15）\",\n" +
+                "        \"ownerName\": \"易酒批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 15.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"脉动\",\n" +
+                "        \"productInfoId\": 1540,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 71300001542537,\n" +
+                "        \"productSpecificationId\": 1542,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"71300001542537\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClassId\": 4729627945517439640,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易酒批\",\n" +
+                "        \"specificationName\": \"15瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0.0*0.0*0.0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 723,\n" +
+                "        \"defaultImageFileId\": \"8490850\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 9,\n" +
+                "        \"name\": \"[下架]乌苏（红）啤酒【瓶】纸箱装11度620ml（1*12）\",\n" +
+                "        \"ownerName\": \"易酒批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 12.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"乌苏\",\n" +
+                "        \"productInfoId\": 145930,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 72300151112005,\n" +
+                "        \"productSpecificationId\": 151112,\n" +
+                "        \"productState\": 0,\n" +
+                "        \"refProductSkuId\": \"799777805606240520\",\n" +
+                "        \"saleModel\": 3,\n" +
+                "        \"secondStatisticsClass\": \"国产\",\n" +
+                "        \"secondStatisticsClassId\": 4729627943067966101,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易酒批\",\n" +
+                "        \"specificationName\": \"12瓶/件\",\n" +
+                "        \"statisticsClass\": \"啤酒\",\n" +
+                "        \"statisticsClassId\": 4729627941671262851,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0*0*0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 723,\n" +
+                "        \"defaultImageFileId\": \"46673\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 6,\n" +
+                "        \"name\": \"[下架]伊利金典纯牛奶250ml（1*12）\",\n" +
+                "        \"ownerName\": \"易酒批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 12.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"伊利\",\n" +
+                "        \"productInfoId\": 6651,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 4769468096336272147,\n" +
+                "        \"productSpecificationId\": 6670,\n" +
+                "        \"productState\": 0,\n" +
+                "        \"refProductSkuId\": \"72300006670055\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClass\": \"纯牛奶\",\n" +
+                "        \"secondStatisticsClassId\": 4729628135724931723,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易酒批\",\n" +
+                "        \"specificationName\": \"12瓶/件\",\n" +
+                "        \"statisticsClass\": \"牛奶乳品\",\n" +
+                "        \"statisticsClassId\": 4729627946540849811,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0*0*0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 704,\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 365,\n" +
+                "        \"name\": \"[下架]燕京啤酒小度酒U8大滋味8度500ml（1*12）\",\n" +
+                "        \"ownerName\": \"易酒批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 12.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"燕京\",\n" +
+                "        \"productInfoId\": 285795,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 4797796031061143825,\n" +
+                "        \"productSpecificationId\": 294058,\n" +
+                "        \"productState\": 0,\n" +
+                "        \"refProductSkuId\": \"70400294058145\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClass\": \"国产\",\n" +
+                "        \"secondStatisticsClassId\": 4729627943067966101,\n" +
+                "        \"shelfLifeUnit\": 3,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易酒批\",\n" +
+                "        \"specificationName\": \"12罐/件\",\n" +
+                "        \"statisticsClass\": \"啤酒\",\n" +
+                "        \"statisticsClassId\": 4729627941671262851,\n" +
+                "        \"unitName\": \"罐\",\n" +
+                "        \"volume\": \"0.0*0.0*0.0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 723,\n" +
+                "        \"defaultImageFileId\": \"9649440\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 18,\n" +
+                "        \"name\": \"康师傅喝开水熟水饮用水550ml（1*24）\",\n" +
+                "        \"ownerName\": \"易酒批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 24.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"康师傅\",\n" +
+                "        \"productInfoId\": 298541,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 4807710028041490262,\n" +
+                "        \"productSpecificationId\": 307499,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"72300307499499\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClass\": \"水\",\n" +
+                "        \"secondStatisticsClassId\": 4729627945517439636,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易酒批\",\n" +
+                "        \"specificationName\": \"24瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0.0*0.0*0.0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 713,\n" +
+                "        \"defaultImageFileId\": \"9649440\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 18,\n" +
+                "        \"name\": \"康师傅喝开水熟水饮用水550ml（1*24）\",\n" +
+                "        \"ownerName\": \"易久批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 24.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"康师傅\",\n" +
+                "        \"productInfoId\": 298541,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 4823452413621428445,\n" +
+                "        \"productSpecificationId\": 307499,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"76900307499409\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClass\": \"水\",\n" +
+                "        \"secondStatisticsClassId\": 4729627945517439636,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易久批\",\n" +
+                "        \"specificationName\": \"24瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0.0*0.0*0.0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 769,\n" +
+                "        \"defaultImageFileId\": \"9791255\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"name\": \"康师傅茉莉蜜茶500ml（1*16）\",\n" +
+                "        \"ownerName\": \"易久批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 16.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"康师傅\",\n" +
+                "        \"productInfoId\": 317638,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 4868065781715567831,\n" +
+                "        \"productSpecificationId\": 328247,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"76900328247824\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClassId\": 4729627945517439638,\n" +
+                "        \"shelfLifeUnit\": 0,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易久批\",\n" +
+                "        \"specificationName\": \"16瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0.0*0.0*0.0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 101,\n" +
+                "        \"defaultImageFileId\": \"10348341\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 18,\n" +
+                "        \"name\": \"[下架]恒大天然矿泉水570ml（1*24）\",\n" +
+                "        \"ownerName\": \"易久批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 24.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"恒大\",\n" +
+                "        \"productInfoId\": 379950,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 4868120068239918288,\n" +
+                "        \"productSpecificationId\": 393405,\n" +
+                "        \"productState\": 0,\n" +
+                "        \"refProductSkuId\": \"70100393405423\",\n" +
+                "        \"saleModel\": 3,\n" +
+                "        \"secondStatisticsClass\": \"水\",\n" +
+                "        \"secondStatisticsClassId\": 4729627945517439636,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易久批\",\n" +
+                "        \"specificationName\": \"24瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0.0*0.0*0.0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 704,\n" +
+                "        \"defaultImageFileId\": \"10348341\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 18,\n" +
+                "        \"name\": \"[下架]恒大天然矿泉水570ml（1*24）\",\n" +
+                "        \"ownerName\": \"易久批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 24.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"恒大\",\n" +
+                "        \"productInfoId\": 379950,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 4868120093263135965,\n" +
+                "        \"productSpecificationId\": 393405,\n" +
+                "        \"productState\": 0,\n" +
+                "        \"refProductSkuId\": \"70100393405423\",\n" +
+                "        \"saleModel\": 3,\n" +
+                "        \"secondStatisticsClass\": \"水\",\n" +
+                "        \"secondStatisticsClassId\": 4729627945517439636,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易久批\",\n" +
+                "        \"specificationName\": \"24瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0.0*0.0*0.0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 713,\n" +
+                "        \"defaultImageFileId\": \"10348341\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 18,\n" +
+                "        \"name\": \"[下架]恒大天然矿泉水570ml（1*24）\",\n" +
+                "        \"ownerName\": \"易久批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 24.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"恒大\",\n" +
+                "        \"productInfoId\": 379950,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 4868120090226777946,\n" +
+                "        \"productSpecificationId\": 393405,\n" +
+                "        \"productState\": 0,\n" +
+                "        \"refProductSkuId\": \"70100393405423\",\n" +
+                "        \"saleModel\": 3,\n" +
+                "        \"secondStatisticsClass\": \"水\",\n" +
+                "        \"secondStatisticsClassId\": 4729627945517439636,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易久批\",\n" +
+                "        \"specificationName\": \"24瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0.0*0.0*0.0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 769,\n" +
+                "        \"defaultImageFileId\": \"3531567\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 18,\n" +
+                "        \"name\": \"红牛250ml（1*24）\",\n" +
+                "        \"ownerName\": \"易久批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 24.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"红牛\",\n" +
+                "        \"productInfoId\": 2254,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 4871406621964164952,\n" +
+                "        \"productSpecificationId\": 2257,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"76900002257181\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClassId\": 4729627945517439640,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易久批\",\n" +
+                "        \"specificationName\": \"24瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0*0*0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 769,\n" +
+                "        \"defaultImageFileId\": \"9425911\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 10,\n" +
+                "        \"name\": \"脉动青柠口味600ml（1*15）\",\n" +
+                "        \"ownerName\": \"易久批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 15.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"脉动\",\n" +
+                "        \"productInfoId\": 1540,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 4872879733728268301,\n" +
+                "        \"productSpecificationId\": 1542,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"76900001542182\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClassId\": 4729627945517439640,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易久批\",\n" +
+                "        \"specificationName\": \"15瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0.0*0.0*0.0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 769,\n" +
+                "        \"defaultImageFileId\": \"8490850\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 9,\n" +
+                "        \"name\": \"乌苏（红）啤酒【瓶】纸箱装11度620ml（1*12）\",\n" +
+                "        \"ownerName\": \"易久批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 12.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"乌苏\",\n" +
+                "        \"productInfoId\": 145930,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 4874552746374778884,\n" +
+                "        \"productSpecificationId\": 151112,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"76900151112702\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClass\": \"国产\",\n" +
+                "        \"secondStatisticsClassId\": 4729627943067966101,\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易久批\",\n" +
+                "        \"specificationName\": \"12瓶/件\",\n" +
+                "        \"statisticsClass\": \"啤酒\",\n" +
+                "        \"statisticsClassId\": 4729627941671262851,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0*0*0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 772,\n" +
+                "        \"defaultImageFileId\": \"9791255\",\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"name\": \"康师傅茉莉蜜茶500ml（1*16）\",\n" +
+                "        \"ownerName\": \"易久批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 16.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"康师傅\",\n" +
+                "        \"productInfoId\": 317638,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 4912419848918971076,\n" +
+                "        \"productSpecificationId\": 328247,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"77200328247796\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClassId\": 4729627945517439638,\n" +
+                "        \"shelfLifeUnit\": 0,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易久批\",\n" +
+                "        \"specificationName\": \"16瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"volume\": \"0.0*0.0*0.0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"cityId\": 723,\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0,\n" +
+                "        \"length\": 0,\n" +
+                "        \"monthOfShelfLife\": 365,\n" +
+                "        \"name\": \"燕京啤酒小度酒U8大滋味8度500ml（1*12）\",\n" +
+                "        \"ownerName\": \"易久批\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 12.000000,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"燕京\",\n" +
+                "        \"productInfoId\": 285795,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productSkuId\": 4939565532622387660,\n" +
+                "        \"productSpecificationId\": 294058,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"72300294058799\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClass\": \"国产\",\n" +
+                "        \"secondStatisticsClassId\": 4729627943067966101,\n" +
+                "        \"shelfLifeUnit\": 3,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易久批\",\n" +
+                "        \"specificationName\": \"12罐/件\",\n" +
+                "        \"statisticsClass\": \"啤酒\",\n" +
+                "        \"statisticsClassId\": 4729627941671262851,\n" +
+                "        \"unitName\": \"罐\",\n" +
+                "        \"volume\": \"0.0*0.0*0.0\",\n" +
+                "        \"weight\": 0,\n" +
+                "        \"width\": 0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"boxCode\": \"6940553360036、6922858211046、6939223900092、6940159410043、6949133700057、6908946284451\",\n" +
+                "        \"cityId\": 105,\n" +
+                "        \"costPrice\": 4.831722,\n" +
+                "        \"defaultImageFileId\": \"16963\",\n" +
+                "        \"deliveryFee\": 0.0000,\n" +
+                "        \"deliveryPayType\": 0,\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"fleeGoods\": 0,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0.0,\n" +
+                "        \"isComplete\": 0,\n" +
+                "        \"length\": 0.0,\n" +
+                "        \"monthOfShelfLife\": 12,\n" +
+                "        \"name\": \"百事可乐2L（1*8）\",\n" +
+                "        \"newBoxCode\": \"6940553360036\",\n" +
+                "        \"newPackageCode\": \"6940553360036\",\n" +
+                "        \"ownerName\": \"易久批\",\n" +
+                "        \"packageCode\": \"6940553360036、6922858211046\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 8.000000,\n" +
+                "        \"pick\": 0,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"百事可乐\",\n" +
+                "        \"productFeature\": 1,\n" +
+                "        \"productGrade\": 0,\n" +
+                "        \"productInfoId\": 2064,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productRelevantState\": 1,\n" +
+                "        \"productSkuId\": 10500002067772,\n" +
+                "        \"productSpecificationId\": 2067,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"10500002067772\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClassId\": 4729627945517439639,\n" +
+                "        \"sellingPrice\": 42.800000,\n" +
+                "        \"sellingPriceUnit\": \"件\",\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"sortingFee\": 0.300,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易久批\",\n" +
+                "        \"sow\": 1,\n" +
+                "        \"specificationName\": \"8瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"storageType\": 0,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"unpackage\": true,\n" +
+                "        \"volume\": \"0*0*0\",\n" +
+                "        \"warehouseCustodyFee\": 0.0000,\n" +
+                "        \"weight\": 0.0,\n" +
+                "        \"width\": 0.0\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"boxCode\": \"6949930102306\",\n" +
+                "        \"cityId\": 105,\n" +
+                "        \"costPrice\": 2.002382,\n" +
+                "        \"defaultImageFileId\": \"16435\",\n" +
+                "        \"deliveryFee\": 0.0000,\n" +
+                "        \"deliveryPayType\": 0,\n" +
+                "        \"distributionPercent\": 1.00,\n" +
+                "        \"distributionPercentForAmount\": 1.00,\n" +
+                "        \"fleeGoods\": 0,\n" +
+                "        \"hasManyStore\": false,\n" +
+                "        \"height\": 0.0,\n" +
+                "        \"isComplete\": 0,\n" +
+                "        \"length\": 0.0,\n" +
+                "        \"monthOfShelfLife\": 12,\n" +
+                "        \"name\": \"百事可乐[瓶]500ml（1*24）\",\n" +
+                "        \"newBoxCode\": \"6949930102306\",\n" +
+                "        \"newPackageCode\": \"6924862100033\",\n" +
+                "        \"ownerName\": \"易久批\",\n" +
+                "        \"packageCode\": \"6924862100033、6939223900016、6925788302624、6908946288305、6940553360012、6949930102306\",\n" +
+                "        \"packageName\": \"件\",\n" +
+                "        \"packageQuantity\": 24.000000,\n" +
+                "        \"pick\": 0,\n" +
+                "        \"process\": 0,\n" +
+                "        \"productBrand\": \"百事可乐\",\n" +
+                "        \"productFeature\": 1,\n" +
+                "        \"productGrade\": 0,\n" +
+                "        \"productInfoId\": 1548,\n" +
+                "        \"productInfoStatus\": 1,\n" +
+                "        \"productRelevantState\": 1,\n" +
+                "        \"productSkuId\": 10500001550578,\n" +
+                "        \"productSpecificationId\": 1550,\n" +
+                "        \"productState\": 2,\n" +
+                "        \"refProductSkuId\": \"10500001550849\",\n" +
+                "        \"saleModel\": 0,\n" +
+                "        \"secondStatisticsClass\": \"碳酸饮料\",\n" +
+                "        \"secondStatisticsClassId\": 4729627945517439639,\n" +
+                "        \"sellingPrice\": 50.500000,\n" +
+                "        \"sellingPriceUnit\": \"件\",\n" +
+                "        \"shelfLifeUnit\": 2,\n" +
+                "        \"sortingFee\": 0.300,\n" +
+                "        \"source\": 0,\n" +
+                "        \"sourceName\": \"易久批\",\n" +
+                "        \"sow\": 1,\n" +
+                "        \"specificationName\": \"24瓶/件\",\n" +
+                "        \"statisticsClass\": \"饮料\",\n" +
+                "        \"statisticsClassId\": 4729627945492273810,\n" +
+                "        \"storageType\": 0,\n" +
+                "        \"unitName\": \"瓶\",\n" +
+                "        \"unpackage\": true,\n" +
+                "        \"volume\": \"0.0*0.0*0.0\",\n" +
+                "        \"warehouseCustodyFee\": 0.0000,\n" +
+                "        \"weight\": 0.0,\n" +
+                "        \"width\": 0.0\n" +
+                "    }\n" +
+                "]";
+        List<ProductSkuDTO> productSkuDTOS = JSON.parseArray(json, ProductSkuDTO.class);
+        List<Long> collect = productSkuDTOS.stream().map(it -> it.getProductSkuId()).collect(Collectors.toList());
+        System.out.println("skuId" + JSON.toJSONString(collect));
+        Map<Long, ProductSkuDTO> map = productSkuDTOS.stream().collect(Collectors.toMap(it -> it.getProductSkuId(), it -> it));
+        return map;
 
+    }
 
 
 }

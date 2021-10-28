@@ -33,6 +33,7 @@ import org.springframework.web.servlet.view.document.AbstractXlsxView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -61,6 +62,7 @@ public class XlsxViewMap extends AbstractXlsxView {
         setHeaderTitle(workbook, sheet, model);
         //填充数据
         setCellValue(workbook, sheet, model);
+
 		response.setHeader("Content-Disposition", "attachment; filename=" + new String(fileName.getBytes(), "ISO8859-1"));
     }
 

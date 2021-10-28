@@ -2,7 +2,7 @@ package com.common.generate.javacreate.test.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @author xialei
@@ -87,11 +87,11 @@ public class Inventorycheck implements Serializable {
     /**
      * 创建时间
      */
-    private Timestamp createTime;
+    private String createTime;
     /**
      * 修改时间
      */
-    private Timestamp lastUpdateTime;
+    private String lastUpdateTime;
 
     private BigDecimal costPrice;
 
@@ -111,7 +111,180 @@ public class Inventorycheck implements Serializable {
     private String errorOwnerId;
 
 
+    private String settleNo;
+
+
+    private Long settleId;
+
+
+    private Long orderId;
+
+    private Long orderItemId;
+
+
+    private Long groupOrderSkuId;
+
+
     private String date;
+
+
+    private String completeTime;
+
+    private BigDecimal totalAmount;
+
+
+    private BigDecimal specQuantity;
+
+    private String packageName;
+
+    private String unitName;
+
+    /**
+     * 数据操作类型（1、新增，2、修改）
+     */
+    private Integer sqlType;
+
+
+    private String orderNo;
+
+
+    private String channelCity;
+
+
+    private Long billId;
+
+    private String dateSource;
+
+    public String getCompleteTime() {
+        return completeTime;
+    }
+
+    public void setCompleteTime(String completeTime) {
+        this.completeTime = completeTime;
+    }
+
+    public String getDateSource() {
+        return dateSource;
+    }
+
+    public void setDateSource(String dateSource) {
+        this.dateSource = dateSource;
+    }
+
+    public Long getBillId() {
+        return billId;
+    }
+
+    public void setBillId(Long billId) {
+        this.billId = billId;
+    }
+
+    public String getChannelCity() {
+        return channelCity;
+    }
+
+    public void setChannelCity(String channelCity) {
+        this.channelCity = channelCity;
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    public Integer getSqlType() {
+        return sqlType;
+    }
+
+    public void setSqlType(Integer sqlType) {
+        this.sqlType = sqlType;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
+    public BigDecimal getSpecQuantity() {
+        return specQuantity;
+    }
+
+    public void setSpecQuantity(BigDecimal specQuantity) {
+        this.specQuantity = specQuantity;
+    }
+
+    public String getSettleNo() {
+        return settleNo;
+    }
+
+    public void setSettleNo(String settleNo) {
+        this.settleNo = settleNo;
+    }
+
+    public Long getSettleId() {
+        return settleId;
+    }
+
+    public void setSettleId(Long settleId) {
+        this.settleId = settleId;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public Long getOrderItemId() {
+        return orderItemId;
+    }
+
+    public void setOrderItemId(Long orderItemId) {
+        this.orderItemId = orderItemId;
+    }
+
+    public Long getGroupOrderSkuId() {
+        return groupOrderSkuId;
+    }
+
+    public void setGroupOrderSkuId(Long groupOrderSkuId) {
+        this.groupOrderSkuId = groupOrderSkuId;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    /***/
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getDate() {
         return date;
@@ -332,18 +505,18 @@ public class Inventorycheck implements Serializable {
     /**
      * 获取创建时间
      */
-    public void setCreateTime (Timestamp createTime) {this.createTime = createTime;} 
+    public void setCreateTime (String createTime) {this.createTime = createTime;}
     /**
      * 设置创建时间
      */
-    public Timestamp getCreateTime(){ return createTime;} 
+    public String getCreateTime(){ return createTime;}
     /**
      * 获取修改时间
      */
-    public void setLastUpdateTime (Timestamp lastUpdateTime) {this.lastUpdateTime = lastUpdateTime;} 
+    public void setLastUpdateTime (String lastUpdateTime) {this.lastUpdateTime = lastUpdateTime;}
     /**
      * 设置修改时间
      */
-    public Timestamp getLastUpdateTime(){ return lastUpdateTime;} 
+    public String getLastUpdateTime(){ return lastUpdateTime;}
 
 }

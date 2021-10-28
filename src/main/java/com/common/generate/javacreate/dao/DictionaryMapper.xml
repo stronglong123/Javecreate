@@ -4,14 +4,14 @@
 
     <resultMap id="dictionaryResultMap" type="com.common.generate.javacreate.model.DictionaryDTO">
         <id column="id" jdbcType="BIGINT" property="id"/> 
-        <result column="name" jdbcType="VARCHAR" property="name"/> 
-        <result column="alias" jdbcType="VARCHAR" property="alias"/> 
-        <result column="description" jdbcType="VARCHAR" property="description"/> 
-        <result column="source" jdbcType="VARCHAR" property="source"/> 
-        <result column="type" jdbcType="VARCHAR" property="type"/> 
-        <result column="instance" jdbcType="VARCHAR" property="instance"/> 
-        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/> 
-        <result column="lastUpdateTime" jdbcType="TIMESTAMP" property="lastUpdateTime"/> 
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="alias" jdbcType="VARCHAR" property="alias"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="source" jdbcType="VARCHAR" property="source"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="instance" jdbcType="VARCHAR" property="instance"/>
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="lastUpdateTime" jdbcType="TIMESTAMP" property="lastUpdateTime"/>
         <result column="createUser" jdbcType="VARCHAR" property="createUser"/>
         <result column="lastUpdateUser" jdbcType="VARCHAR" property="lastUpdateUser"/>
     </resultMap>

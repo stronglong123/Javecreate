@@ -1,6 +1,7 @@
 package com.common.generate.javacreate.utils;
 
 import com.common.generate.javacreate.model.excel.ExcelHead;
+import com.common.generate.javacreate.test.dto.Inventorycheck;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -157,6 +158,13 @@ public class ExcelUtils {
         }
     }
 
+
+
+    public static <T> List<T> readExcelToEntity(Class<T> classzz, String filePath,String fileName) throws Exception {
+        FileInputStream file = new FileInputStream(filePath);
+        return readExcelToEntity(classzz, file, fileName, null);
+    }
+
     /**
      * 解析Excel转换为Entity
      *
@@ -225,6 +233,9 @@ public class ExcelUtils {
      * @return
      */
     private static Object convertType(Class<?> classzz, String value) {
+        if(StringUtils.isEmpty(value)||value.toLowerCase().equals("null")){
+            return null;
+        }
         if (Integer.class == classzz || int.class == classzz) {
             return Integer.valueOf(value);
         }

@@ -1,25 +1,18 @@
 package com.common.generate.javacreate.test.groupsettle.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.common.generate.javacreate.model.base.Result;
 import com.common.generate.javacreate.test.groupsettle.dto.ErpProductOwnerDTO;
-import com.common.generate.javacreate.test.groupsettle.dto.GroupSettleErrorDTO;
 import com.common.generate.javacreate.test.groupsettle.dto.OrderAllPageDTO;
 import com.common.generate.javacreate.test.groupsettle.dto.OrderPageItemDTO;
 import com.common.generate.javacreate.test.groupsettle.dto.SettleOrderItemSecOwnerDTO;
 import com.common.generate.javacreate.test.groupsettle.dto.WarehouseDTO;
 import com.common.generate.javacreate.test.groupsettle.util.BaseUtils;
 import com.common.generate.javacreate.utils.FileUtil;
-import com.common.generate.javacreate.utils.HttpClientUtils;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.relational.core.sql.In;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;

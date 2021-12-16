@@ -1,6 +1,7 @@
 package com.common.generate.javacreate.test;
 
 import com.alibaba.fastjson.JSON;
+import com.common.generate.javacreate.service.newcheck.DataDTO;
 import com.common.generate.javacreate.test.dto.FindStoreQueryDTO;
 import com.common.generate.javacreate.test.dto.OrderLogisticsSyncDTO;
 import com.common.generate.javacreate.test.dto.OrderQueryDTO;
@@ -25,14 +26,18 @@ public class OpenApiTest {
 
     private static final String TESTBASEURL = "http://api.test.yijiupidev.com";
     private static final String RELEASEBASEURL = "http://api.release.yijiupidev.com";
-    private static final String PRODUCTBASEURL = "https://api.yijiupi.com";
+//    private static final String PRODUCTBASEURL = "https://api.yijiupi.com";
+    private static final String PRODUCTBASEURL = "https://api.yijiupi.net";
     private static final String PREBASEURL = "http://api.pre.yijiupi.com";
     private static final String BASEURL = "http://localhost:40000";
     private static String baseUrl;
 
     public static void main(String[] args) {
-        baseUrl = getUrl("release");
-        deal("ywqs");
+//        for (int i = 0; i < 10; i++) {
+//            System.out.println("第"+i+"次");
+            baseUrl = getUrl("product");
+            deal("ywqs");
+//        }
     }
 
     public static String getUrl(String system) {
@@ -83,9 +88,14 @@ public class OpenApiTest {
     }
 
     public static void ywqs(){
-        String appKey = "bc7381239d99417b97e7c3c929bfc497";
-        String appSecret = "ecdb0c21f229a5f5f98483d6e67747ff";
-        orderSendSync(appSecret,appKey);
+//
+//        String appKey = "bc7381239d99417b97e7c3c929bfc497";
+//        String appSecret = "ecdb0c21f229a5f5f98483d6e67747ff";
+
+
+        String appKey = "a5bc5c99ad3b4ba694c38027387645a1";
+        String appSecret = "41e34556e6f4de91769a131a8813df2e";
+        getOrderList(appSecret,appKey);
 
     }
 
@@ -270,9 +280,10 @@ public class OpenApiTest {
      * @param appKey
      */
     public static void getOrderList(String appSecret, String appKey) {
+        long beginTime = System.currentTimeMillis();
         String url = baseUrl + "/order/getOrderList";
         System.out.println("订单获取" + url);
-        String json = "{\"currentPage\":1,\"orderCreateTimeStart\":\"2021-06-01 12:21:00\",\"orderCreateTimeEnd\":\"2021-06-30 15:21:00\",\"pageSize\":20}";
+        String json = "{\"businessTypes\":[1],\"currentPage\":\"1\",\"pageSize\":\"10\",\"lastUpdateTimeStart\":\"2021-10-25 11:00:50\",\"lastUpdateTimeEnd\":\"2021-11-23 16:27:16\"}";
         OrderQueryDTO orderQueryDTO = JSON.parseObject(json, OrderQueryDTO.class);
 //        orderQueryDTO.setBusinessNo("769115400038");
         orderQueryDTO.setBusinessTypes(Arrays.asList((byte) 1,(byte)2));
@@ -281,10 +292,12 @@ public class OpenApiTest {
             System.out.println("url:" + urlWithAuth);
             System.out.println("data:" + JSON.toJSONString(orderQueryDTO));
             String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(orderQueryDTO));
-            System.out.println("订单获取：" + post);
+            System.out.println("订单获取成功："+post);
         } catch (Exception e) {
             System.out.println("请求失败:" + e);
         }
+        System.out.println("===============总耗时:" + (System.currentTimeMillis() - beginTime) / 1000.0000 + "秒");
+
     }
 
     /**

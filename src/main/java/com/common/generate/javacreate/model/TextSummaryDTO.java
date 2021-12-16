@@ -1,7 +1,5 @@
 package com.common.generate.javacreate.model;
 
-import org.springframework.data.relational.core.sql.In;
-
 import java.io.Serializable;
 
 /**

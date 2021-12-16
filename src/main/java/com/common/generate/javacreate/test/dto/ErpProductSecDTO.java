@@ -1,7 +1,5 @@
 package com.common.generate.javacreate.test.dto;
 
-import org.springframework.data.relational.core.sql.In;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 

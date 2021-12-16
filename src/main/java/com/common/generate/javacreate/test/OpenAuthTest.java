@@ -12,7 +12,6 @@ import com.common.generate.javacreate.test.dto.ThirdRoleQueryDTO;
 import com.common.generate.javacreate.authutils.AuthUtil;
 import com.common.generate.javacreate.utils.HttpUtil;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;

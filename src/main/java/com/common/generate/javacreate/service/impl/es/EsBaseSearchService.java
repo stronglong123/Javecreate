@@ -35,13 +35,34 @@ import java.util.Map;
  */
 public abstract class EsBaseSearchService<T> {
     @Autowired
-    private ElasticsearchRestTemplate restTemplate;
+    protected ElasticsearchRestTemplate restTemplate;
 
     /**
      * @Description 根据实体类创建索引，这里的实体类就是上面创建的EsSourceInfo实体
      * @Author Innocence
      */
     public Boolean createIndexByClass(Class<T> clazz) {
+        Document document = clazz.getDeclaredAnnotation(Document.class);
+        if (document == null) {
+            return false;
+        }
+        String indexName = document.indexName();
+        Boolean indexExist = isIndexExist(indexName);
+        if (indexExist) {
+            return false;
+        }
+        IndexOperations indexOps = restTemplate.indexOps(clazz);
+        boolean result1 = indexOps.create(); //创建索引
+        boolean result2 = indexOps.putMapping(indexOps.createMapping(clazz));
+        return result1 & result2;
+    }
+
+
+    /**
+     * @Description 根据实体类创建索引，这里的实体类就是上面创建的EsSourceInfo实体
+     * @Author Innocence
+     */
+    public Boolean putMap(Class<T> clazz) {
         Document document = clazz.getDeclaredAnnotation(Document.class);
         if (document == null) {
             return false;

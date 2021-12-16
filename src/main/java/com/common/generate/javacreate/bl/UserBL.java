@@ -79,19 +79,20 @@ public class UserBL {
      * @description 抽出的公用方法
      */
     private AdminUser extractCode(AdminUser user, String password) {
-        if (ObjectUtils.isNotEmpty(user)) {
-            if (user.getState() != SystemConstant.NORMAL_STATUS) {
-                throw new BusinessException(BusinessCodeEnum.LOCKED_ACCOUNT.getText(), BusinessCodeEnum.LOCKED_ACCOUNT.getCode());
-            }
-            String md5Password = Md5Utils.encrytMD5(password);
-            if (Objects.equals(md5Password, user.getPassword())) {
-                return user;
-            } else {
-                throw new BusinessException(BusinessCodeEnum.LOGIN_ERROR.getText(), BusinessCodeEnum.LOGIN_ERROR.getCode());
-            }
-        } else {
-            throw new BusinessException(BusinessCodeEnum.USER_IS_NULL.getText(), BusinessCodeEnum.USER_IS_NULL.getCode());
-        }
+//        if (ObjectUtils.isNotEmpty(user)) {
+//            if (user.getState() != SystemConstant.NORMAL_STATUS) {
+//                throw new BusinessException(BusinessCodeEnum.LOCKED_ACCOUNT.getText(), BusinessCodeEnum.LOCKED_ACCOUNT.getCode());
+//            }
+//            String md5Password = Md5Utils.encrytMD5(password);
+//            if (Objects.equals(md5Password, user.getPassword())) {
+//                return user;
+//            } else {
+//                throw new BusinessException(BusinessCodeEnum.LOGIN_ERROR.getText(), BusinessCodeEnum.LOGIN_ERROR.getCode());
+//            }
+//        } else {
+//            throw new BusinessException(BusinessCodeEnum.USER_IS_NULL.getText(), BusinessCodeEnum.USER_IS_NULL.getCode());
+//        }
+        return null;
     }
 
 }

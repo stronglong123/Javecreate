@@ -20,7 +20,7 @@ public class CancelTransferNoteService {
 
     private static final String baseUrl = "http://wms.pre.yijiupi.com/supplyChain/";
 
-    private static final String token ="c643db99-6729-491f-9fa3-848072a752de\n";
+    private static final String token ="444709f6-0aee-47b3-adf1-7fc0884c1ef5";
 
     public static void main(String[] args){
         CancelTransferNoteByNos();
@@ -65,10 +65,8 @@ public class CancelTransferNoteService {
     }
 
 
-
-    private static List<String> getTransferNo(){
-        return Arrays.asList("XC202107090072","XC202103300127","XC202103300125","XC202103300124","XC202103300123",
-                "XC202103300109","XC202103300090","XC202103300006","XC202103190059","XC202103010007","XC202101260036");
+    private static List<String> getTransferNo() {
+        return Arrays.asList("XC202103250073");
     }
 
 

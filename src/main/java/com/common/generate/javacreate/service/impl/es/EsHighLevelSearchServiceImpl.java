@@ -32,6 +32,7 @@ public abstract class EsHighLevelSearchServiceImpl<T> extends EsBaseSearchServic
     @Autowired
     private RestHighLevelClient restHighLevelClient;
 
+    @Override
     public List<T> queryList(PageParam pageParam, BoTermQuery boTermQuery, String indexName, Class<T> tClass) {
         /**组转查询条件*/
         BoolQueryBuilder queryBuilder = this.createQueryBuilder(boTermQuery);

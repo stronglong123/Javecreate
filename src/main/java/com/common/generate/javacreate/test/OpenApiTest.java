@@ -2,6 +2,7 @@ package com.common.generate.javacreate.test;
 
 import com.alibaba.fastjson.JSON;
 import com.common.generate.javacreate.service.newcheck.DataDTO;
+import com.common.generate.javacreate.test.dto.DeliverySettingQueryDTO;
 import com.common.generate.javacreate.test.dto.FindStoreQueryDTO;
 import com.common.generate.javacreate.test.dto.OrderLogisticsSyncDTO;
 import com.common.generate.javacreate.test.dto.OrderQueryDTO;
@@ -95,7 +96,9 @@ public class OpenApiTest {
 
         String appKey = "a5bc5c99ad3b4ba694c38027387645a1";
         String appSecret = "41e34556e6f4de91769a131a8813df2e";
-        getOrderList(appSecret,appKey);
+//        getOrderList(appSecret,appKey);
+        logisticsCompany(appSecret, appKey);
+
 
     }
 
@@ -262,11 +265,12 @@ public class OpenApiTest {
     public static void logisticsCompany(String appSecret, String appKey) {
         String url = baseUrl + "/logisticsCompany/list";
         System.out.println("获取快递信息" + url);
-        String json = "{}";
-        String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey);
+        DeliverySettingQueryDTO queryDTO = new DeliverySettingQueryDTO();
+        queryDTO.setSource((byte)1);
+        String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, DeliverySettingQueryDTO.class, queryDTO);
         try {
             System.out.println("url:" + urlWithAuth);
-            String post = HttpUtil.post(urlWithAuth, "{}");
+            String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(queryDTO));
             System.out.println("订单获取：" + post);
         } catch (Exception e) {
             System.out.println("请求失败:" + e);

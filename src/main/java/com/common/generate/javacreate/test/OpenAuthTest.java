@@ -32,9 +32,9 @@ public class OpenAuthTest {
 
     public static void main(String[] args) {
 //        ls();
-//        xls();
+        xls();
 //        test();
-        erp();
+//        erp();
     }
 
     /**
@@ -113,9 +113,9 @@ public class OpenAuthTest {
         String appKey = "c24100b971da488691cfa7e4fb0a0d01";
         //        findPermissionsByRoleCode(appSecret, appKey);
 //        addPermissionsForRoleCode(appSecret, appKey);
-//        findPermissionsByRoleCode(appSecret, appKey);
+        findPermissionsByRoleCode(appSecret, appKey);
 //        findPermissionsJsonByRoleCode(appSecret,appKey);
-        exportMenuByAppCode(appSecret,appKey);
+//        exportMenuByAppCode(appSecret,appKey);
     }
 
 

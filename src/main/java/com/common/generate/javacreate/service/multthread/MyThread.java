@@ -14,6 +14,13 @@ public class MyThread extends Thread {
 
     @Override
     public void run() {
-        System.out.println(Thread.currentThread().getName() + "多线程:" + name);
+        System.out.println("test");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        Thread.yield();
+        System.out.println(Thread.currentThread().getName() + "Thread多线程:" + name);
     }
 }

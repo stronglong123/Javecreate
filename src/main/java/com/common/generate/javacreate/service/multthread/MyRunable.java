@@ -15,6 +15,8 @@ public class MyRunable implements Runnable {
 
     @Override
     public void run() {
-        System.out.println(Thread.currentThread().getName() + "多线程：" + name);
+        System.out.println(Thread.currentThread().getName() + "run多线程：" + name);
+        Thread.yield();
+
     }
 }

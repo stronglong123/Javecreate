@@ -19,6 +19,8 @@ import java.util.List;
  * @author xialei
  * @date  2020-12-10
  */
+
+
 @RestController
 public class DictionaryController {
     private static final Logger LOGGER = LoggerFactory.getLogger(DictionaryController.class);

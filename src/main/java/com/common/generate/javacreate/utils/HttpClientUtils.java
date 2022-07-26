@@ -37,14 +37,15 @@ public class HttpClientUtils {
 	private HttpClientUtils() {}
 
 	public static void main(String[] args) throws Exception {
-		for (int i = 0; i < 50; i++) {
-//			String s = doPost("https://www.baidu.com", "");
-//			System.out.println(s);
-
-			String s = doPostWithToken("3a3075cb-808a-4af9-b49f-0e345c5e67e8", "http://wms.release.yijiupidev.com/supplyChain/base/test2?warehouseId=11", "{}");
-			System.out.println(i+":"+s);
-			Thread.sleep(3000L);
+		for (int i = 0; i <2000; i++) {
+			new Thread(() -> {
+				doPost("http://localhost:8199/dictionary/pageList", "{}");
+			}).start();
+//			String s = doPostWithToken("3a3075cb-808a-4af9-b49f-0e345c5e67e8", "http://wms.release.yijiupidev.com/supplyChain/base/test2?warehouseId=11", "{}");
+//			System.out.println(i+":"+s);
+//			Thread.sleep(3000L);
 		}
+		System.out.println("结束");
 	}
 	
 	/**

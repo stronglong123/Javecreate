@@ -18,6 +18,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -36,6 +37,26 @@ public class HttpUtil {
     private static final String _POST = "POST";// POST
     public static final int DEF_CONN_TIMEOUT = 30000;
     public static final int DEF_READ_TIMEOUT = 30000;
+
+
+    public static void main(String[] args) throws Exception {
+        long begin = System.currentTimeMillis();
+        for (int i = 0; i < 30; i++) {
+            new Thread(() -> {
+                for (int j = 0; j <100; j++) {
+                    new Thread(() -> {
+                        try {
+                            post("http://localhost:8199/dictionary/pageList", "{}");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                }
+            }).start();
+
+        }
+        System.out.println("结束:"+(System.currentTimeMillis()-begin));
+    }
 
     /**
      * 初始化http请求参数

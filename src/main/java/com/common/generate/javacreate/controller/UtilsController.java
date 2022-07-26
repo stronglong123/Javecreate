@@ -31,30 +31,20 @@ import java.util.concurrent.locks.ReentrantLock;
 @RestController
 public class UtilsController {
 
-    @Value("${erp.allotOrder.edit.openNewCheck}")
-    private boolean openNewCheck;
 
     private static final Logger logger = LoggerFactory.getLogger(UtilsController.class);
 
     @PostMapping("/util/multipleReplace")
     @IgnoreAuthInterceptor
     public Result<String> uploadProductInfo(@RequestBody ReplaceDTO replaceDTO) {
-
-        if(openNewCheck){
-            System.out.println("true");
-        }else {
-            System.out.println("false");
+        logger.info("接口参数：{}", JSON.toJSONString(replaceDTO));
+        AssertUtils.notEmpty(replaceDTO.getReplaceList(),"替换参数不能为空");
+        AssertUtils.notNull(replaceDTO.getData(),"原文本不能为空");
+        String data = replaceDTO.getData();
+        for (ReplaceParamsDTO paramsDTO : replaceDTO.getReplaceList()) {
+            data = data.replaceAll(paramsDTO.getOldParam(), StringUtils.isEmpty(paramsDTO.getNewParam())?"":paramsDTO.getNewParam());
         }
-        return null;
-
-//        logger.info("接口参数：{}", JSON.toJSONString(replaceDTO));
-//        AssertUtils.notEmpty(replaceDTO.getReplaceList(),"替换参数不能为空");
-//        AssertUtils.notNull(replaceDTO.getData(),"原文本不能为空");
-//        String data = replaceDTO.getData();
-//        for (ReplaceParamsDTO paramsDTO : replaceDTO.getReplaceList()) {
-//            data = data.replaceAll(paramsDTO.getOldParam(), StringUtils.isEmpty(paramsDTO.getNewParam())?"":paramsDTO.getNewParam());
-//        }
-//        return RetResponse.makeOKRsp(data);
+        return RetResponse.makeOKRsp(data);
     }
 
     @GetMapping("/util/jmeter")

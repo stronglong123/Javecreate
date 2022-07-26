@@ -11,6 +11,7 @@ import com.common.generate.javacreate.test.dto.PaymentReturnInfoQueryDTO;
 import com.common.generate.javacreate.test.dto.ProductSkuListSO;
 import com.common.generate.javacreate.test.dto.StocksDTO;
 import com.common.generate.javacreate.test.dto.ThirdOrderCancelDTO;
+import com.common.generate.javacreate.test.dto.ThirdPartnerOrderDTO;
 import com.common.generate.javacreate.test.dto.ThirdProductInventoryDTO;
 import com.common.generate.javacreate.test.dto.ThirdReturnOrderQueryDTO;
 import com.common.generate.javacreate.authutils.AuthUtil;
@@ -36,14 +37,14 @@ public class OpenApiTest {
     public static void main(String[] args) {
 //        for (int i = 0; i < 10; i++) {
 //            System.out.println("第"+i+"次");
-            baseUrl = getUrl("product");
-            deal("ywqs");
+            baseUrl = getUrl("pre");
+            yjsr();
 //        }
     }
 
     public static String getUrl(String system) {
         switch (system) {
-            case "tmp":
+            case "test":
                 return TESTBASEURL;
             case "release":
                 return RELEASEBASEURL;
@@ -254,6 +255,37 @@ public class OpenApiTest {
         cancelOrderRequest(appSecret,appKey);
     }
 
+    public static void yjsr() {
+        String appSecret = "cc66fbd8876fccc8590d52e232a2a127";
+        String appKey = "3aceb6028b3449aeae4336e53f8caf60";
+        syncOrder(appSecret,appKey);
+//        getOrderList(appSecret,appKey);
+//        cancelOrderRequest(appSecret,appKey);
+    }
+
+
+
+
+    /**
+     * 获取快递信息
+     *
+     * @param appSecret
+     * @param appKey
+     */
+    public static void syncOrder(String appSecret, String appKey) {
+        String url = baseUrl + "/order/syncOrder";
+        System.out.println("下单" + url);
+        String json ="{\"businessId\":5055409705313832978,\"businessNo\":\"5055409705313832978\",\"city\":\"拉萨市\",\"contact\":\"Lu.Xn\",\"contactPhone\":\"18871182396\",\"county\":\"城关区\",\"createUserId\":-952776303,\"detailAddress\":\"无名街道\",\"items\":[{\"packageName\":\"份\",\"payableAmount\":140.000000,\"productName\":\"吉林西洋参精选1.8CM圆片\",\"productSpec\":\"100克/罐(1份)\",\"refSkuId\":\"4909415446684831750\",\"saleCount\":1,\"sellPrice\":140.000000,\"sellUnit\":\"份\",\"specQuantity\":1,\"specificationId\":4909415446684831750,\"totalAmount\":140.000000,\"unitName\":\"份\",\"useCouponAmount\":0.000000}],\"orderAmount\":140.00,\"orderType\":1,\"orgId\":851,\"payType\":1,\"payableAmount\":140.00,\"province\":\"西藏自治区\",\"remark\":\"微信用户\",\"state\":5,\"sysCode\":\"41\",\"sysName\":\"云间参茸\",\"useCouponAmount\":0.00,\"userId\":-952776303,\"userName\":\"微信用户▪刘欣\",\"warehouseId\":3}";
+        ThirdPartnerOrderDTO orderDTO = JSON.parseObject(json,ThirdPartnerOrderDTO.class);
+        String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, ThirdPartnerOrderDTO.class, orderDTO);
+        try {
+            System.out.println("url:" + urlWithAuth);
+            String post = HttpUtil.post(urlWithAuth, JSON.toJSONString(orderDTO));
+            System.out.println("订单获取：" + post);
+        } catch (Exception e) {
+            System.out.println("请求失败:" + e);
+        }
+    }
 
 
     /**
@@ -287,9 +319,13 @@ public class OpenApiTest {
         long beginTime = System.currentTimeMillis();
         String url = baseUrl + "/order/getOrderList";
         System.out.println("订单获取" + url);
-        String json = "{\"businessTypes\":[1],\"currentPage\":\"1\",\"pageSize\":\"10\",\"lastUpdateTimeStart\":\"2021-10-25 11:00:50\",\"lastUpdateTimeEnd\":\"2021-11-23 16:27:16\"}";
-        OrderQueryDTO orderQueryDTO = JSON.parseObject(json, OrderQueryDTO.class);
-//        orderQueryDTO.setBusinessNo("769115400038");
+//        String json = "{\"businessTypes\":[1],\"currentPage\":\"1\",\"pageSize\":\"10\",\"lastUpdateTimeStart\":\"2022-10-25 11:00:50\",\"lastUpdateTimeEnd\":\"2021-11-23 16:27:16\"}";
+//        OrderQueryDTO orderQueryDTO = JSON.parseObject(json, OrderQueryDTO.class);
+        OrderQueryDTO orderQueryDTO =new OrderQueryDTO();
+        orderQueryDTO.setBusinessNo("5046078396068145036");
+        orderQueryDTO.setOrderCreateTimeStart("2022-04-01 00:00:00");
+        orderQueryDTO.setOrderCreateTimeEnd("2022-05-01 00:00:00");
+
         orderQueryDTO.setBusinessTypes(Arrays.asList((byte) 1,(byte)2));
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, OrderQueryDTO.class, orderQueryDTO);
         try {
@@ -333,7 +369,16 @@ public class OpenApiTest {
     public static void cancelOrderRequest(String appSecret, String appKey) {
         String url = baseUrl + "/order/cancelOrderRequest";
         System.out.println("订单取消：" + url);
-        String json = "{\"businessNo\":\"998033700008--1\"}";
+        String json = "{\n" +
+                "    \"businessId\": 5046074163646310299,\n" +
+                "    \"businessNo\": \"5046074163646310299\",\n" +
+                "    \"cancelReason\": \"其他\",\n" +
+                "    \"cancelSource\": 1,\n" +
+                "    \"orgId\": 851,\n" +
+                "    \"sysCode\": \"41\",\n" +
+                "    \"sysName\": \"云间参茸\",\n" +
+                "    \"userId\": 4932271780889285661\n" +
+                "}";
         ThirdOrderCancelDTO cancelDTO = JSON.parseObject(json, ThirdOrderCancelDTO.class);
         String urlWithAuth = AuthUtil.getUrlWithAuth(url, appSecret, appKey, ThirdOrderCancelDTO.class, cancelDTO);
         try {

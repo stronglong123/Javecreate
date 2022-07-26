@@ -35,7 +35,7 @@ public class TaskManagerBL {
 
     public PageList<TaskManagerDTO> pageList(TaskManagerQueryDTO taskManager) {
         PageHelper.startPage(taskManager.getPageNum(), taskManager.getPageSize());
-        taskManager.setCreateUser(userInfoUtils.getUser().getId().toString());
+//        taskManager.setCreateUser(userInfoUtils.getUser().getId().toString());
         List<TaskManagerDTO> list = taskManagerMapper.list(taskManager);
         return new PageList<>(list);
     }

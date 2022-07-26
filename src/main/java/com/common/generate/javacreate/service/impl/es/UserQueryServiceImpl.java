@@ -16,27 +16,31 @@ import java.util.List;
 
 @Service
 public class UserQueryServiceImpl extends EsHighLevelSearchServiceImpl<UserEsQueryDTO> {
-
-    public List<UserEsQueryDTO> query(PageParam pageParam, QueryParam queryParam) {
-        String queryContent = queryParam.getQueryContent();
-        String name = queryParam.getName();
-        String sex = queryParam.getSex();
-
-        BoTermQuery boTermQuery = BoTermQuery.create();
-        BoTermQuery.Should should = BoTermQuery.Should.create(1);
-        if (!StringUtils.isEmpty(queryContent)) {
-            should.addMatchCondition(queryContent, "name", "content");
-            boTermQuery.addShouldCondition(should);
-        }
-        if (!StringUtils.isEmpty(sex)) {
-            boTermQuery.addTermCondition("sex", sex);
-        }
-        if (name != null) {
-            boTermQuery.addMatchCondition("name", name);
-        }
-        return this.queryList(pageParam, boTermQuery,
-                "user", UserEsQueryDTO.class);
-
+    @Override
+    public List<UserEsQueryDTO> queryList(PageParam pageParam, BoTermQuery boTermQuery, String indexName, Class<UserEsQueryDTO> userEsQueryDTOClass) {
+        return null;
     }
+
+//    public List<UserEsQueryDTO> query(PageParam pageParam, QueryParam queryParam) {
+//        String queryContent = queryParam.getQueryContent();
+//        String name = queryParam.getName();
+//        String sex = queryParam.getSex();
+//
+//        BoTermQuery boTermQuery = BoTermQuery.create();
+//        BoTermQuery.Should should = BoTermQuery.Should.create(1);
+//        if (!StringUtils.isEmpty(queryContent)) {
+//            should.addMatchCondition(queryContent, "name", "content");
+//            boTermQuery.addShouldCondition(should);
+//        }
+//        if (!StringUtils.isEmpty(sex)) {
+//            boTermQuery.addTermCondition("sex", sex);
+//        }
+//        if (name != null) {
+//            boTermQuery.addMatchCondition("name", name);
+//        }
+//        return this.queryList(pageParam, boTermQuery,
+//                "user", UserEsQueryDTO.class);
+//
+//    }
 
 }

@@ -21,7 +21,7 @@ public class StatusMachineManageBL {
 
     public static void main(String[] args) {
         //2002  10003 20003
-        checkMachineExpression(false, "pre", 10003);
+        checkMachineExpression(true, "pre", 40001);
     }
 
     /**

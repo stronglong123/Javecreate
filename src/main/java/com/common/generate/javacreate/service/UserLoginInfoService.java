@@ -49,8 +49,8 @@ public class UserLoginInfoService {
      * @param userIfo
      */
     public void setLoginToken(String token, AdminUser userIfo) {
-        redisTemplate.opsForValue().set(token, userIfo, 30, TimeUnit.MINUTES);
-        redisTemplate.opsForValue().set(SystemConstant.USERID_SESSION + userIfo.getId(), userIfo, 30, TimeUnit.MINUTES);
+//        redisTemplate.opsForValue().set(token, userIfo, 30, TimeUnit.MINUTES);
+//        redisTemplate.opsForValue().set(SystemConstant.USERID_SESSION + userIfo.getId(), userIfo, 30, TimeUnit.MINUTES);
     }
 
     public AdminUser getLoginUserById(String userId) {
@@ -58,11 +58,11 @@ public class UserLoginInfoService {
     }
 
     public void clearUserByToken(String token) {
-        AdminUser user = getUserInfoByToken(token);
-        if (user != null && user.getId() != null) {
-            redisTemplate.delete(SystemConstant.USERID_SESSION + user.getId());
-        }
-        redisTemplate.delete(token);
+//        AdminUser user = getUserInfoByToken(token);
+//        if (user != null && user.getId() != null) {
+//            redisTemplate.delete(SystemConstant.USERID_SESSION + user.getId());
+//        }
+//        redisTemplate.delete(token);
     }
 
     /**

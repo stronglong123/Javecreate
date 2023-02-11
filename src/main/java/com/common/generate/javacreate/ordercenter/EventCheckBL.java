@@ -28,8 +28,10 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -44,9 +46,22 @@ public class EventCheckBL {
     public static void main(String[] args) {
 
 
-//        handle(false, "test", "release");
+//        handle(false, "release", "pre");
+
 //        addNotExistsEventCode(false, "test", "release");
 //        checkEventSubscription(false, "test", "release");
+        findUrl();
+    }
+
+    public static void findUrl(){
+        List<EventConsumerDTO> eventConsumers = getEventConsumers("pre");
+        List<EventConsumerDTO> targetList =new ArrayList<>();
+        for (EventConsumerDTO eventConsumer : eventConsumers) {
+            if(eventConsumer.getUrl().contains("http://in-easysale-openapi.yjp.com/oc/informa/addInformaOrder")){
+                targetList.add(eventConsumer);
+            }
+        }
+        System.out.println("结果：" + JSON.toJSONString(targetList));
     }
 
 
@@ -227,7 +242,10 @@ public class EventCheckBL {
 
         EventCheckResult checkResult = compare(releaseEventConsumers, testEventConsumers);
         checkEventCodeExists(targerCode, checkResult);
+        checkResult.setTargetConsumerNoExists(checkResult.getTargetConsumerNoExists().stream()
+                .filter(it->!it.getPartnerCode().equals("Xiedu")&&!it.getPartnerCode().equals("Informa")).collect(Collectors.toList()));
         System.out.println("比较结果:" + JSON.toJSONString(checkResult));
+
         if (needUpdate) {
             dealCheckResult(sourceCode, targerCode, checkResult);
         }
@@ -249,8 +267,8 @@ public class EventCheckBL {
      * @param checkResult
      */
     private static void dealCheckResult(String sourcecode, String targetcode, EventCheckResult checkResult) {
-        addEventCode(sourcecode, targetcode, checkResult.getTargetEventNoExists());
-        addCustomer(targetcode, checkResult.getTargetConsumerNoExists());
+//        addEventCode(sourcecode, targetcode, checkResult.getTargetEventNoExists());
+//        addCustomer(targetcode, checkResult.getTargetConsumerNoExists());
         addSubscribe(sourcecode, targetcode, checkResult.getDiffList());
     }
 
@@ -453,7 +471,7 @@ public class EventCheckBL {
         }
         Map<String, EventRegisterDTO> eventMap = eventList.stream().collect(Collectors.toMap(EventRegisterDTO::getEventCode, it -> it));
 
-        List<String> notExistEventCode = new ArrayList<>();
+        Set<String> notExistEventCode = new HashSet<>();
         for (EventDiffDTO eventDiffDTO : eventDiffDTOS) {
             List<String> diffCode = getDiffCode(eventDiffDTO.getSourceSubscribedEventCodes(), eventDiffDTO.getTargetSubscribedEventCodes());
             for (String diff : diffCode) {
@@ -464,7 +482,7 @@ public class EventCheckBL {
             }
         }
         checkResult.setSameEventCodeList(eventCodeExsits);
-        checkResult.setTargetEventNoExists(notExistEventCode);
+        checkResult.setTargetEventNoExists(new ArrayList<>(notExistEventCode));
     }
 
 

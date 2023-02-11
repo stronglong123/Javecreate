@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="info" name="MyApp"
+<Configuration status="info" name="JavacreateApplication"
                monitorInterval="3">
     <Appenders>
         <!-- 控制台输出 -->
@@ -32,11 +32,12 @@
             <appender-ref ref="BusinessAuditLogger"/>
         </logger>
         <Logger name="com.alibaba.dubbo.monitor.dubbo.DubboMonitor" level="info" additivity="false"/>
-        <Logger name="com.yijiupi.himalaya.supplychain.allot.util.SqlInterceptor" level="debug"/>
+        <Logger name="com.yijiupi.himalaya.supplychain.allot.util.SqlInterceptor" level="info"/>
         <Root level="info">
-
             <AppenderRef ref="STDOUT"/>
             <AppenderRef ref="RollingFile"/>
         </Root>
     </Loggers>
+    <Logger name="org.apache" level="warn"/>
+    <Logger name="httpclient" level="warn"/>
 </Configuration>

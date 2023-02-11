@@ -7,6 +7,7 @@ import com.common.generate.javacreate.ordercenter.dto.event.EventAndSubSimpleDTO
 import com.common.generate.javacreate.ordercenter.dto.event.EventAndSubscriptionResult;
 import com.common.generate.javacreate.ordercenter.dto.event.EventConsumerDTO;
 import com.common.generate.javacreate.ordercenter.dto.event.EventConsumerPageDTO;
+import com.common.generate.javacreate.ordercenter.dto.event.EventConsumerRegisterDTO;
 import com.common.generate.javacreate.ordercenter.dto.event.EventConsumerSimple;
 import com.common.generate.javacreate.ordercenter.dto.event.EventRegisterDTO;
 import com.common.generate.javacreate.ordercenter.dto.event.EventRegisterPageDTO;
@@ -42,14 +43,52 @@ import java.util.stream.Collectors;
 public class EventManageBL {
 
     public static void main(String[] args) {
-        EventManageBL eventManageBL = new EventManageBL();
-        List<EventAndSubExcelDTO> event = eventManageBL.getEvent();
-        List<InEventAndConsumerBindDTO> bindParams = convertInEventAndConsumerBind(event);
-        bindInEventAndConsumer(true,"test", bindParams);
-        updateConsumers(true,"test");
+        String code ="test";
+//        EventManageBL eventManageBL = new EventManageBL();
+//        List<EventAndSubExcelDTO> event = eventManageBL.getEvent();
+//        List<InEventAndConsumerBindDTO> bindParams = convertInEventAndConsumerBind(event);
+//        bindInEventAndConsumer(true,"test", bindParams);
+//        updateConsumers(true,"test");
+//        unbindEventSub("test");
+//        checkConsumers(code);
+
+        List<EventConsumerDTO> eventConsumers = getEventConsumers(code);
+        System.out.println(JSON.toJSONString(eventConsumers));
+
+    }
+
+    public static void checkConsumers(String code){
+        List<EventConsumerDTO> changeConsumers =new ArrayList<>();
+        List<EventConsumerDTO> eventConsumers = getEventConsumers(code);
+        for (EventConsumerDTO eventConsumer : eventConsumers) {
+            if(CollectionUtils.isNotEmpty(eventConsumer.getEventRuleDTO().getEventMatchers().getEventMatcherList())){
+                changeConsumers.add(eventConsumer);
+            }
+        }
+        System.out.println(JSON.toJSONString(changeConsumers));
     }
 
 
+    public static void unbindEventSub(String code){
+        List<EventConsumerDTO> eventConsumers = getEventConsumers(code);
+        for (EventConsumerDTO eventConsumer : eventConsumers) {
+            List<EventConsumerRegisterDTO> eventRegisterList = ApiUtil.findEventRegisterList(code, eventConsumer.getId());
+            for (EventConsumerRegisterDTO eventConsumerRegisterDTO : eventRegisterList) {
+                if(eventConsumerRegisterDTO.getEventRegisterType().equals(EventTypeEnum.ORDER_INTERNAL.getValue())){
+                    System.out.println(JSON.toJSONString(eventConsumer));
+                    System.out.println("消费者名称:"+eventConsumer.getConsumerName()+",事件code："+eventConsumerRegisterDTO.getEventCode());
+                    ApiUtil.unsubscribeEvent(code,eventConsumer.getId(),Arrays.asList(eventConsumerRegisterDTO.getEventRegisterId()));
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 更新需要更新的消费者
+     * @param needUpdate
+     * @param code
+     */
     public static void updateConsumers(boolean needUpdate,String code) {
         List<EventConsumerDTO> consumers = getEventConsumers(code);
         List<EventConsumerDTO> informaConsumers = consumers.stream().collect(Collectors.toList());
@@ -116,6 +155,11 @@ public class EventManageBL {
         }
     }
 
+    /**
+     * 转换
+     * @param eventList
+     * @return
+     */
     private static List<InEventAndConsumerBindDTO> convertInEventAndConsumerBind(List<EventAndSubExcelDTO> eventList) {
         if (CollectionUtils.isEmpty(eventList)) {
             return Collections.emptyList();
@@ -144,31 +188,73 @@ public class EventManageBL {
         return inEventBindList;
     }
 
-
+    /**
+     * 获取需要订阅的消费者
+     * @param needUpdate
+     * @param code
+     * @param bindDTOS
+     */
     public static void bindInEventAndConsumer(boolean needUpdate,String code, List<InEventAndConsumerBindDTO> bindDTOS) {
         if (CollectionUtils.isEmpty(bindDTOS)) {
             return;
         }
         System.out.println("消费者订阅的内部事件："+JSON.toJSONString(bindDTOS));
+        bindDTOS = bindDTOS.stream().filter(it -> !checkExsitInEvent(it.getConsumerSubscribedEventCodes(),it.getEventCode())).collect(Collectors.toList());
+        System.out.println("需要订阅的消费者："+JSON.toJSONString(bindDTOS));
         if(!needUpdate){
             return;
         }
-        bindDTOS = bindDTOS.stream().filter(it -> !it.getConsumerSubscribedEventCodes().contains(it.getEventCode())).collect(Collectors.toList());
-        System.out.println("需要订阅的消费者："+JSON.toJSONString(bindDTOS));
-
         for (InEventAndConsumerBindDTO bindDTO : bindDTOS) {
             ApiUtil.subscribeEvent(code, bindDTO.getConsumerId(), Collections.singletonList(bindDTO.getEventId()));
         }
     }
 
 
+    private static boolean checkExsitInEvent(String consumerSubscribedEventCodes,String inEventCode){
+        if(StringUtils.isEmpty(consumerSubscribedEventCodes)){
+            return false;
+        }
+        String[] split = consumerSubscribedEventCodes.split(",");
+        for (String consumerSubscribedEventCode : split) {
+            if(consumerSubscribedEventCode.equals(inEventCode)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 获取事件以及其绑定的其他事件，消费者等信息
+     * @return
+     */
     public List<EventAndSubExcelDTO> getEvent() {
-        String code = "test";
+        String code = "pre";
         List<EventRegisterDTO> eventRegisterList = registerFindPage(code);
+        eventRegisterList = eventRegisterList.stream()
+                .filter(it -> ObjectUtils.nullSafeEquals(it.getEventRegisterType(), EventTypeEnum.ORDER_EXTERNAL.getValue()))
+                .collect(Collectors.toList());
+//        List<EventAndSubExcelDTO> result =new ArrayList<>();
+//        for (EventRegisterDTO registerDTO : registerDTOS) {
+//            EventAndSubExcelDTO eventAndSubExcelDTO =new EventAndSubExcelDTO();
+//            eventAndSubExcelDTO.setPartnerCode(registerDTO.getPartnerCode());
+//            eventAndSubExcelDTO.setEventCode(registerDTO.getEventCode());
+//            eventAndSubExcelDTO.setEventName(registerDTO.getEventName());
+//            eventAndSubExcelDTO.setEvnetType(registerDTO.getEventRegisterType());
+//            eventAndSubExcelDTO.setEvnetTypeName(EventTypeEnum.getTextEnum(registerDTO.getEventRegisterType()).getName());
+//            result.add(eventAndSubExcelDTO);
+//        }
+//        return result;
+
+
         EventSubscriptionPageDTO page = new EventSubscriptionPageDTO();
         page.setPageIndex(1);
         page.setPageSize(1000);
         List<EventSubscriptionDTO> eventSubscriptionList = ApiUtil.findPageEventSubscription(code, page);
+        eventSubscriptionList = eventSubscriptionList.stream()
+                .filter(it -> !ObjectUtils.nullSafeEquals(it.getEventConsumptionType(), EventConsumptionTypeEnum.SERVICE_ABILITY.getValue()))
+                .collect(Collectors.toList());
+
         Map<String, List<EventSubscriptionDTO>> subscriptMap = eventSubscriptionList.stream()
                 .collect(Collectors.groupingBy(it -> it.getSubscribePartnerCode() + "_" + it.getSubscribeEventCode()));
         List<EventConsumerDTO> consumers = getEventConsumers(code);

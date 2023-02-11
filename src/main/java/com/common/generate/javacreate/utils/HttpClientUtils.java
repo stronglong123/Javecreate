@@ -5,6 +5,7 @@ package com.common.generate.javacreate.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.common.generate.javacreate.model.base.exception.BusinessException;
+import com.common.generate.javacreate.ordercenter.utils.SignUtil;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -36,17 +37,17 @@ public class HttpClientUtils {
 
 	private HttpClientUtils() {}
 
-	public static void main(String[] args) throws Exception {
-		for (int i = 0; i <2000; i++) {
-			new Thread(() -> {
-				doPost("http://localhost:8199/dictionary/pageList", "{}");
-			}).start();
-//			String s = doPostWithToken("3a3075cb-808a-4af9-b49f-0e345c5e67e8", "http://wms.release.yijiupidev.com/supplyChain/base/test2?warehouseId=11", "{}");
-//			System.out.println(i+":"+s);
-//			Thread.sleep(3000L);
-		}
-		System.out.println("结束");
-	}
+//	public static void main(String[] args) throws Exception {
+//		for (int i = 0; i <2000; i++) {
+//			new Thread(() -> {
+//				doPost("http://localhost:8199/dictionary/pageList", "{}");
+//			}).start();
+////			String s = doPostWithToken("3a3075cb-808a-4af9-b49f-0e345c5e67e8", "http://wms.release.yijiupidev.com/supplyChain/base/test2?warehouseId=11", "{}");
+////			System.out.println(i+":"+s);
+////			Thread.sleep(3000L);
+//		}
+//		System.out.println("结束");
+//	}
 	
 	/**
 	 * post请求
@@ -191,18 +192,21 @@ public class HttpClientUtils {
         try {
 
             HttpPost post = new HttpPost(url);
-            System.out.println("要发送的数据：" + body);
+//            System.out.println("要发送的数据：" + body);
             StringEntity myEntity = new StringEntity(body, ContentType.APPLICATION_JSON); // 构造请求数据
             post.setHeader("Content-Type", "application/json;charset=utf8");
             post.addHeader("token",token);
-            post.setEntity(myEntity); // 设置请求体
+			post.setEntity(myEntity); // 设置请求体
             response = client.execute(post);
             if (response.getStatusLine().getStatusCode() == 200) {
                 org.apache.http.HttpEntity entity = response.getEntity();
                 responseContent = EntityUtils.toString(entity, "UTF-8");
                 LOGGER.info("responseContent:" + responseContent);
 
-            }
+            }else {
+				throw new BusinessException("请求失败:" + response.getStatusLine().getStatusCode());
+
+			}
             if (response != null) {
                 response.close();
             }
@@ -210,7 +214,7 @@ public class HttpClientUtils {
                 client.close();
             }
         } catch (Exception e) {
-            throw new BusinessException("erp请求失败:" + e.getMessage());
+            throw new BusinessException("请求失败:" + e.getMessage());
         } finally {
             // 释放资源
             try {
@@ -229,6 +233,7 @@ public class HttpClientUtils {
 				LOGGER.error("关闭response出错", e);
 			}
         }
+		System.out.println("返回结果:"+responseContent);
         return responseContent;
     }
 
@@ -279,6 +284,7 @@ public class HttpClientUtils {
 				LOGGER.error("关闭response出错", e);
 			}
 		}
+		System.out.println("返回结果:"+responseContent);
 		return responseContent;
 	}
 	
@@ -296,5 +302,75 @@ public class HttpClientUtils {
 
 		return null;
 	}
+
+	public static String doPostWithTokenAndSign(String token, String url, String body) {
+		CloseableHttpResponse response = null;
+		CloseableHttpClient client = HttpClients.createDefault();
+		String responseContent = null; // 响应内容
+		try {
+
+			HttpPost post = new HttpPost(url);
+//            System.out.println("要发送的数据：" + body);
+			StringEntity myEntity = new StringEntity(body, ContentType.APPLICATION_JSON); // 构造请求数据
+			post.setHeader("Content-Type", "application/json;charset=utf8");
+			post.addHeader("token",token);
+
+			//header添加校验
+			Map<String, String> auhthMap = SignUtil.authSignHeader(url, body, token);
+			for (Map.Entry<String, String> entry : auhthMap.entrySet()) {
+				post.addHeader(entry.getKey(), entry.getValue());
+			}
+
+
+			post.setEntity(myEntity); // 设置请求体
+			response = client.execute(post);
+			if (response.getStatusLine().getStatusCode() == 200) {
+				org.apache.http.HttpEntity entity = response.getEntity();
+				responseContent = EntityUtils.toString(entity, "UTF-8");
+//				LOGGER.info("responseContent:" + responseContent);
+
+			}else {
+				throw new BusinessException("请求失败:" + response.getStatusLine().getStatusCode());
+
+			}
+			if (response != null) {
+				response.close();
+			}
+			if (client != null) {
+				client.close();
+			}
+		} catch (Exception e) {
+			throw new BusinessException("请求失败:" + e.getMessage());
+		} finally {
+			// 释放资源
+			try {
+				if (client != null) {
+					client.close();
+				}
+			} catch (IOException e) {
+				LOGGER.error("关闭client出错", e);
+			}
+
+			try {
+				if (response != null) {
+					response.close();
+				}
+			} catch (IOException e) {
+				LOGGER.error("关闭response出错", e);
+			}
+		}
+//		System.out.println("返回结果:"+responseContent);
+		return responseContent;
+	}
+
+
+	public static void main(String[] args){
+		String url = "http://ocop.test.yijiupidev.com/ordercenter-elasticsearchsync-basems/EsRetrySyncService/retrySyncOrderByOrderIds";
+		String body = "[["+1+"]]";
+		String token = "69e2168b-28e5-45ab-8f3b-866ba9e7ea89";
+		String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, body);
+		System.out.println(resultstr);
+	}
+
 
 }

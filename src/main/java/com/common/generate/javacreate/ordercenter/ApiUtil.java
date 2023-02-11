@@ -4,6 +4,8 @@ import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.fastjson.JSON;
 import com.common.generate.javacreate.model.base.PageableResult;
 import com.common.generate.javacreate.model.base.Result;
+import com.common.generate.javacreate.ordercenter.dto.EventAndSubscriptionDTO;
+import com.common.generate.javacreate.ordercenter.dto.OrderTraceConfigDTO;
 import com.common.generate.javacreate.ordercenter.dto.ability.ServiceAbilityManageDTO;
 import com.common.generate.javacreate.ordercenter.dto.ability.ServiceAbilityQueryDTO;
 import com.common.generate.javacreate.ordercenter.dto.event.EventConsumerDTO;
@@ -13,9 +15,13 @@ import com.common.generate.javacreate.ordercenter.dto.event.EventRegisterDTO;
 import com.common.generate.javacreate.ordercenter.dto.event.EventRegisterPageDTO;
 import com.common.generate.javacreate.ordercenter.dto.event.EventSubscriptionDTO;
 import com.common.generate.javacreate.ordercenter.dto.event.EventSubscriptionPageDTO;
+import com.common.generate.javacreate.ordercenter.dto.eventaudit.EventConsumptionAuditDocumentDTO;
+import com.common.generate.javacreate.ordercenter.dto.eventaudit.EventPublishAuditDocumentDTO;
 import com.common.generate.javacreate.ordercenter.dto.statusmachine.OrderStatusGraphDTO;
+import com.common.generate.javacreate.service.impl.es.orderdocument.OrderDocumentDTO;
 import com.common.generate.javacreate.utils.HttpClientUtils;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,11 +31,11 @@ import java.util.List;
  */
 public class ApiUtil {
 
-    private static final String testToken = "bf9ae118-78e5-4483-847a-4ad4f715fb0d";
+    private static final String testToken = "4684ab57-a97d-4eeb-a7cc-a62e40416428";
 
-    private static final String relesaeToken = "d3b79b21-bfe0-4f23-92da-511c649b7337";
+    private static final String relesaeToken = "d74314bf-b0da-423a-996e-774492d5cf57";
 
-    private static final String preToken = "9209b34d-90a2-4fed-b252-1f317035bb37";
+    private static final String preToken = "c0a74503-376b-45b1-a33e-899bc0cc1d5a";
 
     private static final String testUrl = "http://ocop.test.yijiupidev.com/";
 
@@ -66,6 +72,26 @@ public class ApiUtil {
 
 
     private static final String createOrderStatusGraph ="ordercenter/ordercenter-config-managerms/orderstatus.OrderStatusMachineManageService/createOrderStatusGraph";
+
+    private static final String unsubscribeEvent ="ordercenter/ordercenter-event-managerms/EventConsumerManageService/unsubscribeEvent";
+
+    private static final String eventPublishAuditQuery ="ordercenter/ordercenter-event-managerms/EventPublishAuditQueryService/findPage";
+
+    private static final String eventConsumptionAuditQuery ="ordercenter/ordercenter-event-managerms/EventConsumptionAuditQueryService/findPage";
+
+    private static final String publishEventRetry ="ordercenter/ordercenter-event-managerms/action/PublishEventRetryService/retry";
+
+    private static final String repairOriginDiscountAmount = "ordercenter/ordercenter-datasync-servicems/OrderRepairService/repairOriginDiscountAmount";
+
+    private static final String findEventAndSubscriptionByPartnerCode = "ordercenter/ordercenter-event-managerms/EventAndSubscriptionQueryService/findEventAndSubscriptionByPartnerCode";
+
+    private static final String findByPageTraceConfigQuery = "ordercenter/ordercenter-config-managerms/ordertraceconfig.OrderTraceConfigQueryService/findByPage";
+
+    private static final String addOrderTraceConfig = "ordercenter/ordercenter-config-managerms/ordertraceconfig.OrderTraceConfigManageService/add";
+    private static final String updateOrderTraceConfig = "ordercenter/ordercenter-config-managerms/ordertraceconfig.OrderTraceConfigManageService/update";
+
+    private static final String findPageByOrderSnapshot ="ordercenter-aggregatequery-servicems/OrderCommonQueryService/findPageByOrderSnapshot";
+
     /**
      * 消费者查询
      * @return
@@ -195,6 +221,14 @@ public class ApiUtil {
         System.out.println("新增结果:" + resultstr);
     }
 
+    public static void unsubscribeEvent(String code, String consumerId, List<String> eventIds) {
+        String url = getUrl(code) + unsubscribeEvent;
+        Object[] objects = new Object[2];
+        objects[0] = consumerId;
+        objects[1] = eventIds;
+        String resultstr = HttpClientUtils.doPostWithToken(getToken(code), url, JSON.toJSONString(objects));
+        System.out.println("新增结果:" + resultstr);
+    }
     /**
      * 事件的订阅关系查询
      * @param pageDTO
@@ -235,6 +269,84 @@ public class ApiUtil {
         String resultstr = HttpClientUtils.doPostWithToken(getToken(code), url, addPreFix(orderStatusGraph));
         System.out.println("新增结果:" + resultstr);
     }
+
+
+    public static List<EventPublishAuditDocumentDTO> eventPublishAuditQuery(String code, String params){
+        String url = getUrl(code) + eventPublishAuditQuery;
+        String resultstr = HttpClientUtils.doPostWithToken(getToken(code), url, params);
+        Result result = JSON.parseObject(resultstr, Result.class);
+        Object data = result.getData();
+        PageableResult pageableResult = JSON.parseObject(JSON.toJSONString(data), PageableResult.class);
+        List<EventPublishAuditDocumentDTO> list = JSON.parseArray(JSON.toJSONString(pageableResult.getDatas()), EventPublishAuditDocumentDTO.class);
+        return list;
+    }
+
+
+    public static List<EventConsumptionAuditDocumentDTO> eventConsumptionAuditQuery(String code, String params){
+        String url = getUrl(code) + eventConsumptionAuditQuery;
+        String resultstr = HttpClientUtils.doPostWithToken(getToken(code), url, params);
+        Result result = JSON.parseObject(resultstr, Result.class);
+        Object data = result.getData();
+        PageableResult pageableResult = JSON.parseObject(JSON.toJSONString(data), PageableResult.class);
+        List<EventConsumptionAuditDocumentDTO> list = JSON.parseArray(JSON.toJSONString(pageableResult.getDatas()), EventConsumptionAuditDocumentDTO.class);
+        return list;
+    }
+
+    public static void publishEventRetry(String code,String body, String eventId){
+        String url = getUrl(code) + publishEventRetry;
+        Object[] obj =new Object[]{body,eventId};
+        String resultstr = HttpClientUtils.doPostWithToken(getToken(code), url, JSON.toJSONString(obj));
+        System.out.println("新增结果:" + resultstr);
+    }
+
+
+    /**
+     * 事件新增
+     */
+    public static void repairOriginDiscountAmount(String code, Object params){
+        String url = getUrl(code) + repairOriginDiscountAmount;
+        String resultstr = HttpClientUtils.doPostWithToken(getToken(code), url, addPreFix(params));
+//        System.out.println("新增结果:" + resultstr);
+    }
+
+    public static List<EventAndSubscriptionDTO> findEventAndSubscriptionByPartnerCode(String code, Object params){
+        String url = getUrl(code) + findEventAndSubscriptionByPartnerCode;
+        String resultstr = HttpClientUtils.doPostWithToken(getToken(code), url, addPreFix(params));
+        Result result = JSON.parseObject(resultstr, Result.class);
+        Object data1 = result.getData();
+        List<EventAndSubscriptionDTO> list = JSON.parseArray(JSON.toJSONString(data1), EventAndSubscriptionDTO.class);
+        return list;
+    }
+
+
+    /**
+     * 事件查询
+     * @param eventRegisterPageDTO
+     * @return
+     */
+    public static List<OrderTraceConfigDTO> findByPageTraceConfigQuery(String code, Object params) {
+        String url = getUrl(code) + findByPageTraceConfigQuery;
+        String resultstr = HttpClientUtils.doPostWithToken(getToken(code), url, addPreFix(params));
+        Result result = JSON.parseObject(resultstr, Result.class);
+        Object data1 = result.getData();
+        PageableResult pageableResult = JSON.parseObject(JSON.toJSONString(data1), PageableResult.class);
+        List<OrderTraceConfigDTO> eventRegisterDTOS = JSON.parseArray(JSON.toJSONString(pageableResult.getDatas()), OrderTraceConfigDTO.class);
+        return eventRegisterDTOS;
+    }
+
+
+    public static void addOrderTraceConfig(String code, Object param) {
+        String url = getUrl(code) + addOrderTraceConfig;
+        String resultstr = HttpClientUtils.doPostWithToken(getToken(code), url, addPreFix(param));
+    }
+
+
+    public static void updateOrderTraceConfig(String code, Object param) {
+        String url = getUrl(code) + updateOrderTraceConfig;
+        String resultstr = HttpClientUtils.doPostWithToken(getToken(code), url, addPreFix(param));
+        System.out.println(resultstr);
+    }
+
 
     private static String addPreFix(Object params) {
         return JSON.toJSONString(Collections.singletonList(params));

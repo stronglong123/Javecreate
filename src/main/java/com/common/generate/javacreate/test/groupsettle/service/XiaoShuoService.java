@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.common.generate.javacreate.model.text.TextDTO;
 import com.common.generate.javacreate.test.groupsettle.dto.PushOtherSettleDTO;
 import com.common.generate.javacreate.utils.ExcelUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -23,12 +24,29 @@ import java.util.List;
 public class XiaoShuoService {
 
     public static void main(String[] args) throws Exception {
+        general();
+    }
 
-        String filePath = "C:\\Users\\Administrator\\Desktop\\从李元芳开始.xlsx";
-        List<TextDTO> tableDTOS = ExcelUtils.readExcelToEntity(TextDTO.class, filePath, "推送其他出入.xlsx");
+
+    private static void general() throws Exception {
+        String filePath = "C:\\Users\\Administrator\\Desktop\\冤种玩家的人生模拟器.xlsx";
+        List<TextDTO> tableDTOS = ExcelUtils.readExcelToEntity(TextDTO.class, filePath, "冤种玩家的人生模拟器.xlsx");
         StringBuilder result = new StringBuilder();
         tableDTOS.forEach(it -> {
-            result.append(("\r\n")).append(it.getTitle()).append(("\r\n")).append(it.getComment());
+            String comment = it.getComment();
+            if(StringUtils.isNotEmpty(comment)){
+                comment = comment.replace("mchaptererror();『章节错误,点此举报』", "");
+                String[] split = comment.split("请翻页\\)");
+                comment = split[0];
+                comment = comment.replace("(本章未完,", "");
+
+            }
+
+
+            result.append(("\r\n"))
+//                    .append(it.getTitle())
+//                    .append(("\r\n"))
+                    .append(comment);
         });
 
         exportText(result.toString());

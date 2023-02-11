@@ -14,6 +14,18 @@ public class Result<T> {
     private String msg;
     private T data;
     private String result;
+    private T datas;
+
+    private Integer recordCount;
+
+    private Integer totalPage;
+
+
+    private Integer currentPage;
+
+
+    private Integer pageSize;
+
 
     public Result() {
 
@@ -102,4 +114,43 @@ public class Result<T> {
         return this;
     }
 
+    public T getDatas() {
+        return datas;
+    }
+
+    public void setDatas(T datas) {
+        this.datas = datas;
+    }
+
+    public Integer getRecordCount() {
+        return recordCount;
+    }
+
+    public void setRecordCount(Integer recordCount) {
+        this.recordCount = recordCount;
+    }
+
+    public Integer getTotalPage() {
+        return totalPage;
+    }
+
+    public void setTotalPage(Integer totalPage) {
+        this.totalPage = totalPage;
+    }
+
+    public Integer getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
 }

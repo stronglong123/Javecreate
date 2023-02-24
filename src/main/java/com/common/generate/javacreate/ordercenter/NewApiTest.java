@@ -47,9 +47,9 @@ public class NewApiTest {
 
     private static final String testToken ="0c34bcbe-53de-4abe-aa45-f0763abdbadb";
 
-    private static final String releaseToken ="c478c80a-0cba-449f-8dbe-2bd2b427e853";
+    private static final String releaseToken ="32eb5d73-4733-4ffd-b1d9-546c9447fdfd";
 
-    private static final String token ="9d907fb0-e58f-400a-a8d3-c214b443ed0f";
+    private static final String token ="5109ce27-886d-4133-85ec-46276a1714ba";
 
 
 
@@ -79,7 +79,7 @@ public class NewApiTest {
 
     @SneakyThrows
     public static void main(String[] args) {
-        deleteByOrderId(999000210118217323L);
+//        deleteByOrderId(5157699752078807362L);
 
 //        update("release");
 //        retrySyncOrderByOrderIds("release",5031224347955159367L);
@@ -87,15 +87,15 @@ public class NewApiTest {
 //        repairErpSaleCompleteEventError("pre");
 
 
-//        List<Long> orderIds = getOrderIds();
-//        for (Long orderId : orderIds) {
-////            repairSaleComplete(orderId);
-////            repairReturnComplete(orderId);
-////            evnetTrySaleComplete(orderId);
-////            pullScmTransferOrderToOrderCenter("pre",orderId);
-//            deleteByOrderId(orderId);
-//            Thread.sleep(500);
-//        }
+        List<Long> orderIds = getOrderIds();
+        for (Long orderId : orderIds) {
+//            repairSaleComplete(orderId);
+//            repairReturnComplete(orderId);
+//            evnetTrySaleComplete(orderId);
+//            pullScmTransferOrderToOrderCenter("pre",orderId);
+            deleteByOrderId(orderId);
+            Thread.sleep(500);
+        }
 //        for (Long orderId : orderIds) {
 ////            retrySyncOrderByOrderIds("pre", orderId);
 //            initOrderCenterByOmsorderIds(orderId);
@@ -130,7 +130,7 @@ public class NewApiTest {
 
 
     private static List<Long> getOrderIds() {
-        return Arrays.asList(998000230214142813L);
+        return Arrays.asList(7550002102160868187L,7550002103191575412L,7550002102160768186L);
     }
 
     public static void evnetTrySaleComplete(Long orderId) {
@@ -196,7 +196,7 @@ public class NewApiTest {
      * @return
      */
     public static void deleteByOrderId(Long orderId) {
-        String code = "pre";
+        String code = "release";
         String baseUrl = getUrl(code);
         String url = baseUrl +"ordercenter-datasync-servicems/OrderRepairService/repairOrderByOrderId";
         String body = "[[" + orderId + "]]";

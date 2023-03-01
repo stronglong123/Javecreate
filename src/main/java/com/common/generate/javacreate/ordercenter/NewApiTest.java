@@ -47,9 +47,9 @@ public class NewApiTest {
 
     private static final String testToken ="0c34bcbe-53de-4abe-aa45-f0763abdbadb";
 
-    private static final String releaseToken ="32eb5d73-4733-4ffd-b1d9-546c9447fdfd";
+    private static final String releaseToken ="50ee088d-d824-4c98-a4c3-010c451dee30";
 
-    private static final String token ="5109ce27-886d-4133-85ec-46276a1714ba";
+    private static final String token ="7b21ba7b-4ab8-4fbd-ba01-c74240bed2f1";
 
 
 
@@ -79,6 +79,7 @@ public class NewApiTest {
 
     @SneakyThrows
     public static void main(String[] args) {
+        saleOrderPushWms(5160508737106143406L);
 //        deleteByOrderId(5157699752078807362L);
 
 //        update("release");
@@ -87,15 +88,15 @@ public class NewApiTest {
 //        repairErpSaleCompleteEventError("pre");
 
 
-        List<Long> orderIds = getOrderIds();
-        for (Long orderId : orderIds) {
-//            repairSaleComplete(orderId);
-//            repairReturnComplete(orderId);
-//            evnetTrySaleComplete(orderId);
-//            pullScmTransferOrderToOrderCenter("pre",orderId);
-            deleteByOrderId(orderId);
-            Thread.sleep(500);
-        }
+//        List<Long> orderIds = getOrderIds();
+//        for (Long orderId : orderIds) {
+////            repairSaleComplete(orderId);
+////            repairReturnComplete(orderId);
+////            evnetTrySaleComplete(orderId);
+////            pullScmTransferOrderToOrderCenter("pre",orderId);
+//            deleteByOrderId(orderId);
+//            Thread.sleep(500);
+//        }
 //        for (Long orderId : orderIds) {
 ////            retrySyncOrderByOrderIds("pre", orderId);
 //            initOrderCenterByOmsorderIds(orderId);
@@ -206,10 +207,12 @@ public class NewApiTest {
     }
 
 
-    public static void saleOrderPushWms() {
-        String url = "http://ocop.release.yijiupidev.com/ordercenter-datasync-servicems/WmsRepairService/saleOrderPushWms";
-        String body = "[[5127602366330377228]]";
-        String token = "9370754d-70fe-4e4e-af28-8b31c2bde742";
+    public static void saleOrderPushWms(Long orderId) {
+        String code = "pre";
+        String baseUrl = getUrl(code);
+        String url = baseUrl +"ordercenter-datasync-servicems/WmsRepairService/saleOrderPushWms";
+        String body = "[[" + orderId + "]]";
+        String token =getToken(code);
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, body);
         System.out.println(resultstr);
 
@@ -454,6 +457,19 @@ public class NewApiTest {
     }
 
 
-
+//    public static void pullScmTransferOrderToOrderCenter(String code,Long orderId) {
+//        String baseUrl = getUrl(code);
+//        String token = getToken(code);
+//        String url = baseUrl + "ordercenter-datasync-servicems/TransferOrderSyncService/pullScmTransferOrderToOrderCenter";
+//        String params = "[\n" +
+//                "    {\n" +
+//                "        \"orderIds\": [\n" +
+//                orderId+
+//                "        ]\n" +
+//                "    }\n" +
+//                "]";
+//        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
+//        System.out.println(resultstr);
+//    }
 
 }

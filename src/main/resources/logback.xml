@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration>
+    <Logger name="org.apache" level="warn"/>
+    <Logger name="httpclient" level="warn"/>
+</Configuration>

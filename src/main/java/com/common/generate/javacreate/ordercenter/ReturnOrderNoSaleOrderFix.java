@@ -30,19 +30,18 @@ import java.util.stream.Collectors;
 @Component
 public class ReturnOrderNoSaleOrderFix {
 
-    private static final String Cookie = "YJPINFO=6edd49d1-858e-47a1-bfe6-d5530905d906; YID=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI1ODM4NCIsImlzcyI6InNzbyIsImV4cCI6MTY3NzY1NTEyMn0.Tv8w91EL6GF3dpqz3W0Q7BJJ4xaHsfbgQt19ogXm5b0";
+    private static final String Cookie = "YJPINFO=27e3c571-efcb-4ef2-9094-d55bca9ec418; YID=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI1ODM4NCIsImlzcyI6InNzbyIsImV4cCI6MTY4MDE1ODI1NH0._7wPJHfUsx0pQh69PSTLlh_Vn_YlLeNBbehCAbeVRCY";
 
     private static final String baseUrl = "http://console.pre.yijiupi.com";
 
 
     public static void main(String[] args) throws Exception {
-        requeueWithBody(getData());
+        reSyncSaleOrder();
+//        for (int i = 14; i > 0; i--) {
+//            fixReturnOrder(i);
+//        }
 
-        for (int i = 45; i > 0; i--) {
-            fixReturnOrder(i);
-        }
-
-//        for (int i = 1; i > 0; i--) {
+//        for (int i = 2; i > 0; i--) {
 //            fixSaleOrder(i);
 //        }
 
@@ -58,25 +57,32 @@ public class ReturnOrderNoSaleOrderFix {
 //        List<OrderDocumentDTO> orderList = NewApiTest.findPageByOrderSnapshot("pre", "[{},{\"pageIndex\":1,\"pageSize\":10}]");
 //        List<FixReturnOrderBO> dataFromFile = getDataFromFile("C:\\Users\\Administrator\\Desktop\\退货单修复异常数据.txt");
 //        Set<Long> collect = dataFromFile.stream().map(it -> it.getSaleOrderId()).collect(Collectors.toSet());
-//        System.out.println(JSON.toJSONString(collect));
+//        System.out.println(JSON.toJSONString(collect))
     }
 
     @SneakyThrows
     public static void reSyncSaleOrder() {
+
         List<Long> orderIds = getOrderIds();
         for (Long orderId : orderIds) {
-            Thread.sleep(500L);
+            Thread.sleep(100L);
+            initOrderCenterByOmsorderIds("{\n" +
+                    "  \"omsorderIds\": [\n" +
+                    orderId +
+                    "  ],\n" +
+                    " \"queryNpt\":true\n"+
+                    "}");
 
-            List<OrderDocumentDTO> orderList = NewApiTest.findPageByOrderSnapshot("pre", "[{\"orderWord\":" + orderId.toString() + ",\"companyCode\":\"YJP\"},{\"pageIndex\":5,\"pageSize\":100}]");
-            if (CollectionUtils.isNotEmpty(orderList)) {
-                System.out.println("销售单已经同步无需重新同步:" + JSON.toJSONString(orderId));
-            } else {
-                initOrderCenterByOmsorderIds("{\n" +
-                        "  \"omsorderIds\": [\n" +
-                        orderId +
-                        "  ]\n" +
-                        "}");
-            }
+//            List<OrderDocumentDTO> orderList = NewApiTest.findPageByOrderSnapshot("pre", "[{\"orderWord\":" + orderId.toString() + ",\"companyCode\":\"YJP\"},{\"pageIndex\":5,\"pageSize\":100}]");
+//            if (CollectionUtils.isNotEmpty(orderList)) {
+//                System.out.println("销售单已经同步无需重新同步:" + JSON.toJSONString(orderId));
+//            } else {
+//                initOrderCenterByOmsorderIds("{\n" +
+//                        "  \"omsorderIds\": [\n" +
+//                        orderId +
+//                        "  ]\n" +
+//                        "}");
+//            }
         }
     }
 
@@ -214,7 +220,7 @@ public class ReturnOrderNoSaleOrderFix {
             return;
         }
         for (DeadLetterRecoverDTO deadLetterRecoverDTO : deadLetterRecoverList) {
-            if (!deadLetterRecoverDTO.getCauseException().contains("Data too long for column 'ContactPhone' ")) {
+            if (!deadLetterRecoverDTO.getCauseException().contains("An invalid response was received from the upstream server")) {
                 continue;
             }
             requeue(JSON.toJSONString(Collections.singletonList(deadLetterRecoverDTO.getId())));

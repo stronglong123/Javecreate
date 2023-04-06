@@ -47,9 +47,9 @@ public class NewApiTest {
 
     private static final String testToken ="0c34bcbe-53de-4abe-aa45-f0763abdbadb";
 
-    private static final String releaseToken ="50ee088d-d824-4c98-a4c3-010c451dee30";
+    private static final String releaseToken ="2ffe07d3-f86f-415b-b13d-0b1468456624";
 
-    private static final String token ="7b21ba7b-4ab8-4fbd-ba01-c74240bed2f1";
+    private static final String token ="439ff511-b3ae-4e97-a9e0-58c41091367d";
 
 
 
@@ -79,8 +79,9 @@ public class NewApiTest {
 
     @SneakyThrows
     public static void main(String[] args) {
-        saleOrderPushWms(5160508737106143406L);
-//        deleteByOrderId(5157699752078807362L);
+//            repairReturnComplete(5162088339163517276L);
+
+        //        deleteByOrderId(5157699752078807362L);
 
 //        update("release");
 //        retrySyncOrderByOrderIds("release",5031224347955159367L);
@@ -88,20 +89,22 @@ public class NewApiTest {
 //        repairErpSaleCompleteEventError("pre");
 
 
-//        List<Long> orderIds = getOrderIds();
-//        for (Long orderId : orderIds) {
-////            repairSaleComplete(orderId);
-////            repairReturnComplete(orderId);
-////            evnetTrySaleComplete(orderId);
-////            pullScmTransferOrderToOrderCenter("pre",orderId);
-//            deleteByOrderId(orderId);
-//            Thread.sleep(500);
-//        }
-//        for (Long orderId : orderIds) {
-////            retrySyncOrderByOrderIds("pre", orderId);
-//            initOrderCenterByOmsorderIds(orderId);
-//            Thread.sleep(500);
-//        }
+        List<Long> orderIds = getOrderIds();
+        for (Long orderId : orderIds) {
+//            repairSaleComplete(orderId);
+//            repairReturnComplete(orderId);
+//            evnetTrySaleComplete(orderId);
+//            pullScmTransferOrderToOrderCenter("pre",orderId);
+            deleteByOrderId("pre", orderId);
+//            saleOrderPushWms(orderId);
+            Thread.sleep(500);
+//            retrySyncOrderByOrderIds("pre", orderId);
+        }
+
+        for (Long orderId : orderIds) {
+//            retrySyncOrderByOrderIds("pre", orderId);
+//            initOrderCenterByOmsorderIds("pre",orderId);
+        }
 
 //        warehouseConfigAdd();
 //        repairErpSaleComplete(1L);
@@ -117,7 +120,7 @@ public class NewApiTest {
 //        repairReturnOrderBusinessItemId(repairBusinessItemIdDTO);
     }
 
-    public static void initOrderCenterByOmsorderIds(Long orderId) {
+    public static void initOrderCenterByOmsorderIds(String code,Long orderId) {
         String params = "{\n" +
                 "  \"omsorderIds\": [\n" +
                 orderId +
@@ -125,19 +128,24 @@ public class NewApiTest {
                 "  ,\n" +
                 "  \"skipGrapCheck\":true\n" +
                 "}";
-        String url = "http://openapi.pre.yijiupi.com/openapi/oms/initOrderCenterByOmsorderIds";
+        String url = "http://openapi.release.yijiupidev.com/openapi/oms/initOrderCenterByOmsorderIds";
+        if("pre".equals(code)){
+            url = "http://openapi.pre.yijiupi.com/openapi/oms/initOrderCenterByOmsorderIds";
+        }
         String resultstr = HttpClientUtils.doPost(url, params);
     }
 
 
     private static List<Long> getOrderIds() {
-        return Arrays.asList(7550002102160868187L,7550002103191575412L,7550002102160768186L);
+        return Arrays.asList(
+                1150002303172264798L
+        );
     }
 
     public static void evnetTrySaleComplete(Long orderId) {
         String baseUrl = getUrl("pre");
         String url = baseUrl + "ordercenter-event-managerms/action/PublishEventRetryService/retry";
-        List<String> params = Arrays.asList("{\"orderId\":" + orderId + ",\"completeTime\":\"2022-12-30T14:00:00.350+08:00\",\"reason\":\"系统自动完成\"}", "DispatchAutoComplete:5136651219371885133_1671435634759_1671435783274");
+        List<String> params = Arrays.asList("{\"orderId\":" + orderId + ",\"completeTime\":\"2023-03-17T14:00:00.350+08:00\",\"reason\":\"系统自动完成\"}", "DispatchAutoComplete:5136651219371885133_1671435634759_1671435783274");
         String body = JSON.toJSONString(params);
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, body);
         System.out.println(resultstr);
@@ -196,8 +204,7 @@ public class NewApiTest {
      *
      * @return
      */
-    public static void deleteByOrderId(Long orderId) {
-        String code = "release";
+    public static void deleteByOrderId(String code,Long orderId) {
         String baseUrl = getUrl(code);
         String url = baseUrl +"ordercenter-datasync-servicems/OrderRepairService/repairOrderByOrderId";
         String body = "[[" + orderId + "]]";
@@ -436,7 +443,8 @@ public class NewApiTest {
                 "    {\n" +
                 "        \"orderIds\": [\n" +
                             orderId+
-                "        ]\n" +
+                "        ],\n" +
+                "\"needClearOld\": true"+
                 "    }\n" +
                 "]";
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);

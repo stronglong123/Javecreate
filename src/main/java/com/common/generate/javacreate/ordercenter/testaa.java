@@ -33,301 +33,110 @@ public class testaa {
     public static void main(String[] args){
         String json ="[\n" +
                 "        {\n" +
-                "            \"business_Id\": 998422120611039126,\n" +
-                "            \"createTime\": 1670297950000,\n" +
-                "            \"description\": \"审核处理[审核通过]\",\n" +
-                "            \"id\": 999006221206113905,\n" +
-                "            \"lastUpdateTime\": 1670297950000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"org_Id\": 999,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4000002304010301710,\n" +
+                "            \"payAmount\": 584.13\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 998422120611039126,\n" +
-                "            \"createTime\": 1670297951000,\n" +
-                "            \"description\": \"用户下单成功，订单类型为实仓代运营自营订单(仓库配送)\",\n" +
-                "            \"id\": 998006221206115569,\n" +
-                "            \"lastUpdateTime\": 1670297951000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"org_Id\": 998,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4000002304012002158,\n" +
+                "            \"payAmount\": 216.0\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 998422120611039126,\n" +
-                "            \"createTime\": 1670297952000,\n" +
-                "            \"description\": \"货物流向(35):中心仓[拉萨休食中心仓(999219)]将货物内配到前置仓[阿里酒饮仓9981(9981)]，货物送到前置仓后，代运营仓库[山东汽车制造有限公司经销商仓库（我是真的）(99837)]的司机去前置仓取货，然后配送给客户\",\n" +
-                "            \"id\": 999006221206113906,\n" +
-                "            \"lastUpdateTime\": 1670297952000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"org_Id\": 999,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4000002304021202440,\n" +
+                "            \"payAmount\": 432.0\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670297952000,\n" +
-                "            \"description\": \"内配单同步成功,仓库：拉萨休食中心仓\",\n" +
-                "            \"lastUpdateTime\": 1670297952000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4000002304022002711,\n" +
+                "            \"payAmount\": 316.54\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670297978000,\n" +
-                "            \"description\": \"拉萨休食中心仓开始处理订单。订单为物流配送。订单分配到中转车次：369369369，物流公司：壹米滴答，单号：369369369，操作人：张裔譞拉萨\",\n" +
-                "            \"lastUpdateTime\": 1670297978000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4000002304030802825,\n" +
+                "            \"payAmount\": 216.0\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670297979000,\n" +
-                "            \"description\": \"波次号更新成功，波次号：BC99921922120600001\",\n" +
-                "            \"lastUpdateTime\": 1670297979000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4000002304030902827,\n" +
+                "            \"payAmount\": 647.0\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670297993000,\n" +
-                "            \"description\": \"运单拣货成功,拣货员:蓝色\",\n" +
-                "            \"lastUpdateTime\": 1670297993000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4000002304031102942,\n" +
+                "            \"payAmount\": 199.2\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 998422120611039126,\n" +
-                "            \"createTime\": 1670298012000,\n" +
-                "            \"description\": \"运单第1次打印，打印批次为2022-12-06 11:40:12，操作人：张裔譞拉萨\",\n" +
-                "            \"id\": 998006221206115571,\n" +
-                "            \"lastUpdateTime\": 1670298012000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"org_Id\": 998,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4000002304031503074,\n" +
+                "            \"payAmount\": 863.0\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298012000,\n" +
-                "            \"description\": \"订单打印成功。操作人：张裔譞拉萨,操作人手机号：18186660891\",\n" +
-                "            \"lastUpdateTime\": 1670298012000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4000002304031903210,\n" +
+                "            \"payAmount\": 367.98\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298031000,\n" +
-                "            \"description\": \"仓管确认发货，发货批次为2022-12-06 11:40:31，车辆为【壹米滴答】369369369，司机为，手机号为,司机手机号为，装卸工为测试未雪，操作人：张裔譞拉萨\",\n" +
-                "            \"lastUpdateTime\": 1670298031000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4000002304032103270,\n" +
+                "            \"payAmount\": 893.0\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298075000,\n" +
-                "            \"description\": \"中转订单,司机确认发车。操作人：张裔譞拉萨,操作人手机号：18186660891\",\n" +
-                "            \"lastUpdateTime\": 1670298075000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4000002304032303315,\n" +
+                "            \"payAmount\": 1511.0\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298323000,\n" +
-                "            \"description\": \"中转单确认入库【阿里酒饮仓9981】。操作人：临时外包-张裔譞阿里,操作人手机号：18186660897\",\n" +
-                "            \"lastUpdateTime\": 1670298323000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4000002304040903376,\n" +
+                "            \"payAmount\": 232.5\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298390000,\n" +
-                "            \"description\": \"波次号更新成功，波次号：BC998122120600003\",\n" +
-                "            \"lastUpdateTime\": 1670298390000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4000002304040903399,\n" +
+                "            \"payAmount\": 95.5\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298390000,\n" +
-                "            \"description\": \"运单调度成功\",\n" +
-                "            \"lastUpdateTime\": 1670298390000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4000002304041103476,\n" +
+                "            \"payAmount\": 256.5\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298390000,\n" +
-                "            \"description\": \"订单装车，车辆为自带车，司机为test周啊橙，操作人:临时外包-张裔譞阿里\",\n" +
-                "            \"lastUpdateTime\": 1670298390000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4760002304012068101,\n" +
+                "            \"payAmount\": 278.0\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 998422120611039126,\n" +
-                "            \"createTime\": 1670298522000,\n" +
-                "            \"description\": \"波次号更新成功，波次号：BC998122120600003，操作人：王新军\",\n" +
-                "            \"id\": 999006221206113907,\n" +
-                "            \"lastUpdateTime\": 1670298522000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"org_Id\": 999,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 4760002304012268102,\n" +
+                "            \"payAmount\": 572.5\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298522000,\n" +
-                "            \"description\": \"运单拣货成功,拣货员:王新军\",\n" +
-                "            \"lastUpdateTime\": 1670298522000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 5174987245526194727,\n" +
+                "            \"payAmount\": 182.3\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298765000,\n" +
-                "            \"description\": \"订单打印，打印次数：1\",\n" +
-                "            \"lastUpdateTime\": 1670298765000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 5174998208497326633,\n" +
+                "            \"payAmount\": 5694.0\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298779000,\n" +
-                "            \"description\": \"代运营运单确认取货，取货批次号[fetchTaskNo]，操作人:[optUserName]临时外包-张裔譞阿里\",\n" +
-                "            \"lastUpdateTime\": 1670298779000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298787000,\n" +
-                "            \"description\": \"司机确认发车。操作人：配送员test周啊橙,操作人手机号：17718819999\",\n" +
-                "            \"lastUpdateTime\": 1670298787000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 998422120611039126,\n" +
-                "            \"createTime\": 1670298788000,\n" +
-                "            \"description\": \"仓管确认发货，发货批次为2022-12-06 11:53:08，车辆为，司机为test周啊橙，手机号为17718819999，装卸工为，操作人：配送员test周啊橙\",\n" +
-                "            \"id\": 998006221206115572,\n" +
-                "            \"lastUpdateTime\": 1670298788000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"org_Id\": 998,\n" +
-                "            \"tag\": \"\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298797000,\n" +
-                "            \"description\": \"订单标记为全部配送，操作人：配送员test周啊橙\",\n" +
-                "            \"lastUpdateTime\": 1670298797000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298798000,\n" +
-                "            \"description\": \"默认的收款方式为付款码收款。操作人：配送员test周啊橙,操作人手机号：17718819999\",\n" +
-                "            \"lastUpdateTime\": 1670298798000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298802000,\n" +
-                "            \"description\": \"司机更换新收款方式为现金收款。操作人：配送员test周啊橙,操作人手机号：17718819999\",\n" +
-                "            \"lastUpdateTime\": 1670298802000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298803000,\n" +
-                "            \"description\": \"订单收款成功，收款方式为现金收款, 收款金额为：0.03。操作人：配送员test周啊橙,操作人手机号：17718819999\",\n" +
-                "            \"lastUpdateTime\": 1670298803000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 998422120611039126,\n" +
-                "            \"createTime\": 1670298855000,\n" +
-                "            \"description\": \"oms订单完成\",\n" +
-                "            \"id\": 998006221206115574,\n" +
-                "            \"lastUpdateTime\": 1670298855000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"org_Id\": 998,\n" +
-                "            \"tag\": \"\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298855000,\n" +
-                "            \"description\": \"财务确认收款，收款时间：2022-12-06 11:54:14；操作人：配送员test周啊橙\",\n" +
-                "            \"lastUpdateTime\": 1670298855000,\n" +
-                "            \"mouldShowType\": 1,\n" +
-                "            \"tag\": \"\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 998422120611039126,\n" +
-                "            \"createTime\": 1670297951000,\n" +
-                "            \"description\": \"用户下单成功\",\n" +
-                "            \"id\": 998006221206115570,\n" +
-                "            \"lastUpdateTime\": 1670297951000,\n" +
-                "            \"mouldShowType\": 2,\n" +
-                "            \"org_Id\": 998,\n" +
-                "            \"tag\": \"{\\\"title\\\":\\\"已下单\\\"}\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670297979000,\n" +
-                "            \"description\": \"您的订单仓库已经开始作业\",\n" +
-                "            \"lastUpdateTime\": 1670297979000,\n" +
-                "            \"mouldShowType\": 2,\n" +
-                "            \"tag\": \"{\\\"title\\\":\\\"仓库处理中\\\"}\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298031000,\n" +
-                "            \"description\": \"您的订单正在派送中，【配送员：，手机号：,司机手机号为】，请您耐心等待\",\n" +
-                "            \"lastUpdateTime\": 1670298031000,\n" +
-                "            \"mouldShowType\": 2,\n" +
-                "            \"tag\": \"{\\\"title\\\":\\\"配送中\\\"}\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298390000,\n" +
-                "            \"description\": \"您的订单仓库已经开始作业\",\n" +
-                "            \"lastUpdateTime\": 1670298390000,\n" +
-                "            \"mouldShowType\": 2,\n" +
-                "            \"tag\": \"{\\\"title\\\":\\\"仓库处理中\\\"}\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 998422120611039126,\n" +
-                "            \"createTime\": 1670298788000,\n" +
-                "            \"description\": \"您的订单正在派送中，【配送员：test周啊橙，手机号：17718819999】，请您耐心等待\",\n" +
-                "            \"id\": 998006221206115573,\n" +
-                "            \"lastUpdateTime\": 1670298788000,\n" +
-                "            \"mouldShowType\": 2,\n" +
-                "            \"org_Id\": 998,\n" +
-                "            \"tag\": \"{\\\"title\\\":\\\"配送中\\\"}\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298797000,\n" +
-                "            \"description\": \"您的订单全部配送，如有疑问，请联系配送员：test周啊橙\",\n" +
-                "            \"lastUpdateTime\": 1670298797000,\n" +
-                "            \"mouldShowType\": 2,\n" +
-                "            \"tag\": \"{\\\"title\\\":\\\"已签收\\\"}\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"business_Id\": 999000221206117692,\n" +
-                "            \"createTime\": 1670298855000,\n" +
-                "            \"description\": \"您的订单已完成\",\n" +
-                "            \"lastUpdateTime\": 1670298855000,\n" +
-                "            \"mouldShowType\": 2,\n" +
-                "            \"tag\": \"{\\\"title\\\":\\\"已签收\\\"}\"\n" +
+                "            \"collectionTime\": 1680775108017,\n" +
+                "            \"orderId\": 5175077341583645225,\n" +
+                "            \"payAmount\": 278.0\n" +
                 "        }\n" +
                 "    ]";
         List<Trace> traces = JSON.parseArray(json, Trace.class);
-        List<Trace> sorted = traces.stream().sorted(Comparator.comparing(it -> it.getCreateTime())).collect(Collectors.toList());
-        for (Trace trace : sorted) {
+        List<Long> orderIds =new ArrayList<>();
+
+//        List<Trace> sorted = traces.stream().sorted(Comparator.comparing(it -> it.getCreateTime())).collect(Collectors.toList());
+        for (Trace trace : traces) {
             System.out.println(trace.toString());
+            orderIds.add(trace.getOrderId());
         }
+        System.out.println(JSON.toJSONString(orderIds));
     }
 
 
@@ -415,6 +224,16 @@ class Trace {
     private Date lastUpdateTime;
     private Integer mouldShowType;
     private String tag;
+
+    private Long orderId;
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
 
     public Long getBusiness_Id() {
         return business_Id;

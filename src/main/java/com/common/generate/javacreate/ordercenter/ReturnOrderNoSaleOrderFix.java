@@ -30,14 +30,14 @@ import java.util.stream.Collectors;
 @Component
 public class ReturnOrderNoSaleOrderFix {
 
-    private static final String Cookie = "YJPINFO=27e3c571-efcb-4ef2-9094-d55bca9ec418; YID=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI1ODM4NCIsImlzcyI6InNzbyIsImV4cCI6MTY4MDE1ODI1NH0._7wPJHfUsx0pQh69PSTLlh_Vn_YlLeNBbehCAbeVRCY";
+    private static final String Cookie = "YJPINFO=58acf457-c1f3-43ce-bc70-1cd059910eab; YID=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI1ODM4NCIsImlzcyI6InNzbyIsImV4cCI6MTY4MTA5NzM5OX0.xW-muM2B0lOewJLIf952wxkywwfPvqlpOwgc0MVc-U0";
 
     private static final String baseUrl = "http://console.pre.yijiupi.com";
 
 
     public static void main(String[] args) throws Exception {
-        reSyncSaleOrder();
-//        for (int i = 14; i > 0; i--) {
+//        reSyncSaleOrder();
+//        for (int i = 1; i > 0; i--) {
 //            fixReturnOrder(i);
 //        }
 

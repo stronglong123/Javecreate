@@ -6,12 +6,17 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.common.generate.javacreate.model.base.PageableResult;
 import com.common.generate.javacreate.model.base.Result;
+import com.common.generate.javacreate.model.base.exception.BusinessException;
 import com.common.generate.javacreate.ordercenter.dto.ChangeCountMarkDTO;
+import com.common.generate.javacreate.ordercenter.dto.ElkDTO;
 import com.common.generate.javacreate.ordercenter.dto.EsOrderSyncDTO;
 import com.common.generate.javacreate.ordercenter.dto.PushSaleOrderDTO;
 import com.common.generate.javacreate.ordercenter.dto.RepairBusinessItemIdDTO;
 import com.common.generate.javacreate.ordercenter.dto.SaleOrderDTO;
+import com.common.generate.javacreate.ordercenter.dto.SaleOrderItemDTO;
 import com.common.generate.javacreate.ordercenter.dto.TrainsOutStockDTO;
+import com.common.generate.javacreate.ordercenter.dto.TrainsOutStockDealerDTO;
+import com.common.generate.javacreate.ordercenter.dto.TrainsOutStockOrderDTO;
 import com.common.generate.javacreate.ordercenter.dto.UpdateSecOwnerDTO;
 import com.common.generate.javacreate.ordercenter.dto.ability.ServiceAbilityManageDTO;
 import com.common.generate.javacreate.ordercenter.dto.ability.ServiceAbilityQueryDTO;
@@ -22,11 +27,13 @@ import com.common.generate.javacreate.ordercenter.utils.SignUtil;
 import com.common.generate.javacreate.service.impl.es.base.OrderBaseDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderPickDTO;
 import com.common.generate.javacreate.service.impl.es.orderdocument.OrderDocumentDTO;
+import com.common.generate.javacreate.utils.ExcelUtils;
 import com.common.generate.javacreate.utils.HttpClientUtils;
 import lombok.SneakyThrows;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,12 +57,11 @@ public class NewApiTest {
 
     private static final String preUrl = "http://ocop.pre.yijiupi.com/";
 
-    private static final String testToken ="0c34bcbe-53de-4abe-aa45-f0763abdbadb";
+    private static final String testToken = "41189675-7513-4bd4-af46-db644ff69ac0";
 
-    private static final String releaseToken ="4eedaf2d-0d00-4489-a4f0-3cc6c5508c80";
+    private static final String releaseToken = "35d7aeca-3f4a-4ef9-9d02-fa4f4999c5f8";
 
-    private static final String token ="04f61ac6-c364-4a76-aef7-a4c7da15a36a";
-
+    private static final String token = "0bfd78f7-0dc1-4615-9957-19bee67bd8fd";
 
 
     private static String getUrl(String code) {
@@ -89,15 +95,15 @@ public class NewApiTest {
 //        fixModify();
 //        UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();
 //        updateSecOwnerDTO.setId(1111L);
-//        updateSecOwnerDTO.setCount(BigDecimal.TEN);
+//        updateSecOwnerDTO.setWarehouseId(99991);
 //        updateItemSercOwner("release",updateSecOwnerDTO);
 
 //        ChangeCountMarkDTO changeCountMarkDTO =new ChangeCountMarkDTO();
 //        changeCountMarkDTO.setOrderId(7010002304210916769L);
 //        changeCountMarkDTO.setWarehouseId(7201L);
 
-
-
+//        TrainsOutStockDTO preData = getPreData();
+//        System.out.println(JSON.toJSONString(preData));
 //        nptOutSyncErp("pre");
 
 //            repairReturnComplete(5162088339163517276L);
@@ -115,13 +121,15 @@ public class NewApiTest {
 //            repairSaleDisPatch(orderId);
 //            orderSyncEs("pre",orderId);
 //            retrySyncOrderItemOwnerByOrderIds("pre",orderId);
+
 //            startOrderCenter(orderId);
 //            cancelTransferOrder("pre", orderId);
-            repairSaleComplete(orderId);
+//            repairSaleComplete(orderId);
 //            repairReturnComplete(orderId);
+            completeSaleOrder("pre",orderId);
 //            evnetTrySaleComplete(orderId);
 //            pullScmTransferOrderToOrderCenter("pre",orderId);
-//            deleteByOrderId("pre", orderId);
+//            deleteByOrderId("release", orderId);
 //            saleOrderPushWms(orderId);
 //            Thread.sleep(500);
 //            retrySyncOrderByOrderIds("pre", orderId);
@@ -146,7 +154,7 @@ public class NewApiTest {
 //        repairReturnOrderBusinessItemId(repairBusinessItemIdDTO);
     }
 
-    public static void initOrderCenterByOmsorderIds(String code,Long orderId) {
+    public static void initOrderCenterByOmsorderIds(String code, Long orderId) {
         String params = "{\n" +
                 "  \"omsorderIds\": [\n" +
                 orderId +
@@ -155,7 +163,7 @@ public class NewApiTest {
                 "  \"skipGrapCheck\":true\n" +
                 "}";
         String url = "http://openapi.release.yijiupidev.com/openapi/oms/initOrderCenterByOmsorderIds";
-        if("pre".equals(code)){
+        if ("pre".equals(code)) {
             url = "http://openapi.pre.yijiupi.com/openapi/oms/initOrderCenterByOmsorderIds";
         }
         String resultstr = HttpClientUtils.doPost(url, params);
@@ -164,20 +172,18 @@ public class NewApiTest {
 
     private static List<Long> getOrderIds() {
         return Arrays.asList(
-                5181588950312114947L,
-                5181553595437374214L,
-                5181332036406862917L,
-                5181160435682990856L,
-                7200002304201576811L,
-                7200002304201476806L
+                5189198948076560001L,
+                5189948036543880841L,
+                5189959526948740739L
+//                5190246850399246126L
         );
     }
 
 
-    private static void fixModify(){
-        String json ="[\n" +
+    private static void fixModify() {
+        String json = "[\n" +
                 "    {\n" +
-                "        \"orderId\": 4060002304172349606,\n" +
+                "        \"orderId\": 5182927564911535180,\n" +
                 "        \"warehouseId\": 4721\n" +
                 "    }\n" +
                 "]";
@@ -188,9 +194,9 @@ public class NewApiTest {
 //                "        \"warehouseId\": 9981" +
 //                "    }\n" +
 //                "]";
-        List<ChangeCountMarkDTO> changeCountMarkDTOS = JSON.parseArray(json,ChangeCountMarkDTO.class);
+        List<ChangeCountMarkDTO> changeCountMarkDTOS = JSON.parseArray(json, ChangeCountMarkDTO.class);
         for (ChangeCountMarkDTO countMarkDTO : changeCountMarkDTOS) {
-            retryChangeCountMarkByOrderId("pre",countMarkDTO);
+            retryChangeCountMarkByOrderId("pre", countMarkDTO);
         }
     }
 
@@ -241,11 +247,11 @@ public class NewApiTest {
      *
      * @return
      */
-    public static void retrySyncOrderByOrderIds(String code,Long orderId) {
+    public static void retrySyncOrderByOrderIds(String code, Long orderId) {
         String baseUrl = getUrl(code);
 
         String token = getToken(code);
-        String url = baseUrl +"ordercenter-elasticsearchsync-basems/EsRetrySyncService/retrySyncOrderByOrderIds";
+        String url = baseUrl + "ordercenter-elasticsearchsync-basems/EsRetrySyncService/retrySyncOrderByOrderIds";
         String body = "[[" + orderId + "]]";
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, body);
         System.out.println(resultstr);
@@ -256,11 +262,11 @@ public class NewApiTest {
      *
      * @return
      */
-    public static void deleteByOrderId(String code,Long orderId) {
+    public static void deleteByOrderId(String code, Long orderId) {
         String baseUrl = getUrl(code);
-        String url = baseUrl +"ordercenter-datasync-servicems/OrderRepairService/repairOrderByOrderId";
+        String url = baseUrl + "ordercenter-datasync-servicems/OrderRepairService/repairOrderByOrderId";
         String body = "[[" + orderId + "]]";
-        String token =getToken(code);
+        String token = getToken(code);
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, body);
         System.out.println(resultstr);
     }
@@ -269,9 +275,9 @@ public class NewApiTest {
     public static void saleOrderPushWms(Long orderId) {
         String code = "pre";
         String baseUrl = getUrl(code);
-        String url = baseUrl +"ordercenter-datasync-servicems/WmsRepairService/saleOrderPushWms";
+        String url = baseUrl + "ordercenter-datasync-servicems/WmsRepairService/saleOrderPushWms";
         String body = "[[" + orderId + "]]";
-        String token =getToken(code);
+        String token = getToken(code);
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, body);
         System.out.println(resultstr);
 
@@ -289,7 +295,7 @@ public class NewApiTest {
 
 
     public static void repairSaleComplete(Long orderId) {
-        String code ="pre";
+        String code = "pre";
         String baseUrl = getUrl(code);
         String token = getToken(code);
         String url = baseUrl + "ordercenter-datasync-servicems/OrderRepairService/repairSaleComplete";
@@ -300,7 +306,7 @@ public class NewApiTest {
     }
 
     public static void repairSaleDisPatch(Long orderId) {
-        String code ="pre";
+        String code = "pre";
         String baseUrl = getUrl(code);
         String token = getToken(code);
         String url = baseUrl + "ordercenter-datasync-servicems/OrderRepairService/repairSaleDisPatch";
@@ -312,7 +318,7 @@ public class NewApiTest {
 
 
     public static void repairReturnComplete(Long orderId) {
-        String code ="pre";
+        String code = "pre";
         String baseUrl = getUrl(code);
         String token = getToken(code);
         String url = baseUrl + "ordercenter-datasync-servicems/OrderRepairService/repairReturnComplete";
@@ -325,7 +331,7 @@ public class NewApiTest {
     public static void repairReturnOrderBusinessItemId(RepairBusinessItemIdDTO repairBusinessItemIdDTO) {
         String baseUrl = getUrl("pre");
         String url = baseUrl + "ordercenter-datasync-servicems/OrderRepairService/repairReturnOrderBusinessItemId";
-        String body ="[["+ JSON.toJSONString(repairBusinessItemIdDTO)+"]]";
+        String body = "[[" + JSON.toJSONString(repairBusinessItemIdDTO) + "]]";
 //        String token = "b2fcc534-7106-42ef-ba1e-f798900759c5";
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, body);
         System.out.println(resultstr);
@@ -355,7 +361,7 @@ public class NewApiTest {
     public static void expressDispatchNotifyList() {
         String code = "pre";
         String baseUrl = getUrl(code);
-        String url = baseUrl +  "ordercenter-datasync-servicems/SaleOrderRepairService/expressDispatchNotifyList";
+        String url = baseUrl + "ordercenter-datasync-servicems/SaleOrderRepairService/expressDispatchNotifyList";
         String token = getToken(code);
 
         String body = "[\n" +
@@ -404,8 +410,6 @@ public class NewApiTest {
     }
 
 
-
-
     public static void wmsTest() {
         String url = "http://wms.release.yijiupidev.com/supplyChain/transfernote/getTransferNoteList";
         String body = "{\n" +
@@ -433,7 +437,7 @@ public class NewApiTest {
     }
 
     public static void updatePartner() {
-        String params ="[\n" +
+        String params = "[\n" +
                 "    {\n" +
                 "        \"appId\": \"5145770321308562899\",\n" +
                 "        \"appKey\": \"8217c86e-944f-4706-b1ff-12191d2d1976\",\n" +
@@ -451,7 +455,7 @@ public class NewApiTest {
         System.out.println(resultstr);
     }
 
-    public static List<EventConsumptionAuditDocumentDTO> findErrorEventConsum(String code,String params){
+    public static List<EventConsumptionAuditDocumentDTO> findErrorEventConsum(String code, String params) {
         String url = getUrl(code) + "ordercenter-event-managerms/EventConsumptionAuditQueryService/findPage";
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
         Result result = JSON.parseObject(resultstr, Result.class);
@@ -462,7 +466,7 @@ public class NewApiTest {
     }
 
 
-    public static List<EventPublishAuditDocumentDTO> eventConsumptionAuditQuery(String code, String params){
+    public static List<EventPublishAuditDocumentDTO> eventConsumptionAuditQuery(String code, String params) {
         String url = getUrl(code) + "ordercenter-event-managerms/EventPublishAuditQueryService/findPage";
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(getToken(code), url, params);
         Result result = JSON.parseObject(resultstr, Result.class);
@@ -490,19 +494,19 @@ public class NewApiTest {
         System.out.println(resultstr);
     }
 
-    public static void repairErpSaleCompleteEventError(String code){
+    public static void repairErpSaleCompleteEventError(String code) {
         //  1.5号0点-1.17号0点
         String errorParam = "[{\"partnerCode\":\"YJP-ERP\",\"sourceBusinessFlowCode\":\"payConfirm\",\"success\":1,\"createTimeStart\":1673884800000,\"createTimeEnd\":1673971200000,\"pageIndex\":1,\"pageSize\":100}]";
         List<EventConsumptionAuditDocumentDTO> errorEventConsumList = findErrorEventConsum(code, errorParam);
-        if(CollectionUtils.isEmpty(errorEventConsumList)){
+        if (CollectionUtils.isEmpty(errorEventConsumList)) {
             return;
         }
         List<EventConsumptionAuditDocumentDTO> needFixList = errorEventConsumList.stream().filter(it -> StringUtils.isNotEmpty(it.getRemark())
                 && it.getRemark().contains("ArgumentNullException: Value cannot be null. (Parameter 'request.body.inventoryAllocates.allocateCount')")).collect(Collectors.toList());
-        if(CollectionUtils.isEmpty(needFixList)){
+        if (CollectionUtils.isEmpty(needFixList)) {
             return;
         }
-        System.out.println("需要修复数量="+needFixList.size());
+        System.out.println("需要修复数量=" + needFixList.size());
         Integer dealerOrderCount = 0;
         Set<Long> warehouseIds = new HashSet<>();
         for (EventConsumptionAuditDocumentDTO eventConsumption : needFixList) {
@@ -511,19 +515,19 @@ public class NewApiTest {
             List<EventPublishAuditDocumentDTO> publishAuditDocumentList = eventConsumptionAuditQuery(code, query);
             EventPublishAuditDocumentDTO documentDTO = publishAuditDocumentList.get(0);
             String body = documentDTO.getBody();
-            if(!body.contains("\"allocateCount\":null")){
+            if (!body.contains("\"allocateCount\":null")) {
                 continue;
             }
-            PushSaleOrderDTO pushSaleOrderDTO = JSON.parseObject(body,PushSaleOrderDTO.class);
+            PushSaleOrderDTO pushSaleOrderDTO = JSON.parseObject(body, PushSaleOrderDTO.class);
             SaleOrderDTO saleOrder = pushSaleOrderDTO.getSaleOrder();
             OrderBaseDTO orderBaseDTO = saleOrder.getOrderBaseDTO();
             OrderPickDTO orderPickDTO = saleOrder.getOrderPickDTO();
-            if(orderBaseDTO.getDealerId()==null){
-                System.out.printf("非经销商订单，订单id=%s,经销商id=%s,仓库id=%s%n",orderBaseDTO.getOrderId(),orderBaseDTO.getDealerId(),orderPickDTO.getWarehouseId());
-            }else {
+            if (orderBaseDTO.getDealerId() == null) {
+                System.out.printf("非经销商订单，订单id=%s,经销商id=%s,仓库id=%s%n", orderBaseDTO.getOrderId(), orderBaseDTO.getDealerId(), orderPickDTO.getWarehouseId());
+            } else {
                 dealerOrderCount++;
             }
-            System.out.printf("订单id=%s,经销商id=%s,仓库id=%s%n",orderBaseDTO.getOrderId(),orderBaseDTO.getDealerId(),orderPickDTO.getWarehouseId());
+            System.out.printf("订单id=%s,经销商id=%s,仓库id=%s%n", orderBaseDTO.getOrderId(), orderBaseDTO.getDealerId(), orderPickDTO.getWarehouseId());
             warehouseIds.add(orderPickDTO.getWarehouseId());
 //            String trueBody = body.replace("\"allocateCount\":null", "\"allocateCount\":0");
 //
@@ -531,30 +535,28 @@ public class NewApiTest {
 //
 //            repairOrderComplete(code,buildRepairSaleCompleteParam(trueBody,documentDTO.getEventId()));
         }
-        System.out.println("经销商订单数量="+needFixList.size());
-        System.out.println("仓库="+warehouseIds);
+        System.out.println("经销商订单数量=" + needFixList.size());
+        System.out.println("仓库=" + warehouseIds);
 
     }
 
 
-    private static String buildRepairSaleCompleteParam(String body,String eventId){
+    private static String buildRepairSaleCompleteParam(String body, String eventId) {
         List<String> strings = Arrays.asList(body, eventId);
         return JSON.toJSONString(strings);
     }
 
 
-
-
-    public static void pullScmTransferOrderToOrderCenter(String code,Long orderId) {
+    public static void pullScmTransferOrderToOrderCenter(String code, Long orderId) {
         String baseUrl = getUrl(code);
         String token = getToken(code);
         String url = baseUrl + "ordercenter-datasync-servicems/TransferOrderSyncService/pullScmTransferOrderToOrderCenter";
         String params = "[\n" +
                 "    {\n" +
                 "        \"orderIds\": [\n" +
-                            orderId+
+                orderId +
                 "        ],\n" +
-                "\"needClearOld\": false"+
+                "\"needClearOld\": false" +
                 "    }\n" +
                 "]";
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
@@ -603,9 +605,9 @@ public class NewApiTest {
 
     public static void nptOutSyncErp(String code) {
         String baseUrl = getUrl(code);
-        String url = baseUrl +"ordercenter-datasync-servicems/OrderRepairService/nptOutSyncErp";
+        String url = baseUrl + "ordercenter-datasync-servicems/OrderRepairService/nptOutSyncErp";
         TrainsOutStockDTO trainsOutStock = getPreData();
-        String token =getToken(code);
+        String token = getToken(code);
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, JSON.toJSONString(trainsOutStock));
         System.out.println(resultstr);
     }
@@ -621,7 +623,7 @@ public class NewApiTest {
     }
 
 
-    public static void updateItemSercOwner(String code,UpdateSecOwnerDTO updateSecOwnerDTO) {
+    public static void updateItemSercOwner(String code, UpdateSecOwnerDTO updateSecOwnerDTO) {
         String baseUrl = getUrl(code);
         String token = getToken(code);
         String url = baseUrl + "ordercenter-datasync-servicems/SaleOrderRepairService/pdateItemSercOwner";
@@ -631,7 +633,16 @@ public class NewApiTest {
     }
 
 
-    public static void retryChangeCountMarkByOrderId(String code,ChangeCountMarkDTO changeCountMarkDTO) {
+    public static void updateOrderItem(String code, SaleOrderItemDTO saleOrderItemDTO) {
+        String baseUrl = getUrl(code);
+        String token = getToken(code);
+        String url = baseUrl + "ordercenter-datasync-servicems/SaleOrderRepairService/updateOrderItem";
+        String params = "[[" + JSON.toJSONString(saleOrderItemDTO) + "]]";
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
+        System.out.println(resultstr);
+    }
+
+    public static void retryChangeCountMarkByOrderId(String code, ChangeCountMarkDTO changeCountMarkDTO) {
         String baseUrl = getUrl(code);
         String token = getToken(code);
         String url = baseUrl + "ordercenter-datasync-servicems/SaleOrderRepairService/retryChangeCountMarkByOrderId";
@@ -641,7 +652,17 @@ public class NewApiTest {
     }
 
 
-    public static void orderSyncEs(String code,Long orderId) {
+    public static void completeSaleOrder(String code, Long orderId) {
+        String baseUrl = getUrl(code);
+        String token = getToken(code);
+        String url = baseUrl + "ordercenter-datasync-servicems/SaleOrderRepairService/completeSaleOrder";
+        String params = "[" + orderId + "]";
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
+        System.out.println(resultstr);
+    }
+
+
+    public static void orderSyncEs(String code, Long orderId) {
         String baseUrl = getUrl(code);
         String token = getToken(code);
         String url = baseUrl + "ordercenter-datasync-servicems/EsOrderSyncSerivce/orderSyncEs";
@@ -657,7 +678,7 @@ public class NewApiTest {
         String baseUrl = getUrl(code);
         String token = getToken(code);
         String url = baseUrl + "ordercenter-datasync-servicems/OrderRepairService/WarehouseConfigSave";
-        String body ="[\n" +
+        String body = "[\n" +
                 "    {\n" +
                 "        \"companyCode\": \"Omai\",\n" +
                 "        \"partnerCode\": \"Omai_TRD\",\n" +
@@ -668,7 +689,6 @@ public class NewApiTest {
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, body);
         System.out.println(resultstr);
     }
-
 
 
     public static boolean startOrderCenter(Long orderId) {
@@ -684,241 +704,68 @@ public class NewApiTest {
         if (jsonString.equals("[]")) {
             return false;
         }
-        System.out.println("订单中台已经处理,"+orderId);
+        System.out.println("订单中台已经处理," + orderId);
         return true;
     }
 
 
-    private static TrainsOutStockDTO getReleaseData(){
+    private static TrainsOutStockDTO getReleaseData() {
         String json = "{\"cityId\":711,\"deliveryCarNumber\":\"CK711123041800021\",\"deliveryTaskChangeFetchOrderList\":[{\"deliveryTaskChangeFetchOrderItemList\":[{\"orderId\":5180194328175142048,\"orderItemId\":5180194328841092616,\"scheduleUnitTotalCount\":6.0}],\"fetchOrderId\":7110392304181800004}],\"deliveryTaskId\":\"5180194600131257671\",\"optUserId\":\"67799384\",\"outStockTime\":1681815120756,\"trainsOutStockOrderList\":[{\"orderId\":5180194328175142048,\"orderType\":3,\"outStockOrderId\":5180194331187885091,\"outStockOrderType\":1,\"trainsOutStockOrderItemList\":[{\"orderItemId\":5180194328841092616,\"outStockOrderItemId\":5180194331225729860,\"trainsOutStockDealerList\":[{\"productSpecificationId\":559951,\"secOwnerId\":1,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0}]}],\"warehouseId\":7111}";
         TrainsOutStockDTO trainsOutStockDTO = JSON.parseObject(json, TrainsOutStockDTO.class);
         return trainsOutStockDTO;
     }
 
-    private static TrainsOutStockDTO getPreData(){
-        String json = "{\n" +
-                "    \"cityId\": 472,\n" +
-                "    \"deliveryCarNumber\": \"CK472123042000002\",\n" +
-                "    \"deliveryTaskChangeFetchOrderList\": [\n" +
-                "        {\n" +
-                "            \"deliveryTaskChangeFetchOrderItemList\": [\n" +
-                "                {\n" +
-                "                    \"orderId\": 5179503007417588483,\n" +
-                "                    \"orderItemId\": 5179503007585650440,\n" +
-                "                    \"scheduleUnitTotalCount\": 24.0\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"orderId\": 5179503007417588483,\n" +
-                "                    \"orderItemId\": 5179503007606621957,\n" +
-                "                    \"scheduleUnitTotalCount\": 12.0\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"orderId\": 5179503007417588483,\n" +
-                "                    \"orderItemId\": 5179503007631787782,\n" +
-                "                    \"scheduleUnitTotalCount\": 12.0\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"orderId\": 5179503007455337218,\n" +
-                "                    \"orderItemId\": 5179503007585650441,\n" +
-                "                    \"scheduleUnitTotalCount\": 24.0\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"orderId\": 4720002304191776165,\n" +
-                "                    \"orderItemId\": 4060012304191747163,\n" +
-                "                    \"scheduleUnitTotalCount\": 1.0\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"orderId\": 4720002304191776162,\n" +
-                "                    \"orderItemId\": 4060012304191747160,\n" +
-                "                    \"scheduleUnitTotalCount\": 3.0\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"orderId\": 4720002304191776166,\n" +
-                "                    \"orderItemId\": 4060012304191747164,\n" +
-                "                    \"scheduleUnitTotalCount\": 1.0\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"orderId\": 4720002304191776163,\n" +
-                "                    \"orderItemId\": 4060012304191747161,\n" +
-                "                    \"scheduleUnitTotalCount\": 1.0\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"orderId\": 4720002304191776164,\n" +
-                "                    \"orderItemId\": 4060012304191747162,\n" +
-                "                    \"scheduleUnitTotalCount\": 1.0\n" +
-                "                }\n" +
-                "            ],\n" +
-                "            \"fetchOrderId\": 4720392304201510111\n" +
-                "        }\n" +
-                "    ],\n" +
-                "    \"deliveryTaskId\": \"5180865037060786347\",\n" +
-                "    \"optUserId\": \"42358\",\n" +
-                "    \"outStockTime\": 1682042462686,\n" +
-                "    \"trainsOutStockOrderList\": [\n" +
-                "        {\n" +
-                "            \"orderId\": 5179503007417588483,\n" +
-                "            \"orderType\": 3,\n" +
-                "            \"outStockOrderId\": 5179503008136719661,\n" +
-                "            \"outStockOrderType\": 1,\n" +
-                "            \"trainsOutStockOrderItemList\": [\n" +
-                "                {\n" +
-                "                    \"orderItemId\": 5179503007585650440,\n" +
-                "                    \"outStockOrderItemId\": 5179503008141428014,\n" +
-                "                    \"trainsOutStockDealerList\": [\n" +
-                "                        {\n" +
-                "                            \"productSpecificationId\": 493,\n" +
-                "                            \"secOwnerId\": 1395869718239556342,\n" +
-                "                            \"unitTotalCount\": 24.0\n" +
-                "                        }\n" +
-                "                    ],\n" +
-                "                    \"unitTotalCount\": 24.0\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"orderItemId\": 5179503007606621957,\n" +
-                "                    \"outStockOrderItemId\": 5179503008162399521,\n" +
-                "                    \"trainsOutStockDealerList\": [\n" +
-                "                        {\n" +
-                "                            \"productSpecificationId\": 437697,\n" +
-                "                            \"secOwnerId\": 1395869718239556342,\n" +
-                "                            \"unitTotalCount\": 12.0\n" +
-                "                        }\n" +
-                "                    ],\n" +
-                "                    \"unitTotalCount\": 12.0\n" +
-                "                },\n" +
-                "                {\n" +
-                "                    \"orderItemId\": 5179503007631787782,\n" +
-                "                    \"outStockOrderItemId\": 5179503008179176747,\n" +
-                "                    \"trainsOutStockDealerList\": [\n" +
-                "                        {\n" +
-                "                            \"productSpecificationId\": 329608,\n" +
-                "                            \"secOwnerId\": 1395869718239556342,\n" +
-                "                            \"unitTotalCount\": 12.0\n" +
-                "                        }\n" +
-                "                    ],\n" +
-                "                    \"unitTotalCount\": 12.0\n" +
-                "                }\n" +
-                "            ]\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"orderId\": 5179503007455337218,\n" +
-                "            \"orderType\": 3,\n" +
-                "            \"outStockOrderId\": 5179503008346434854,\n" +
-                "            \"outStockOrderType\": 1,\n" +
-                "            \"trainsOutStockOrderItemList\": [\n" +
-                "                {\n" +
-                "                    \"orderItemId\": 5179503007585650441,\n" +
-                "                    \"outStockOrderItemId\": 5179503008351143203,\n" +
-                "                    \"trainsOutStockDealerList\": [\n" +
-                "                        {\n" +
-                "                            \"productSpecificationId\": 9556,\n" +
-                "                            \"secOwnerId\": 1,\n" +
-                "                            \"unitTotalCount\": 24.0\n" +
-                "                        }\n" +
-                "                    ],\n" +
-                "                    \"unitTotalCount\": 24.0\n" +
-                "                }\n" +
-                "            ]\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"orderId\": 4720002304191776165,\n" +
-                "            \"orderType\": 1,\n" +
-                "            \"outStockOrderId\": 5180540810812612645,\n" +
-                "            \"trainsOutStockOrderItemList\": [\n" +
-                "                {\n" +
-                "                    \"orderItemId\": 4060012304191747163,\n" +
-                "                    \"outStockOrderItemId\": 5180540810838500423,\n" +
-                "                    \"trainsOutStockDealerList\": [\n" +
-                "                        {\n" +
-                "                            \"productSpecificationId\": 67392,\n" +
-                "                            \"secOwnerId\": 1,\n" +
-                "                            \"unitTotalCount\": 1.0\n" +
-                "                        }\n" +
-                "                    ],\n" +
-                "                    \"unitTotalCount\": 1.0\n" +
-                "                }\n" +
-                "            ]\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"orderId\": 4720002304191776162,\n" +
-                "            \"orderType\": 1,\n" +
-                "            \"outStockOrderId\": 5180540810997162020,\n" +
-                "            \"trainsOutStockOrderItemList\": [\n" +
-                "                {\n" +
-                "                    \"orderItemId\": 4060012304191747160,\n" +
-                "                    \"outStockOrderItemId\": 5180540811018855501,\n" +
-                "                    \"trainsOutStockDealerList\": [\n" +
-                "                        {\n" +
-                "                            \"productSpecificationId\": 310734,\n" +
-                "                            \"secOwnerId\": 1,\n" +
-                "                            \"unitTotalCount\": 3.0\n" +
-                "                        }\n" +
-                "                    ],\n" +
-                "                    \"unitTotalCount\": 3.0\n" +
-                "                }\n" +
-                "            ]\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"orderId\": 4720002304191776166,\n" +
-                "            \"orderType\": 1,\n" +
-                "            \"outStockOrderId\": 5180540811420786729,\n" +
-                "            \"trainsOutStockOrderItemList\": [\n" +
-                "                {\n" +
-                "                    \"orderItemId\": 4060012304191747164,\n" +
-                "                    \"outStockOrderItemId\": 5180540811446674496,\n" +
-                "                    \"trainsOutStockDealerList\": [\n" +
-                "                        {\n" +
-                "                            \"productSpecificationId\": 301545,\n" +
-                "                            \"secOwnerId\": 1395869718239576261,\n" +
-                "                            \"unitTotalCount\": 1.0\n" +
-                "                        }\n" +
-                "                    ],\n" +
-                "                    \"unitTotalCount\": 1.0\n" +
-                "                }\n" +
-                "            ]\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"orderId\": 4720002304191776163,\n" +
-                "            \"orderType\": 1,\n" +
-                "            \"outStockOrderId\": 5180540811420786730,\n" +
-                "            \"trainsOutStockOrderItemList\": [\n" +
-                "                {\n" +
-                "                    \"orderItemId\": 4060012304191747161,\n" +
-                "                    \"outStockOrderItemId\": 5180540811446674497,\n" +
-                "                    \"trainsOutStockDealerList\": [\n" +
-                "                        {\n" +
-                "                            \"productSpecificationId\": 16877,\n" +
-                "                            \"secOwnerId\": 1,\n" +
-                "                            \"unitTotalCount\": 1.0\n" +
-                "                        }\n" +
-                "                    ],\n" +
-                "                    \"unitTotalCount\": 1.0\n" +
-                "                }\n" +
-                "            ]\n" +
-                "        },\n" +
-                "        {\n" +
-                "            \"orderId\": 4720002304191776164,\n" +
-                "            \"orderType\": 1,\n" +
-                "            \"outStockOrderId\": 5180540811437563940,\n" +
-                "            \"trainsOutStockOrderItemList\": [\n" +
-                "                {\n" +
-                "                    \"orderItemId\": 4060012304191747162,\n" +
-                "                    \"outStockOrderItemId\": 5180540811459257417,\n" +
-                "                    \"trainsOutStockDealerList\": [\n" +
-                "                        {\n" +
-                "                            \"productSpecificationId\": 117342,\n" +
-                "                            \"secOwnerId\": 1395869718239573824,\n" +
-                "                            \"unitTotalCount\": 1.0\n" +
-                "                        }\n" +
-                "                    ],\n" +
-                "                    \"unitTotalCount\": 1.0\n" +
-                "                }\n" +
-                "            ]\n" +
-                "        }\n" +
-                "    ],\n" +
-                "    \"warehouseId\": 4721\n" +
-                "}";
+    private static TrainsOutStockDTO getPreData() {
+        String json = "{\"cityId\":476,\"deliveryCarNumber\":\"CK476123050900021\",\"deliveryTaskChangeFetchOrderList\":[{\"deliveryTaskChangeFetchOrderItemList\":[{\"orderId\":5184411499852063808,\"orderItemId\":5184411500040667976,\"scheduleUnitTotalCount\":5.0},{\"orderId\":5186205346341935883,\"orderItemId\":5186205346493220609,\"scheduleUnitTotalCount\":12.0},{\"orderId\":5186205346341935883,\"orderItemId\":5186205346518386439,\"scheduleUnitTotalCount\":12.0},{\"orderId\":5186205346341935883,\"orderItemId\":5186205346539357962,\"scheduleUnitTotalCount\":12.0},{\"orderId\":5186205346341935883,\"orderItemId\":5186205346560329473,\"scheduleUnitTotalCount\":6.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346042987336,\"scheduleUnitTotalCount\":15.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346068153152,\"scheduleUnitTotalCount\":10.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346089124680,\"scheduleUnitTotalCount\":6.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346114290507,\"scheduleUnitTotalCount\":6.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346135262028,\"scheduleUnitTotalCount\":6.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346156233542,\"scheduleUnitTotalCount\":6.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346177205065,\"scheduleUnitTotalCount\":6.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346198176583,\"scheduleUnitTotalCount\":6.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346219148109,\"scheduleUnitTotalCount\":6.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346244313931,\"scheduleUnitTotalCount\":6.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346265285454,\"scheduleUnitTotalCount\":6.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346286256967,\"scheduleUnitTotalCount\":6.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346307228491,\"scheduleUnitTotalCount\":6.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346328200011,\"scheduleUnitTotalCount\":6.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346349171520,\"scheduleUnitTotalCount\":5.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346370143040,\"scheduleUnitTotalCount\":5.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346391114574,\"scheduleUnitTotalCount\":5.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346412086084,\"scheduleUnitTotalCount\":5.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346433057600,\"scheduleUnitTotalCount\":5.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346449834822,\"scheduleUnitTotalCount\":5.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346470806340,\"scheduleUnitTotalCount\":5.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346491777857,\"scheduleUnitTotalCount\":5.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346508555077,\"scheduleUnitTotalCount\":5.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346529526595,\"scheduleUnitTotalCount\":4.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346550498114,\"scheduleUnitTotalCount\":4.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346567275330,\"scheduleUnitTotalCount\":2.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346588246860,\"scheduleUnitTotalCount\":2.0},{\"orderId\":5186205345866966080,\"orderItemId\":5186205346609218382,\"scheduleUnitTotalCount\":1.0},{\"orderId\":5187303263134100267,\"orderItemId\":5187303263293923787,\"scheduleUnitTotalCount\":3.0},{\"orderId\":5187806177549031212,\"orderItemId\":5187806177707080492,\"scheduleUnitTotalCount\":60.0},{\"orderId\":5187806177549031212,\"orderItemId\":5187806177732246312,\"scheduleUnitTotalCount\":60.0},{\"orderId\":5187806177549031212,\"orderItemId\":5187806177757412135,\"scheduleUnitTotalCount\":60.0}],\"fetchOrderId\":4760392305092108549}],\"deliveryTaskId\":\"5187861011302486848\",\"optUserId\":\"7120\",\"outStockTime\":1683688687522,\"trainsOutStockOrderList\":[{\"orderId\":5184411499852063808,\"orderType\":3,\"outStockOrderId\":5184411500528897133,\"outStockOrderType\":1,\"trainsOutStockOrderItemList\":[{\"orderItemId\":5184411500040667976,\"outStockOrderItemId\":5184411500531051684,\"trainsOutStockDealerList\":[{\"productSpecificationId\":510449,\"secOwnerId\":1,\"unitTotalCount\":5.0}],\"unitTotalCount\":5.0}]},{\"orderId\":5186205346341935883,\"orderType\":3,\"outStockOrderId\":5186205347076963170,\"outStockOrderType\":1,\"trainsOutStockOrderItemList\":[{\"orderItemId\":5186205346493220609,\"outStockOrderItemId\":5186205347084258211,\"trainsOutStockDealerList\":[{\"productSpecificationId\":11529,\"secOwnerId\":1395869718239554799,\"unitTotalCount\":12.0}],\"unitTotalCount\":12.0},{\"orderItemId\":5186205346518386439,\"outStockOrderItemId\":5186205347101035436,\"trainsOutStockDealerList\":[{\"productSpecificationId\":615186,\"secOwnerId\":1395869718285759601,\"unitTotalCount\":12.0}],\"unitTotalCount\":12.0},{\"orderItemId\":5186205346539357962,\"outStockOrderItemId\":5186205347117812650,\"trainsOutStockDealerList\":[{\"productSpecificationId\":496907,\"secOwnerId\":1395869718239554799,\"unitTotalCount\":12.0}],\"unitTotalCount\":12.0},{\"orderItemId\":5186205346560329473,\"outStockOrderItemId\":5186205347130395553,\"trainsOutStockDealerList\":[{\"productSpecificationId\":433231,\"secOwnerId\":1395869718239554799,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0}]},{\"orderId\":5186205345866966080,\"orderType\":3,\"outStockOrderId\":5186205347269901155,\"outStockOrderType\":1,\"trainsOutStockOrderItemList\":[{\"orderItemId\":5186205346042987336,\"outStockOrderItemId\":5186205347281390498,\"trainsOutStockDealerList\":[{\"productSpecificationId\":160830,\"secOwnerId\":1,\"unitTotalCount\":15.0}],\"unitTotalCount\":15.0},{\"orderItemId\":5186205346068153152,\"outStockOrderItemId\":5186205347293973410,\"trainsOutStockDealerList\":[{\"productSpecificationId\":31358,\"secOwnerId\":1,\"unitTotalCount\":10.0}],\"unitTotalCount\":10.0},{\"orderItemId\":5186205346089124680,\"outStockOrderItemId\":5186205347310750635,\"trainsOutStockDealerList\":[{\"productSpecificationId\":417603,\"secOwnerId\":1395869718239566717,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0},{\"orderItemId\":5186205346114290507,\"outStockOrderItemId\":5186205347323333542,\"trainsOutStockDealerList\":[{\"productSpecificationId\":28116,\"secOwnerId\":1395869718452367040,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0},{\"orderItemId\":5186205346135262028,\"outStockOrderItemId\":5186205347344305062,\"trainsOutStockDealerList\":[{\"productSpecificationId\":161386,\"secOwnerId\":1395869718239573031,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0},{\"orderItemId\":5186205346156233542,\"outStockOrderItemId\":5186205347361082284,\"trainsOutStockDealerList\":[{\"productSpecificationId\":418785,\"secOwnerId\":1395869718239566717,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0},{\"orderItemId\":5186205346177205065,\"outStockOrderItemId\":5186205347373665185,\"trainsOutStockDealerList\":[{\"productSpecificationId\":30246,\"secOwnerId\":1,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0},{\"orderItemId\":5186205346198176583,\"outStockOrderItemId\":5186205347390442407,\"trainsOutStockDealerList\":[{\"productSpecificationId\":421262,\"secOwnerId\":1395869718239566717,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0},{\"orderItemId\":5186205346219148109,\"outStockOrderItemId\":5186205347411413926,\"trainsOutStockDealerList\":[{\"productSpecificationId\":424730,\"secOwnerId\":1395869718239566717,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0},{\"orderItemId\":5186205346244313931,\"outStockOrderItemId\":5186205347428191139,\"trainsOutStockDealerList\":[{\"productSpecificationId\":32313,\"secOwnerId\":1395869718452367040,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0},{\"orderItemId\":5186205346265285454,\"outStockOrderItemId\":5186205347444968356,\"trainsOutStockDealerList\":[{\"productSpecificationId\":26325,\"secOwnerId\":1395869718452367040,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0},{\"orderItemId\":5186205346286256967,\"outStockOrderItemId\":5186205347457551274,\"trainsOutStockDealerList\":[{\"productSpecificationId\":16760,\"secOwnerId\":1,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0},{\"orderItemId\":5186205346307228491,\"outStockOrderItemId\":5186205347474328484,\"trainsOutStockDealerList\":[{\"productSpecificationId\":27832,\"secOwnerId\":1395869718452367040,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0},{\"orderItemId\":5186205346328200011,\"outStockOrderItemId\":5186205347486911397,\"trainsOutStockDealerList\":[{\"productSpecificationId\":26357,\"secOwnerId\":1395869718262515073,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0},{\"orderItemId\":5186205346349171520,\"outStockOrderItemId\":5186205347503688610,\"trainsOutStockDealerList\":[{\"productSpecificationId\":232901,\"secOwnerId\":2405152967219075202,\"unitTotalCount\":5.0}],\"unitTotalCount\":5.0},{\"orderItemId\":5186205346370143040,\"outStockOrderItemId\":5186205347516271529,\"trainsOutStockDealerList\":[{\"productSpecificationId\":510951,\"secOwnerId\":2405152967219075202,\"unitTotalCount\":5.0}],\"unitTotalCount\":5.0},{\"orderItemId\":5186205346391114574,\"outStockOrderItemId\":5186205347528854444,\"trainsOutStockDealerList\":[{\"productSpecificationId\":510955,\"secOwnerId\":2405152967219075202,\"unitTotalCount\":5.0}],\"unitTotalCount\":5.0},{\"orderItemId\":5186205346412086084,\"outStockOrderItemId\":5186205347541437348,\"trainsOutStockDealerList\":[{\"productSpecificationId\":7523,\"secOwnerId\":1395869718239562675,\"unitTotalCount\":5.0}],\"unitTotalCount\":5.0},{\"orderItemId\":5186205346433057600,\"outStockOrderItemId\":5186205347554020270,\"trainsOutStockDealerList\":[{\"productSpecificationId\":465638,\"secOwnerId\":1395869718239566717,\"unitTotalCount\":5.0}],\"unitTotalCount\":5.0},{\"orderItemId\":5186205346449834822,\"outStockOrderItemId\":5186205347566603182,\"trainsOutStockDealerList\":[{\"productSpecificationId\":32761,\"secOwnerId\":1395869718452367040,\"unitTotalCount\":5.0}],\"unitTotalCount\":5.0},{\"orderItemId\":5186205346470806340,\"outStockOrderItemId\":5186205347579186094,\"trainsOutStockDealerList\":[{\"productSpecificationId\":31756,\"secOwnerId\":1,\"unitTotalCount\":5.0}],\"unitTotalCount\":5.0},{\"orderItemId\":5186205346491777857,\"outStockOrderItemId\":5186205347595963302,\"trainsOutStockDealerList\":[{\"productSpecificationId\":450915,\"secOwnerId\":1,\"unitTotalCount\":5.0}],\"unitTotalCount\":5.0},{\"orderItemId\":5186205346508555077,\"outStockOrderItemId\":5186205347608546214,\"trainsOutStockDealerList\":[{\"productSpecificationId\":510953,\"secOwnerId\":2405152967219075202,\"unitTotalCount\":5.0}],\"unitTotalCount\":5.0},{\"orderItemId\":5186205346529526595,\"outStockOrderItemId\":5186205347621129134,\"trainsOutStockDealerList\":[{\"productSpecificationId\":16842,\"secOwnerId\":1,\"unitTotalCount\":4.0}],\"unitTotalCount\":4.0},{\"orderItemId\":5186205346550498114,\"outStockOrderItemId\":5186205347633712034,\"trainsOutStockDealerList\":[{\"productSpecificationId\":203989,\"secOwnerId\":1,\"unitTotalCount\":4.0}],\"unitTotalCount\":4.0},{\"orderItemId\":5186205346567275330,\"outStockOrderItemId\":5186205347650489257,\"trainsOutStockDealerList\":[{\"productSpecificationId\":16972,\"secOwnerId\":1,\"unitTotalCount\":2.0}],\"unitTotalCount\":2.0},{\"orderItemId\":5186205346588246860,\"outStockOrderItemId\":5186205347663072173,\"trainsOutStockDealerList\":[{\"productSpecificationId\":30964,\"secOwnerId\":1395869718262515073,\"unitTotalCount\":2.0}],\"unitTotalCount\":2.0},{\"orderItemId\":5186205346609218382,\"outStockOrderItemId\":5186205347675655076,\"trainsOutStockDealerList\":[{\"productSpecificationId\":26324,\"secOwnerId\":1395869718452367040,\"unitTotalCount\":1.0}],\"unitTotalCount\":1.0}]},{\"orderId\":5187303263134100267,\"orderType\":3,\"outStockOrderId\":5187303263863195559,\"outStockOrderType\":1,\"trainsOutStockOrderItemList\":[{\"orderItemId\":5187303263293923787,\"outStockOrderItemId\":5187303263867976320,\"trainsOutStockDealerList\":[{\"productSpecificationId\":20984,\"unitTotalCount\":3.0}],\"unitTotalCount\":3.0}]},{\"orderId\":5187806177549031212,\"orderType\":3,\"outStockOrderId\":5187806178601440226,\"outStockOrderType\":1,\"trainsOutStockOrderItemList\":[{\"orderItemId\":5187806177707080492,\"outStockOrderItemId\":5187806178612055585,\"trainsOutStockDealerList\":[{\"productSpecificationId\":329608,\"secOwnerId\":1,\"unitTotalCount\":60.0}],\"unitTotalCount\":60.0},{\"orderItemId\":5187806177732246312,\"outStockOrderItemId\":5187806178637221420,\"trainsOutStockDealerList\":[{\"productSpecificationId\":453403,\"secOwnerId\":1,\"unitTotalCount\":60.0}],\"unitTotalCount\":60.0},{\"orderItemId\":5187806177757412135,\"outStockOrderItemId\":5187806178653998627,\"trainsOutStockDealerList\":[{\"productSpecificationId\":27903,\"secOwnerId\":1,\"unitTotalCount\":60.0}],\"unitTotalCount\":60.0}]}],\"warehouseId\":4761}";
         TrainsOutStockDTO trainsOutStockDTO = JSON.parseObject(json, TrainsOutStockDTO.class);
+        fixNptOutData(trainsOutStockDTO);
+
+        List<Long> orderItemIds = new ArrayList<>();
+        trainsOutStockDTO.getTrainsOutStockOrderList().forEach(it->it.getTrainsOutStockOrderItemList().forEach(item->{
+            List<TrainsOutStockDealerDTO> trainsOutStockDealerList = item.getTrainsOutStockDealerList();
+            for (TrainsOutStockDealerDTO trainsOutStockDealerDTO : trainsOutStockDealerList) {
+                if(trainsOutStockDealerDTO.getSecOwnerId()==null){
+                    orderItemIds.add(item.getOrderItemId());
+                }
+            }
+        }));
+
+        if(CollectionUtils.isNotEmpty(orderItemIds)){
+            throw new BusinessException("二级货主id不能为null,"+orderItemIds);
+        }
         return trainsOutStockDTO;
     }
+
+
+    @SneakyThrows
+    private static void fixNptOutData(TrainsOutStockDTO trainsOutStockDTO) {
+        String filePath = "C:\\Users\\Administrator\\Desktop\\内配退二级货主异常.xlsx";
+        FileInputStream file = new FileInputStream(filePath);
+        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "内配退二级货主异常.xlsx");
+        Map<Long, ElkDTO> map = list.stream().filter(it -> it.getItemId() != null).collect(Collectors.toMap(it -> it.getItemId(), it -> it));
+        trainsOutStockDTO.getTrainsOutStockOrderList().forEach(it -> it.getTrainsOutStockOrderItemList().forEach(item -> {
+            List<TrainsOutStockDealerDTO> trainsOutStockDealerList = item.getTrainsOutStockDealerList();
+            for (TrainsOutStockDealerDTO trainsOutStockDealerDTO : trainsOutStockDealerList) {
+                Long secOwnerId = trainsOutStockDealerDTO.getSecOwnerId();
+                if (secOwnerId == null) {
+                    ElkDTO elkDTO = map.get(item.getOrderItemId());
+                    if (elkDTO == null || elkDTO.getCount().compareTo(trainsOutStockDealerDTO.getUnitTotalCount()) != 0) {
+                        throw new BusinessException("二级货主异常," + item.getOrderItemId());
+                    }
+                    trainsOutStockDealerDTO.setSecOwnerId(elkDTO.getSecOwnerId());
+                } else {
+                    ElkDTO elkDTO = map.get(item.getOrderItemId());
+                    if (elkDTO == null || elkDTO.getCount().compareTo(trainsOutStockDealerDTO.getUnitTotalCount()) != 0) {
+                        throw new BusinessException("二级货主异常," + item.getOrderItemId());
+                    }
+                    if(!elkDTO.getSecOwnerId().equals(secOwnerId)){
+                        System.out.println("二级货主变更,"+item.getOrderItemId());
+                        trainsOutStockDealerDTO.setSecOwnerId(elkDTO.getSecOwnerId());
+                    }
+                }
+            }
+        }));
+    }
+
 
 }

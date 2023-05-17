@@ -14,6 +14,7 @@ import lombok.SneakyThrows;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,38 +28,23 @@ public class OrderCompletePushErp {
     @SneakyThrows
     public static void main(String[] args) {
         List<String> noFixOrderNoList = new ArrayList<>();
-        String filePath = "C:\\Users\\Administrator\\Desktop\\4月份销售单问题.xlsx";
-        FileInputStream file = new FileInputStream(filePath);
-        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "4月份销售单问题.xlsx");
-        for (ElkDTO elkDTO : list) {
-            if(StringUtils.isEmpty(elkDTO.getOrderNo())){
-                continue;
-            }
-            checkDataAndFix(elkDTO.getOrderNo(), noFixOrderNoList);
-        }
-        System.out.println(JSON.toJSONString("未处理销售单="+JSON.toJSONString(noFixOrderNoList)));
-//        String json ="[\n" +
-//                "    \"720311200018-2\",\n" +
-//                "    \"720311200015-1\",\n" +
-//                "    \"720311100018-1\",\n" +
-//                "    \"720311100005-1\",\n" +
-//                "    \"720311000025-2\",\n" +
-//                "    \"720311000020\",\n" +
-//                "    \"720310900017\",\n" +
-//                "    \"720310900016-1\",\n" +
-//                "    \"472311000002\",\n" +
-//                "    \"472310900010\",\n" +
-//                "    \"472310900009\",\n" +
-//                "    \"472310900008\",\n" +
-//                "    \"472310900007\",\n" +
-//                "    \"472310700004\",\n" +
-//                "    \"472310400010\"\n" +
-//                "]";
-
-//        List<String> orderNos = JSON.parseArray(json, String.class);
-//        for (String orderNo : orderNos) {
-//           checkDataAndFix(orderNo, noFixOrderNoList);
+//        String filePath = "C:\\Users\\Administrator\\Desktop\\4月份销售单问题.xlsx";
+//        FileInputStream file = new FileInputStream(filePath);
+//        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "4月份销售单问题.xlsx");
+//        for (ElkDTO elkDTO : list) {
+//            if(StringUtils.isEmpty(elkDTO.getOrderNo())){
+//                continue;
+//            }
+//            checkDataAndFix(elkDTO.getOrderNo(), noFixOrderNoList);
 //        }
+//        System.out.println(JSON.toJSONString("未处理销售单="+JSON.toJSONString(noFixOrderNoList)));
+
+
+
+        List<String> orderNos = Arrays.asList("757312500019","757312500020","757312500021","757312500022","757312500023","757312500024 ","757312500025","757312500026");
+        for (String orderNo : orderNos) {
+           checkDataAndFix(orderNo, noFixOrderNoList);
+        }
 
 
     }
@@ -70,9 +56,14 @@ public class OrderCompletePushErp {
 
         Long orderId = getOrderIdByOrderNo(code, orderNo);
 
-        EventPublishAuditDocumentDTO publishAuditDocument = eventConsumptionAuditQuery(code, orderId);
+        EventPublishAuditDocumentDTO publishAuditDocument = eventSaleCompleteConsumptionAuditQuery(code, orderId);
         if (publishAuditDocument == null) {
-            System.out.println(String.format("订单处理异常,orderId=%s,orderNo=%s", orderId, orderNo));
+            EventPublishAuditDocumentDTO exist = eventConsumptionAuditQuery(code, orderId);
+            if (exist != null) {
+                System.out.println(String.format("订单处理异常,不存在完成事件,orderId=%s,orderNo=%s", orderId, orderNo));
+            } else {
+                System.out.println(String.format("老流程完成订单,orderId=%s,orderNo=%s", orderId, orderNo));
+            }
             return;
         }
 
@@ -83,15 +74,15 @@ public class OrderCompletePushErp {
             return;
         }
         System.out.println(String.format("订单id完成事件失败,orderId=%s,orderNo=%s,remark=%s", orderId, orderNo, auditDocument.getRemark()));
-        if (auditDocument.getRemark().contains("订单不能有多个不同的一级货主") || auditDocument.getRemark().contains("一级货主不存在")) {
-//            retryExternal(code, auditDocument);
-            FileUtil.writeTxt("C:\\Users\\Administrator\\Desktop\\erp数据推送重试处理.txt",
-                    JSON.toJSONString(auditDocument.getRemark()) + String.format("订单id完成事件失败,orderId=%s,orderNo=%s", orderId, orderNo) + ",");
-        } else {
-            FileUtil.writeTxt("C:\\Users\\Administrator\\Desktop\\erp数据推送失败未处理.txt",
-                    JSON.toJSONString(auditDocument.getRemark()) + String.format("订单id完成事件失败,orderId=%s,orderNo=%s", orderId, orderNo) + ",");
-            noFixOrderNoList.add(orderNo);
-        }
+//        if (auditDocument.getRemark().contains("订单不能有多个不同的一级货主") || auditDocument.getRemark().contains("一级货主不存在")) {
+////            retryExternal(code, auditDocument);
+//            FileUtil.writeTxt("C:\\Users\\Administrator\\Desktop\\erp数据推送重试处理.txt",
+//                    JSON.toJSONString(auditDocument.getRemark()) + String.format("订单id完成事件失败,orderId=%s,orderNo=%s", orderId, orderNo) + ",");
+//        } else {
+//            FileUtil.writeTxt("C:\\Users\\Administrator\\Desktop\\erp数据推送失败未处理.txt",
+//                    JSON.toJSONString(auditDocument.getRemark()) + String.format("订单id完成事件失败,orderId=%s,orderNo=%s", orderId, orderNo) + ",");
+//            noFixOrderNoList.add(orderNo);
+//        }
     }
 
 
@@ -106,7 +97,7 @@ public class OrderCompletePushErp {
                 "        \"orderWord\":\" " + orderNo +
                 "\"," +
                 "        \"companyCode\":\"YJP\",\n" +
-                "        \"firstOrderType\":1\n" +
+                "        \"firstOrderType\":2\n" +
                 "    },\n" +
                 "    {\n" +
                 "        \"pageIndex\": 1,\n" +
@@ -124,12 +115,28 @@ public class OrderCompletePushErp {
      * https://ocop.yijiupi.com/ordercenter-event-managerms/EventPublishAuditQueryService/findPage
      * [{"body":"5177655736595987009","eventCode":"SaleComplete","pageIndex":1,"pageSize":20}]
      */
+    private static EventPublishAuditDocumentDTO eventSaleCompleteConsumptionAuditQuery(String code, Long orderId) {
+        String params = "[\n" +
+                "    {\n" +
+                "        \"body\": \"" + orderId +
+                "\",\n" +
+                "        \"eventCode\": \"ReturnOrderComplete\",\n" +
+                "        \"pageIndex\": 1,\n" +
+                "        \"pageSize\": 20\n" +
+                "    }\n" +
+                "]";
+        List<EventPublishAuditDocumentDTO> documentDTOS = NewApiTest.eventConsumptionAuditQuery(code, params);
+        if(CollectionUtils.isEmpty(documentDTOS)){
+            return null;
+        }
+        return documentDTOS.get(0);
+    }
+
     private static EventPublishAuditDocumentDTO eventConsumptionAuditQuery(String code, Long orderId) {
         String params = "[\n" +
                 "    {\n" +
                 "        \"body\": \"" + orderId +
                 "\",\n" +
-                "        \"eventCode\": \"SaleComplete\",\n" +
                 "        \"pageIndex\": 1,\n" +
                 "        \"pageSize\": 20\n" +
                 "    }\n" +

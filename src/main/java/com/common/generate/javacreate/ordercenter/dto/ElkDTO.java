@@ -1,5 +1,7 @@
 package com.common.generate.javacreate.ordercenter.dto;
 
+import java.math.BigDecimal;
+
 /**
  * @author xialei
  * @date 2022/9/1 12:01
@@ -20,6 +22,46 @@ public class ElkDTO {
     private Long businessItemId;
 
     private Integer isFix;
+
+    private Long id;
+
+    private Integer trueWarehouseId;
+
+    private Long secOwnerId;
+
+    private BigDecimal count;
+
+    public Long getSecOwnerId() {
+        return secOwnerId;
+    }
+
+    public void setSecOwnerId(Long secOwnerId) {
+        this.secOwnerId = secOwnerId;
+    }
+
+    public BigDecimal getCount() {
+        return count;
+    }
+
+    public void setCount(BigDecimal count) {
+        this.count = count;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getTrueWarehouseId() {
+        return trueWarehouseId;
+    }
+
+    public void setTrueWarehouseId(Integer trueWarehouseId) {
+        this.trueWarehouseId = trueWarehouseId;
+    }
 
     public Long getOrderId() {
         return orderId;

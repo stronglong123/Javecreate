@@ -23,16 +23,16 @@ public class UpdateSecOwnerBL {
 
     @SneakyThrows
     public static void main(String[] args){
-        String filePath = "C:\\Users\\Administrator\\Desktop\\二级货主仓库异常2.xlsx";
-        FileInputStream file = new FileInputStream(filePath);
-        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "二级货主仓库异常2.xlsx");
-        for (ElkDTO elkDTO : list) {
-            UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();
-            updateSecOwnerDTO.setId(elkDTO.getId());
-            updateSecOwnerDTO.setCount(elkDTO.getCount());
-            System.out.println(JSON.toJSONString(updateSecOwnerDTO));
-            NewApiTest.updateItemSercOwner("pre", updateSecOwnerDTO);
-        }
+//        String filePath = "C:\\Users\\Administrator\\Desktop\\二级货主仓库异常2.xlsx";
+//        FileInputStream file = new FileInputStream(filePath);
+//        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "二级货主仓库异常2.xlsx");
+//        for (ElkDTO elkDTO : list) {
+//            UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();
+//            updateSecOwnerDTO.setId(elkDTO.getId());
+//            updateSecOwnerDTO.setCount(elkDTO.getCount());
+//            System.out.println(JSON.toJSONString(updateSecOwnerDTO));
+//            NewApiTest.updateItemSercOwner("pre", updateSecOwnerDTO);
+//        }
 
 
 
@@ -48,18 +48,18 @@ public class UpdateSecOwnerBL {
 //        }
 
 
-//        Map<Long, BigDecimal> map = new HashMap<>();
-////        map.put(5188069094620926699L,BigDecimal.valueOf(4));
-//        map.put(5188069094620926700L,BigDecimal.valueOf(3));
-//        map.put(5188069094620926701L,BigDecimal.valueOf(3));
-//
-//
-//        for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {
-//            UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();
-//            updateSecOwnerDTO.setId(entry.getKey());
-//            updateSecOwnerDTO.setCount(entry.getValue());
-//            System.out.println(JSON.toJSONString(updateSecOwnerDTO));
-//            NewApiTest.updateItemSercOwner("pre", updateSecOwnerDTO);
-//        }
+        Map<Long, BigDecimal> map = new HashMap<>();
+        map.put(5189193182650908294L,BigDecimal.valueOf(3));
+        map.put(5189639907165421198L,BigDecimal.valueOf(15));
+        map.put(5188402040259220199L,BigDecimal.valueOf(1));
+
+
+        for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {
+            UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();
+            updateSecOwnerDTO.setId(entry.getKey());
+            updateSecOwnerDTO.setCount(entry.getValue());
+            System.out.println(JSON.toJSONString(updateSecOwnerDTO));
+            NewApiTest.updateItemSercOwner("pre", updateSecOwnerDTO);
+        }
     }
 }

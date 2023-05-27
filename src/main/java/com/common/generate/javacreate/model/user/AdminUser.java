@@ -9,6 +9,15 @@ import java.util.Date;
  * @author
  *********************************************/
 public class AdminUser implements Serializable {
+
+
+    public AdminUser(){
+
+    }
+
+    public AdminUser(Integer id){
+        this.id= id;
+    }
     /**
      *
      */

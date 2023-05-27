@@ -39,21 +39,20 @@ public class UpdateItemBL {
 //        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "明细金额异常.xlsx");
 
         List<Long> orderItemIdList = Arrays.asList(
-                5188079252272608163L
+                999001230322146296L
         );
         for (Long orderItemId : orderItemIdList) {
             SaleOrderItemDTO saleOrderItemDTO = new SaleOrderItemDTO();
-//            OrderItemBaseDTO orderItemBaseDTO = new OrderItemBaseDTO();
-//            orderItemBaseDTO.setOrderItemId(orderItemId);
-//            orderItemBaseDTO.setPriceQuantity(BigDecimal.ONE);
-//            orderItemBaseDTO.setPriceUnit("瓶");
-//            saleOrderItemDTO.setOrderItemBaseDTO(orderItemBaseDTO);
+            OrderItemBaseDTO orderItemBaseDTO = new OrderItemBaseDTO();
+            orderItemBaseDTO.setOrderItemId(orderItemId);
+            orderItemBaseDTO.setRemark("测试");
+            saleOrderItemDTO.setOrderItemBaseDTO(orderItemBaseDTO);
 
             OrderItemAmountDTO orderItemAmountDTO = new OrderItemAmountDTO();
             orderItemAmountDTO.setOrderItemId(orderItemId);
-            orderItemAmountDTO.setPayableAmount(BigDecimal.ZERO);
+            orderItemAmountDTO.setDiscount(BigDecimal.ZERO);
             saleOrderItemDTO.setOrderItemAmountDTO(orderItemAmountDTO);
-            NewApiTest.updateOrderItem("pre", saleOrderItemDTO);
+//            NewApiTest.updateOrderItem("release", saleOrderItemDTO);
         }
     }
 }

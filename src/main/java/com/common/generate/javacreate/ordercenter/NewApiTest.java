@@ -11,6 +11,7 @@ import com.common.generate.javacreate.ordercenter.dto.ChangeCountMarkDTO;
 import com.common.generate.javacreate.ordercenter.dto.ElkDTO;
 import com.common.generate.javacreate.ordercenter.dto.EsOrderSyncDTO;
 import com.common.generate.javacreate.ordercenter.dto.PushSaleOrderDTO;
+import com.common.generate.javacreate.ordercenter.dto.PushTmsPayConfirmDTO;
 import com.common.generate.javacreate.ordercenter.dto.RepairBusinessItemIdDTO;
 import com.common.generate.javacreate.ordercenter.dto.SaleOrderDTO;
 import com.common.generate.javacreate.ordercenter.dto.SaleOrderItemDTO;
@@ -61,7 +62,7 @@ public class NewApiTest {
 
     private static final String releaseToken = "01879606-60eb-4e2e-8e4b-b03590b6aeec";
 
-    private static final String token = "0bf5e712-321c-415d-a241-625d566e860c";
+    private static final String token = "9fd9efc9-3668-4e75-9bb7-de3fbbca305c";
 
 
     private static String getUrl(String code) {
@@ -132,7 +133,7 @@ public class NewApiTest {
 //            saleOrderPushWms(orderId);
 //            Thread.sleep(500);
 //            retrySyncOrderByOrderIds("pre", orderId);
-//            pushFms("pre", orderId);
+            pushFms("pre", orderId);
             auditComplete("pre", orderId);
         }
 
@@ -677,6 +678,15 @@ public class NewApiTest {
         String token = getToken(code);
         String url = baseUrl + "ordercenter-datasync-servicems/SaleOrderRepairService/auditComplete";
         String params = "[" + orderId + "]";
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
+        System.out.println(resultstr);
+    }
+
+    public static void processConfirmReceiptAmount(String code, PushTmsPayConfirmDTO pushTmsPayConfirm) {
+        String baseUrl = getUrl(code);
+        String token = getToken(code);
+        String url = baseUrl + "ordercenter-datasync-servicems/SaleOrderRepairService/processConfirmReceiptAmount";
+        String params = "[" + JSON.toJSONString(pushTmsPayConfirm) + "]";
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
         System.out.println(resultstr);
     }

@@ -11,6 +11,7 @@ import com.common.generate.javacreate.ordercenter.dto.ChangeCountMarkDTO;
 import com.common.generate.javacreate.ordercenter.dto.ElkDTO;
 import com.common.generate.javacreate.ordercenter.dto.EsOrderSyncDTO;
 import com.common.generate.javacreate.ordercenter.dto.PushSaleOrderDTO;
+import com.common.generate.javacreate.ordercenter.dto.PushTmsPayConfirmDTO;
 import com.common.generate.javacreate.ordercenter.dto.RepairBusinessItemIdDTO;
 import com.common.generate.javacreate.ordercenter.dto.SaleOrderDTO;
 import com.common.generate.javacreate.ordercenter.dto.SaleOrderItemDTO;
@@ -102,9 +103,9 @@ public class NewApiTest {
 //        changeCountMarkDTO.setOrderId(7010002304210916769L);
 //        changeCountMarkDTO.setWarehouseId(7201L);
 
-        TrainsOutStockDTO preData = getPreData();
-        System.out.println(JSON.toJSONString(preData));
-        nptOutSyncErp("pre");
+//        TrainsOutStockDTO preData = getPreData();
+//        System.out.println(JSON.toJSONString(preData));
+//        nptOutSyncErp("pre");
 
 //            repairReturnComplete(5162088339163517276L);
 
@@ -683,6 +684,15 @@ public class NewApiTest {
         String token = getToken(code);
         String url = baseUrl + "ordercenter-datasync-servicems/SaleOrderRepairService/auditComplete";
         String params = "[" + orderId + "]";
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
+        System.out.println(resultstr);
+    }
+
+    public static void processConfirmReceiptAmount(String code, PushTmsPayConfirmDTO pushTmsPayConfirm) {
+        String baseUrl = getUrl(code);
+        String token = getToken(code);
+        String url = baseUrl + "ordercenter-datasync-servicems/SaleOrderRepairService/processConfirmReceiptAmount";
+        String params = "[" + JSON.toJSONString(pushTmsPayConfirm) + "]";
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
         System.out.println(resultstr);
     }

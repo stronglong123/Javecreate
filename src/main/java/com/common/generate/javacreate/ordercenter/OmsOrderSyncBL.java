@@ -69,7 +69,7 @@ public class OmsOrderSyncBL {
                 System.out.println("受限仓库，不处理" + warehouseSync.getWarehouseId());
                 continue;
             }
-            if (warehouseSync.getOmscount() != null && warehouseSync.getOmscount() >= 10000 && warehouseSync.getOmscount() < 200000 && warehouseSync.getOccount() <= 100) {
+            if (warehouseSync.getOmscount() != null && warehouseSync.getOmscount() >= 200000 && warehouseSync.getOmscount() < 500000 && warehouseSync.getOccount() <= 100) {
                 initOrderCenterByWarehouseIds(warehouseSync.getWarehouseId());
                 System.out.println(DateUtils.date2String(new Date()) + " 已修复仓库=" + warehouseSync.getWarehouseId() + " 已修复数量=" + warehouseSync.getOmscount());
                 warehouseList.add(warehouseSync.getWarehouseId());

@@ -34,25 +34,47 @@ public class UpdateItemBL {
 
     @SneakyThrows
     public static void main(String[] args){
-//        String filePath = "C:\\Users\\Administrator\\Desktop\\明细金额异常.xlsx";
-//        FileInputStream file = new FileInputStream(filePath);
-//        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "明细金额异常.xlsx");
+   List<Long> itemIds = Arrays.asList(4000012305290704713L);
 
-        List<Long> orderItemIdList = Arrays.asList(
-                999001230322146296L
-        );
-        for (Long orderItemId : orderItemIdList) {
+
+        for (Long itemId : itemIds) {
             SaleOrderItemDTO saleOrderItemDTO = new SaleOrderItemDTO();
             OrderItemBaseDTO orderItemBaseDTO = new OrderItemBaseDTO();
-            orderItemBaseDTO.setOrderItemId(orderItemId);
-            orderItemBaseDTO.setRemark("测试");
+            orderItemBaseDTO.setOrderItemId(itemId);
+            orderItemBaseDTO.setCount(BigDecimal.ZERO);
+//            orderItemBaseDTO.setRemark("");
             saleOrderItemDTO.setOrderItemBaseDTO(orderItemBaseDTO);
 
-            OrderItemAmountDTO orderItemAmountDTO = new OrderItemAmountDTO();
-            orderItemAmountDTO.setOrderItemId(orderItemId);
-            orderItemAmountDTO.setDiscount(BigDecimal.ZERO);
-            saleOrderItemDTO.setOrderItemAmountDTO(orderItemAmountDTO);
-//            NewApiTest.updateOrderItem("release", saleOrderItemDTO);
+//            OrderItemAmountDTO orderItemAmountDTO = new OrderItemAmountDTO();
+//            orderItemAmountDTO.setOrderItemId(orderItemId);
+//            orderItemAmountDTO.setDiscount(BigDecimal.ZERO);
+//            saleOrderItemDTO.setOrderItemAmountDTO(orderItemAmountDTO);
+            NewApiTest.updateOrderItem("pre", saleOrderItemDTO);
+            Thread.sleep(100);
+        }
+    }
+
+    @SneakyThrows
+    public static void fixByExcel(){
+        String filePath = "C:\\Users\\Administrator\\Desktop\\异常数据.xlsx";
+        FileInputStream file = new FileInputStream(filePath);
+        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "异常数据.xlsx");
+
+
+        for (ElkDTO elkDTO : list) {
+            SaleOrderItemDTO saleOrderItemDTO = new SaleOrderItemDTO();
+            OrderItemBaseDTO orderItemBaseDTO = new OrderItemBaseDTO();
+            orderItemBaseDTO.setOrderItemId(elkDTO.getItemId());
+            orderItemBaseDTO.setDeliveryCount(elkDTO.getOutStockCount());
+//            orderItemBaseDTO.setRemark("");
+            saleOrderItemDTO.setOrderItemBaseDTO(orderItemBaseDTO);
+
+//            OrderItemAmountDTO orderItemAmountDTO = new OrderItemAmountDTO();
+//            orderItemAmountDTO.setOrderItemId(orderItemId);
+//            orderItemAmountDTO.setDiscount(BigDecimal.ZERO);
+//            saleOrderItemDTO.setOrderItemAmountDTO(orderItemAmountDTO);
+            NewApiTest.updateOrderItem("pre", saleOrderItemDTO);
+            Thread.sleep(100);
         }
     }
 }

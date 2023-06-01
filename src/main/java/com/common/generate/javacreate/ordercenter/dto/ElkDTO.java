@@ -31,6 +31,16 @@ public class ElkDTO {
 
     private BigDecimal count;
 
+    private BigDecimal outStockCount;
+
+    public BigDecimal getOutStockCount() {
+        return outStockCount;
+    }
+
+    public void setOutStockCount(BigDecimal outStockCount) {
+        this.outStockCount = outStockCount;
+    }
+
     public Long getSecOwnerId() {
         return secOwnerId;
     }

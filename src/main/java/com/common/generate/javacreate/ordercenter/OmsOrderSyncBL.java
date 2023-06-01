@@ -3,6 +3,7 @@ package com.common.generate.javacreate.ordercenter;
 import cn.hutool.db.DaoTemplate;
 import com.alibaba.fastjson.JSON;
 import com.common.generate.javacreate.controller.DiaryController;
+import com.common.generate.javacreate.ordercenter.dto.ElkDTO;
 import com.common.generate.javacreate.ordercenter.dto.WarehouseSyncDTO;
 import com.common.generate.javacreate.utils.DateUtils;
 import com.common.generate.javacreate.utils.ExcelUtils;
@@ -33,7 +34,25 @@ public class OmsOrderSyncBL {
 
     @SneakyThrows
     public static void main(String[] args) {
-        warehouseSync();
+        orderIdSync();
+    }
+
+
+    @SneakyThrows
+    public static void orderIdSync() {
+        String filePath = "C:\\Users\\Administrator\\Desktop\\未同步数据.xlsx";
+        FileInputStream file = new FileInputStream(filePath);
+        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "未同步数据.xlsx");
+        for (ElkDTO elkDTO : list) {
+            if (elkDTO.getOrderId() == null) {
+                continue;
+            }
+            NewApiTest.initOrderCenterByOmsorderIds("pre", elkDTO.getOrderId());
+
+            System.out.println("同步订单"+elkDTO.getOrderId());
+            Thread.sleep(100);
+
+        }
     }
 
 

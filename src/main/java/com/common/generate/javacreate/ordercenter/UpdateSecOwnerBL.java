@@ -23,43 +23,64 @@ public class UpdateSecOwnerBL {
 
     @SneakyThrows
     public static void main(String[] args){
-//        String filePath = "C:\\Users\\Administrator\\Desktop\\二级货主仓库异常2.xlsx";
+//        dealData();
+//        String filePath = "C:\\Users\\Administrator\\Desktop\\二级或组合数量修复.xlsx";
 //        FileInputStream file = new FileInputStream(filePath);
-//        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "二级货主仓库异常2.xlsx");
+//        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "二级或组合数量修复.xlsx");
 //        for (ElkDTO elkDTO : list) {
 //            UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();
-//            updateSecOwnerDTO.setId(elkDTO.getId());
-//            updateSecOwnerDTO.setCount(elkDTO.getCount());
+//            updateSecOwnerDTO.setId(elkDTO.getSecId());
+//            updateSecOwnerDTO.setCount(elkDTO.getWorkingItemCount());
 //            System.out.println(JSON.toJSONString(updateSecOwnerDTO));
 //            NewApiTest.updateItemSercOwner("pre", updateSecOwnerDTO);
 //        }
 
 
 
-//        List<Long> orderList = Arrays.asList(5186970771933532744L,
-//                5187305362630106595L,
-//                5187305659083513325L);
-//        for (Long orderId : orderList) {
-//            UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();
-//            updateSecOwnerDTO.setId(orderId);
-//            updateSecOwnerDTO.setCount(BigDecimal.ONE);
-//            System.out.println(JSON.toJSONString(updateSecOwnerDTO));
-//            NewApiTest.updateItemSercOwner("pre", updateSecOwnerDTO);
-//        }
-
-
-        Map<Long, BigDecimal> map = new HashMap<>();
-        map.put(5189193182650908294L,BigDecimal.valueOf(3));
-        map.put(5189639907165421198L,BigDecimal.valueOf(15));
-        map.put(5188402040259220199L,BigDecimal.valueOf(1));
-
-
-        for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {
+        List<Long> orderList = Arrays.asList(5125843791303534862L,5125843791303534863L,5125843791303534864L,5125843791303534865L,5125843791303534866L,5125843791303534867L,5125843791303534868L,5125843791303534869L,5125843791303534870L,5125843791303534871L,5125843791303534872L,5125843791303534873L,5125843791303534874L,5125843791303534875L,5125843791303534876L,5125843791303534877L
+                );
+        for (Long orderId : orderList) {
             UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();
-            updateSecOwnerDTO.setId(entry.getKey());
-            updateSecOwnerDTO.setCount(entry.getValue());
+            updateSecOwnerDTO.setId(orderId);
+            updateSecOwnerDTO.setWarehouseId(1031);
             System.out.println(JSON.toJSONString(updateSecOwnerDTO));
             NewApiTest.updateItemSercOwner("pre", updateSecOwnerDTO);
+        }
+
+
+//        Map<Long, BigDecimal> map = new HashMap<>();
+//        map.put(5209982387445632848L, BigDecimal.valueOf(4));
+//
+//
+//        for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {
+//            UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();
+//            updateSecOwnerDTO.setId(entry.getKey());
+//            updateSecOwnerDTO.setCount(entry.getValue());
+//            System.out.println(JSON.toJSONString(updateSecOwnerDTO));
+//            NewApiTest.updateItemSercOwner("pre", updateSecOwnerDTO);
+//        }
+    }
+
+
+    @SneakyThrows
+    public static void dealData() {
+        String filePath = "C:\\Users\\Administrator\\Desktop\\经销商单缺货异常.xlsx";
+        FileInputStream file = new FileInputStream(filePath);
+        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "经销商单缺货异常.xlsx");
+        for (ElkDTO elkDTO : list) {
+            if (elkDTO.getItemId() == null) {
+                continue;
+            }
+            if (elkDTO.getCount().compareTo(elkDTO.getWorkingItemCount()) == 0
+                    && elkDTO.getCount().compareTo(elkDTO.getOriginalCount()) != 0) {
+                UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();
+                updateSecOwnerDTO.setId(elkDTO.getId());
+                updateSecOwnerDTO.setOrderItemId(elkDTO.getItemId());
+                updateSecOwnerDTO.setOrderId(elkDTO.getOrderId());
+                updateSecOwnerDTO.setCount(elkDTO.getCount());
+                System.out.println(JSON.toJSONString(updateSecOwnerDTO));
+                //            NewApiTest.updateItemSercOwner("pre", updateSecOwnerDTO);
+            }
         }
     }
 }

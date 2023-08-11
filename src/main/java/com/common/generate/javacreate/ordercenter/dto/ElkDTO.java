@@ -31,7 +31,75 @@ public class ElkDTO {
 
     private BigDecimal count;
 
+    private BigDecimal workingItemCount;
+    private BigDecimal  originalCount;
+
     private BigDecimal outStockCount;
+
+    private BigDecimal specQuantity;
+
+    private Long fromCityId;
+
+    private Long fromWarehouseId;
+    private Long orgId;
+    private Long warehouseId;
+
+
+    private Long orderItemId;
+
+    private BigDecimal deliveryCount;
+
+    private Long secId;
+
+    private Integer state;
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public Long getSecId() {
+        return secId;
+    }
+
+    public void setSecId(Long secId) {
+        this.secId = secId;
+    }
+
+    public Long getOrderItemId() {
+        return orderItemId;
+    }
+
+    public void setOrderItemId(Long orderItemId) {
+        this.orderItemId = orderItemId;
+    }
+
+    public BigDecimal getDeliveryCount() {
+        return deliveryCount;
+    }
+
+    public void setDeliveryCount(BigDecimal deliveryCount) {
+        this.deliveryCount = deliveryCount;
+    }
+
+    public BigDecimal getOriginalCount() {
+        return originalCount;
+    }
+
+    public void setOriginalCount(BigDecimal originalCount) {
+        this.originalCount = originalCount;
+    }
+
+    public BigDecimal getSpecQuantity() {
+        return specQuantity;
+    }
+
+    public void setSpecQuantity(BigDecimal specQuantity) {
+        this.specQuantity = specQuantity;
+    }
 
     public BigDecimal getOutStockCount() {
         return outStockCount;
@@ -127,5 +195,45 @@ public class ElkDTO {
 
     public void setIsFix(Integer isFix) {
         this.isFix = isFix;
+    }
+
+    public BigDecimal getWorkingItemCount() {
+        return workingItemCount;
+    }
+
+    public void setWorkingItemCount(BigDecimal workingItemCount) {
+        this.workingItemCount = workingItemCount;
+    }
+
+    public Long getFromCityId() {
+        return fromCityId;
+    }
+
+    public void setFromCityId(Long fromCityId) {
+        this.fromCityId = fromCityId;
+    }
+
+    public Long getFromWarehouseId() {
+        return fromWarehouseId;
+    }
+
+    public void setFromWarehouseId(Long fromWarehouseId) {
+        this.fromWarehouseId = fromWarehouseId;
+    }
+
+    public Long getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
+
+    public Long getWarehouseId() {
+        return warehouseId;
+    }
+
+    public void setWarehouseId(Long warehouseId) {
+        this.warehouseId = warehouseId;
     }
 }

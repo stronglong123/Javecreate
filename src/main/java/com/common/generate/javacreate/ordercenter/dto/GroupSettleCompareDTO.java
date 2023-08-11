@@ -6,53 +6,44 @@ package com.common.generate.javacreate.ordercenter.dto;
  */
 public class GroupSettleCompareDTO {
 
-    private Integer org_Id;
+    private Integer orgId;
 
-    private Integer warehouse_Id;
+    private Integer warehouseId;
 
-    private Long productSku_Id;
 
-    private Long secOwner_Id;
+    private Long productSkuId;
 
-    public Integer getOrg_Id() {
-        return org_Id;
+    private Long secOwnerId;
+
+    public Long getProductSkuId() {
+        return productSkuId;
     }
 
-    public void setOrg_Id(Integer org_Id) {
-        this.org_Id = org_Id;
+    public void setProductSkuId(Long productSkuId) {
+        this.productSkuId = productSkuId;
     }
 
-    public Integer getWarehouse_Id() {
-        return warehouse_Id;
+    public Integer getOrgId() {
+        return orgId;
     }
 
-    public void setWarehouse_Id(Integer warehouse_Id) {
-        this.warehouse_Id = warehouse_Id;
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
     }
 
-    public Long getProductSku_Id() {
-        return productSku_Id;
+    public Integer getWarehouseId() {
+        return warehouseId;
     }
 
-    public void setProductSku_Id(Long productSku_Id) {
-        this.productSku_Id = productSku_Id;
+    public void setWarehouseId(Integer warehouseId) {
+        this.warehouseId = warehouseId;
     }
 
-    public Long getSecOwner_Id() {
-        return secOwner_Id;
+    public Long getSecOwnerId() {
+        return secOwnerId;
     }
 
-    public void setSecOwner_Id(Long secOwner_Id) {
-        this.secOwner_Id = secOwner_Id;
-    }
-
-    @Override
-    public String toString() {
-        return "GroupSettleCompareDTO{" +
-                "org_Id=" + org_Id +
-                ", warehouse_Id=" + warehouse_Id +
-                ", productSku_Id=" + productSku_Id +
-                ", secOwner_Id=" + secOwner_Id +
-                '}';
+    public void setSecOwnerId(Long secOwnerId) {
+        this.secOwnerId = secOwnerId;
     }
 }

@@ -55,6 +55,12 @@ public class GroupOtherOrderDTO {
      */
     private String businessNo;
 
+    private String inBusinessNo;
+
+    private String inOrderId;
+
+    private String inOrderItemId;
+
     private String orderId;
 
     private String orderItemId;
@@ -70,6 +76,30 @@ public class GroupOtherOrderDTO {
     private String settleOrderId;
 
     private Integer needFix;
+
+    public String getInBusinessNo() {
+        return inBusinessNo;
+    }
+
+    public void setInBusinessNo(String inBusinessNo) {
+        this.inBusinessNo = inBusinessNo;
+    }
+
+    public String getInOrderId() {
+        return inOrderId;
+    }
+
+    public void setInOrderId(String inOrderId) {
+        this.inOrderId = inOrderId;
+    }
+
+    public String getInOrderItemId() {
+        return inOrderItemId;
+    }
+
+    public void setInOrderItemId(String inOrderItemId) {
+        this.inOrderItemId = inOrderItemId;
+    }
 
     public Integer getNeedFix() {
         return needFix;

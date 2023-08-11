@@ -35,8 +35,8 @@ public class FindErrorGroupSettleOrder {
 
 
     public static void main(String[] args) {
-//        getOtherOrder();
-        findGroupSettleOrder();
+        getOtherOrder();
+//        findGroupSettleOrder();
 //        List<Long> list= Arrays.asList(1646010362321101363L,1646010362321101363L,1646010362321101363L,1643330262662109977L,1643330262662109977L,1643330262662109977L,1618999002612100001L,1643330262662109977L,1648699192711100357L, 1648864165697100388L, 1648695710576100354L,1631457772131100279L,1643330262662109977L,1643330262662109977L,1643330262662109977L,1677479537104100414L, 1677479987775100535L, 1677479987775100534L,1618999002612100001L,1677383251673100080L, 1666229151616100003L,1643330262662109977L,1643330262662109977L,1643330262662109977L,1677479537104100414L, 1677479987775100535L, 1677479987775100534L,1622523866675100793L,1618999002612100001L,1643330262662109977L,1643330262662109977L,1643330262662109977L,1618999002612100001L,1677550036436100085L,1618999002612100001L,1677121712477100040L,1631182008583125398L,1643330262662109977L,1677550036436100085L,1631182008583125398L,1643330262662109977L,1643330262662109977L,1646010362321101363L,1631182008583125398L,1643330262662109977L,1643330262662109977L,1643330262662109977L,1677121712477100040L,1643330262662109977L,1643330262662109977L,1618999002612100001L,1628260203268100146L,1646010362321101363L,1618999002612100001L,1643330313844109787L, 1643330262662109977L,1623392163559108334L,1643330262662109977L,1643330262662109977L,1643330262662109977L,1677550036436100085L,1643330262662109977L,1618999002612100001L,1643330262662109977L);
 //        Set<Long> set = new HashSet<>(list);
 //        System.out.println(set);
@@ -65,8 +65,8 @@ public class FindErrorGroupSettleOrder {
         List<Integer> checkWarehouseIds = Arrays.asList(1191, 7111, 7131, 1591);
 
         for (GroupSettleCompareDTO groupSettleCompareDTO : groupSettleOrder) {
-            Long productSkuId = groupSettleCompareDTO.getProductSku_Id();
-            if (groupSettleCompareDTO.getProductSku_Id() == null) {
+            Long productSkuId = groupSettleCompareDTO.getProductSkuId();
+            if (productSkuId == null) {
                 continue;
             }
 //            if (!checkWarehouseIds.contains(groupSettleCompareDTO.getWarehouse_Id())) {
@@ -75,7 +75,7 @@ public class FindErrorGroupSettleOrder {
 
             String result = resultMap.get(productSkuId);
             if (StringUtils.isEmpty(result)) {
-                result = fixWmsErpInventoryCheck(groupSettleCompareDTO.getOrg_Id(), groupSettleCompareDTO.getWarehouse_Id(), groupSettleCompareDTO.getProductSku_Id());
+                result = fixWmsErpInventoryCheck(groupSettleCompareDTO.getOrgId(), groupSettleCompareDTO.getWarehouseId(), groupSettleCompareDTO.getProductSkuId());
             }
             String parseGroupSettle = getParseGroupSettle(groupSettleCompareDTO, result);
             FileUtil.writeTxt("C:\\Users\\Administrator\\Desktop\\团购异常数据.txt", groupSettleCompareDTO + "," + parseGroupSettle + "\n");
@@ -88,7 +88,7 @@ public class FindErrorGroupSettleOrder {
         }
         String[] split = result.split("\",");
         for (String str : split) {
-            if (str.contains(groupSettleCompareDTO.getSecOwner_Id().toString())) {
+            if (str.contains(groupSettleCompareDTO.getSecOwnerId().toString())) {
                 return str;
             }
         }
@@ -99,7 +99,7 @@ public class FindErrorGroupSettleOrder {
     private static String getParseGroupSettleTMS(GroupSettleCompareDTO groupSettleCompareDTO, String result) {
         String[] split = result.split("\",");
         for (String str : split) {
-            if (str.contains(groupSettleCompareDTO.getSecOwner_Id().toString())) {
+            if (str.contains(groupSettleCompareDTO.getSecOwnerId().toString())) {
                 String[] split2 = str.split("\\|");
                 for (String s : split2) {
                     if (s.contains("TMS已发货未完成的数量")) {
@@ -113,9 +113,9 @@ public class FindErrorGroupSettleOrder {
 
     @SneakyThrows
     private static List<GroupSettleCompareDTO> getGroupSettleOrder() {
-        String filePath = "C:\\Users\\Administrator\\Desktop\\异常库存3-27.xlsx";
+        String filePath = "C:\\Users\\Administrator\\Desktop\\荆州团购异常.xlsx";
         FileInputStream file = new FileInputStream(filePath);
-        List<GroupSettleCompareDTO> list = ExcelUtils.readExcelToEntity(GroupSettleCompareDTO.class, file, "异常库存.xlsx");
+        List<GroupSettleCompareDTO> list = ExcelUtils.readExcelToEntity(GroupSettleCompareDTO.class, file, "荆州团购异常.xlsx");
         return list;
     }
 
@@ -163,9 +163,9 @@ public class FindErrorGroupSettleOrder {
 
     @SneakyThrows
     public static void getOtherOrder() {
-        String filePath = "C:\\Users\\Administrator\\Desktop\\待处理销团购异常.xlsx";
+        String filePath = "C:\\Users\\Administrator\\Desktop\\荆州团购异常.xlsx";
         FileInputStream file = new FileInputStream(filePath);
-        List<GroupOtherOrderDTO> list = ExcelUtils.readExcelToEntity(GroupOtherOrderDTO.class, file, "待处理销团购异常3.16.xlsx");
+        List<GroupOtherOrderDTO> list = ExcelUtils.readExcelToEntity(GroupOtherOrderDTO.class, file, "荆州团购异常.16.xlsx");
 
 
         List<GroupSettleOrderBillInsertDTO>  settleOrderBillList = new ArrayList<>();
@@ -175,10 +175,10 @@ public class FindErrorGroupSettleOrder {
             if(!ObjectUtils.nullSafeEquals(groupOtherOrderDTO.getNeedFix(),0)) {
                 continue;
             }
-            if (groupOtherOrderDTO.getOutStockCount() != null) {
-                createList.add(convertOtherInOut(groupOtherOrderDTO, 1));
-                settleOrderBillList.add(buildSettleOrderBill(groupOtherOrderDTO, 1));
-            }
+//            if (groupOtherOrderDTO.getOutStockCount() != null) {
+//                createList.add(convertOtherInOut(groupOtherOrderDTO, 1));
+//                settleOrderBillList.add(buildSettleOrderBill(groupOtherOrderDTO, 1));
+//            }
             if (groupOtherOrderDTO.getInStockCount() != null) {
                 createList.add(convertOtherInOut(groupOtherOrderDTO, 2));
                 settleOrderBillList.add(buildSettleOrderBill(groupOtherOrderDTO, 2));
@@ -186,7 +186,7 @@ public class FindErrorGroupSettleOrder {
             }
         }
 
-        System.out.println("其他出入:"+JSON.toJSON(createList));
+//        System.out.println("其他出入:"+JSON.toJSON(createList));
         System.out.println("账单明细:"+JSON.toJSON(settleOrderBillList));
 
     }
@@ -216,9 +216,9 @@ public class FindErrorGroupSettleOrder {
         }else {
             groupSettleOrderBillInsertDTO.setOrgId(dto.getOrgId());
             groupSettleOrderBillInsertDTO.setSettleOrderId(dto.getSettleOrderId());
-            groupSettleOrderBillInsertDTO.setBusinessNo(dto.getBusinessNo());
-            groupSettleOrderBillInsertDTO.setOrderId(dto.getOrderId());
-            groupSettleOrderBillInsertDTO.setOrderItemId(dto.getOrderItemId());
+            groupSettleOrderBillInsertDTO.setBusinessNo(dto.getInBusinessNo());
+            groupSettleOrderBillInsertDTO.setOrderId(dto.getInOrderId());
+            groupSettleOrderBillInsertDTO.setOrderItemId(dto.getInOrderItemId());
             groupSettleOrderBillInsertDTO.setOrderType("8");
             groupSettleOrderBillInsertDTO.setSkuId(dto.getProductSkuId());
             groupSettleOrderBillInsertDTO.setSkuName(dto.getProductName());

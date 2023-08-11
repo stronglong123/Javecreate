@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 @Service
 public interface IUserServicce {
 
+    String NAME="default";
+
     /**
      * @param userDTO 用户dto实体
      * @author wyf
@@ -61,4 +63,5 @@ public interface IUserServicce {
      * @date 2019/4/13 下午 12:20
      */
     AdminUser configLogin(UserLoginInfoParam loginParam);
+
 }

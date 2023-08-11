@@ -59,6 +59,18 @@ public class OrderConsignorDTO implements Serializable {
 	@ApiParam(description = "更新时间")
 	private Date lastUpdateTime;
 
+	@ApiParam(description = "配送地址id")
+	private Long addressId;
+
+
+	public Long getAddressId() {
+		return addressId;
+	}
+
+	public void setAddressId(Long addressId) {
+		this.addressId = addressId;
+	}
+
 	public Long getOrderId() {
 		return orderId;
 	}

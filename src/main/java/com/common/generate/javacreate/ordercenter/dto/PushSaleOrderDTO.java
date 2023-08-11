@@ -21,6 +21,16 @@ public class PushSaleOrderDTO {
     List<SaleInventoryAllocateResult> inventoryAllocates;
 
 
+    private SaleOrderCancelDTO cancel;
+
+    public SaleOrderCancelDTO getCancel() {
+        return cancel;
+    }
+
+    public void setCancel(SaleOrderCancelDTO cancel) {
+        this.cancel = cancel;
+    }
+
     public SaleOrderDTO getSaleOrder() {
         return saleOrder;
     }

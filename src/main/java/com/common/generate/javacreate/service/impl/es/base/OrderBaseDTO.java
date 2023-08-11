@@ -99,6 +99,17 @@ public class OrderBaseDTO implements Serializable {
     //(description = "打印次数")
     private Integer printTimes;
 
+    private Integer businessType;
+
+
+    public Integer getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(Integer businessType) {
+        this.businessType = businessType;
+    }
+
     public String getCustomerRemark() {
         return customerRemark;
     }

@@ -17,6 +17,16 @@ public class GiftBO {
 
     private Integer deliveryMode;
 
+    private boolean isOutOfStock;
+
+    public boolean isOutOfStock() {
+        return isOutOfStock;
+    }
+
+    public void setOutOfStock(boolean outOfStock) {
+        isOutOfStock = outOfStock;
+    }
+
     public Integer getDeliveryMode() {
         return deliveryMode;
     }

@@ -55,13 +55,13 @@ public class UpdateOrderPickBL {
 //            NewApiTest.updateWarehouse("pre", orderPickDTO);
 //        }
 
-        List<Long> orderIds = Arrays.asList(5219383248150003393L);
-        for (Long orderId : orderIds) {
-            OrderBaseDTO orderBaseDTO = new OrderBaseDTO();
-            orderBaseDTO.setOrderId(orderId);
-            orderBaseDTO.setState(200);
-            NewApiTest.updateState("pre", orderBaseDTO);
-        }
+//        List<Long> orderIds = Arrays.asList(5219383248150003393L);
+//        for (Long orderId : orderIds) {
+//            OrderBaseDTO orderBaseDTO = new OrderBaseDTO();
+//            orderBaseDTO.setOrderId(orderId);
+//            orderBaseDTO.setState(200);
+//            NewApiTest.updateState("pre", orderBaseDTO);
+//        }
 
 //        Map<Long ,BigDecimal> map = new HashMap<>();
 //        map.put(4620002307061904536L,BigDecimal.valueOf(3));
@@ -77,14 +77,16 @@ public class UpdateOrderPickBL {
 
 
 //        for (Long orderId : orderIds) {
-//            OrderAmountDTO orderAmountDTO = new OrderAmountDTO();
-//            orderAmountDTO.setOrderId(orderId);
-////            orderAmountDTO.setOrderAmount(BigDecimal.valueOf(3.6));
-////            orderAmountDTO.setPayableAmount(BigDecimal.valueOf(3.6));
-////            orderAmountDTO.setReceiveAmount(BigDecimal.valueOf(54));
-////            orderAmountDTO.setUncollectedAmount(BigDecimal.valueOf(0));
-//            orderAmountDTO.setTotalDiscount(BigDecimal.ZERO);
-//            NewApiTest.updateOrderAmount("release", orderAmountDTO);
+            OrderAmountDTO orderAmountDTO = new OrderAmountDTO();
+            orderAmountDTO.setOrderId(5221902542159150798L);
+//            orderAmountDTO.setOrderAmount(BigDecimal.valueOf(3.6));
+//            orderAmountDTO.setPayableAmount(BigDecimal.valueOf(3.6));
+//            orderAmountDTO.setReceiveAmount(BigDecimal.valueOf(54));
+//            orderAmountDTO.setUncollectedAmount(BigDecimal.valueOf(0));
+            orderAmountDTO.setTotalDiscount(BigDecimal.valueOf(5));
+            orderAmountDTO.setUncollectedAmount(BigDecimal.valueOf(918));
+            orderAmountDTO.setPayableAmount(BigDecimal.valueOf(918));
+            NewApiTest.updateOrderAmount("pre", orderAmountDTO);
 //        }
 
 //        List<Long> orderIds = Arrays.asList();

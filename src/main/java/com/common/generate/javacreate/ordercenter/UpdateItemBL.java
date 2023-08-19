@@ -47,25 +47,25 @@ public class UpdateItemBL {
     @SneakyThrows
     public static void fixByMap() {
         Map<Long ,BigDecimal> itemmap = new HashMap<>();
-        itemmap.put(1L,BigDecimal.valueOf(24));
+        itemmap.put(5213850565108995973L,BigDecimal.valueOf(12));
 
         for (Map.Entry<Long, BigDecimal> entry : itemmap.entrySet()) {
             Long itemId = entry.getKey();
             BigDecimal count = entry.getValue();
-
             SaleOrderItemDTO saleOrderItemDTO = new SaleOrderItemDTO();
+
             OrderItemBaseDTO orderItemBaseDTO = new OrderItemBaseDTO();
             orderItemBaseDTO.setOrderItemId(itemId);
             orderItemBaseDTO.setCount(count);
-            orderItemBaseDTO.setTakeCount(count);
-            orderItemBaseDTO.setWorkingItemCount(count);
+//            orderItemBaseDTO.setTakeCount(count);
+//            orderItemBaseDTO.setWorkingItemCount(count);
             saleOrderItemDTO.setOrderItemBaseDTO(orderItemBaseDTO);
 
 //            OrderItemAmountDTO orderItemAmountDTO = new OrderItemAmountDTO();
 //            orderItemAmountDTO.setOrderItemId(itemId);
-//            orderItemAmountDTO.setOrderItemAmount(BigDecimal.valueOf(3.6));
-//            orderItemAmountDTO.setPayableAmount(BigDecimal.valueOf(3.6));
-//            orderItemAmountDTO.setWorkingOrderItemAmount(BigDecimal.valueOf(3.6));
+////            orderItemAmountDTO.setDiscount(BigDecimal.valueOf(5));
+//            orderItemAmountDTO.setPayableAmount(BigDecimal.valueOf(918));
+////            orderItemAmountDTO.setWorkingOrderItemAmount(BigDecimal.valueOf(3.6));
 //            saleOrderItemDTO.setOrderItemAmountDTO(orderItemAmountDTO);
             System.out.println(JSON.toJSONString(saleOrderItemDTO));
             NewApiTest.updateOrderItem("pre", saleOrderItemDTO);

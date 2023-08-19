@@ -37,28 +37,30 @@ public class UpdateSecOwnerBL {
 
 
 
-        List<Long> orderList = Arrays.asList(5125843791303534862L,5125843791303534863L,5125843791303534864L,5125843791303534865L,5125843791303534866L,5125843791303534867L,5125843791303534868L,5125843791303534869L,5125843791303534870L,5125843791303534871L,5125843791303534872L,5125843791303534873L,5125843791303534874L,5125843791303534875L,5125843791303534876L,5125843791303534877L
-                );
-        for (Long orderId : orderList) {
-            UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();
-            updateSecOwnerDTO.setId(orderId);
-            updateSecOwnerDTO.setWarehouseId(1031);
-            System.out.println(JSON.toJSONString(updateSecOwnerDTO));
-            NewApiTest.updateItemSercOwner("pre", updateSecOwnerDTO);
-        }
-
-
-//        Map<Long, BigDecimal> map = new HashMap<>();
-//        map.put(5209982387445632848L, BigDecimal.valueOf(4));
-//
-//
-//        for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {
+//        List<Long> orderList = Arrays.asList(5125843791303534862L,5125843791303534863L,5125843791303534864L,5125843791303534865L,5125843791303534866L,5125843791303534867L,5125843791303534868L,5125843791303534869L,5125843791303534870L,5125843791303534871L,5125843791303534872L,5125843791303534873L,5125843791303534874L,5125843791303534875L,5125843791303534876L,5125843791303534877L
+//                );
+//        for (Long orderId : orderList) {
 //            UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();
-//            updateSecOwnerDTO.setId(entry.getKey());
-//            updateSecOwnerDTO.setCount(entry.getValue());
+//            updateSecOwnerDTO.setId(orderId);
+//            updateSecOwnerDTO.setWarehouseId(1031);
 //            System.out.println(JSON.toJSONString(updateSecOwnerDTO));
 //            NewApiTest.updateItemSercOwner("pre", updateSecOwnerDTO);
 //        }
+
+
+        Map<Long, BigDecimal> map = new HashMap<>();
+        map.put(5221462428846673065L, BigDecimal.valueOf(36));
+        map.put(5221462428846673066L, BigDecimal.valueOf(24));
+        map.put(5221462428846673067L, BigDecimal.valueOf(12));
+
+
+        for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {
+            UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();
+            updateSecOwnerDTO.setId(entry.getKey());
+            updateSecOwnerDTO.setCount(entry.getValue());
+            System.out.println(JSON.toJSONString(updateSecOwnerDTO));
+            NewApiTest.updateItemSercOwner("pre", updateSecOwnerDTO);
+        }
     }
 
 

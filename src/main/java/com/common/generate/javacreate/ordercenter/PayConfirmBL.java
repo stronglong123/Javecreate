@@ -7,7 +7,9 @@ import lombok.SneakyThrows;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xialei
@@ -33,14 +35,19 @@ public class PayConfirmBL {
 //        System.out.println(JSON.toJSONString(batchPayConfirmDTO));
 //        NewApiTest.batchPayConfirm("pre",batchPayConfirmDTO);
 
-        RepairSaleOrderConfirmPayDTO repairSaleOrderConfirmPayDTO =new RepairSaleOrderConfirmPayDTO();
-        repairSaleOrderConfirmPayDTO.setOptUserId(String.valueOf(68132155));
-        repairSaleOrderConfirmPayDTO.setOptUserName("68132155");
-        repairSaleOrderConfirmPayDTO.setOrderId(5215699353325178531L);
-        repairSaleOrderConfirmPayDTO.setPayAmount(BigDecimal.valueOf(293.49));
-        repairSaleOrderConfirmPayDTO.setCollectionTime(new Date(1690513835000L));
-        System.out.println(JSON.toJSONString(repairSaleOrderConfirmPayDTO));
-        NewApiTest.orderPayConfirm("pre", repairSaleOrderConfirmPayDTO);
+        Map<Long, BigDecimal> map = new HashMap<>();
+//        map.put(1240002307111949082L, BigDecimal.valueOf(288));
+        map.put(1190002307101141845L, BigDecimal.valueOf(205.63));
+        for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {
+            RepairSaleOrderConfirmPayDTO repairSaleOrderConfirmPayDTO =new RepairSaleOrderConfirmPayDTO();
+            repairSaleOrderConfirmPayDTO.setOptUserId(String.valueOf(7432));
+            repairSaleOrderConfirmPayDTO.setOptUserName("7432");
+            repairSaleOrderConfirmPayDTO.setOrderId(entry.getKey());
+            repairSaleOrderConfirmPayDTO.setPayAmount(entry.getValue());
+            repairSaleOrderConfirmPayDTO.setCollectionTime(new Date(1689150504070L));
+            System.out.println(JSON.toJSONString(repairSaleOrderConfirmPayDTO));
+            NewApiTest.orderPayConfirm("pre", repairSaleOrderConfirmPayDTO);
+        }
 //        singlePay();
 
     }

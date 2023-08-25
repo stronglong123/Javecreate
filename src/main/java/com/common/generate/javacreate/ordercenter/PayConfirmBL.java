@@ -1,11 +1,13 @@
 package com.common.generate.javacreate.ordercenter;
 
 import com.alibaba.fastjson.JSON;
+import com.common.generate.javacreate.ordercenter.dto.PushTmsPayConfirmDTO;
 import com.common.generate.javacreate.ordercenter.dto.SaleOrderPayConfirm;
 import lombok.SneakyThrows;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,37 +26,37 @@ public class PayConfirmBL {
 //
 //
 //        PushTmsPayConfirmDTO pushTmsPayConfirm =new PushTmsPayConfirmDTO();
-//        pushTmsPayConfirm.setDeliveryTaskId(data.getTaskId());
-//        pushTmsPayConfirm.setOrderIds(orderIds);
-//        pushTmsPayConfirm.setOptUserId(data.getOptUserId());
+//        pushTmsPayConfirm.setDeliveryTaskId(5143861414145228801L);
+//        pushTmsPayConfirm.setOrderIds(Arrays.asList(5143504159428274117L));
+//        pushTmsPayConfirm.setOptUserId(1L);
 //        System.out.println(JSON.toJSONString(pushTmsPayConfirm));
 //        NewApiTest.processConfirmReceiptAmount("pre",pushTmsPayConfirm);
 
 
-//        BatchPayConfirmDTO batchPayConfirmDTO = getData();
-//        System.out.println(JSON.toJSONString(batchPayConfirmDTO));
-//        NewApiTest.batchPayConfirm("pre",batchPayConfirmDTO);
+        BatchPayConfirmDTO batchPayConfirmDTO = getData();
+        System.out.println(JSON.toJSONString(batchPayConfirmDTO));
+        NewApiTest.batchPayConfirm("pre",batchPayConfirmDTO);
 
-        Map<Long, BigDecimal> map = new HashMap<>();
-//        map.put(1240002307111949082L, BigDecimal.valueOf(288));
-        map.put(1190002307101141845L, BigDecimal.valueOf(205.63));
-        for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {
-            RepairSaleOrderConfirmPayDTO repairSaleOrderConfirmPayDTO =new RepairSaleOrderConfirmPayDTO();
-            repairSaleOrderConfirmPayDTO.setOptUserId(String.valueOf(7432));
-            repairSaleOrderConfirmPayDTO.setOptUserName("7432");
-            repairSaleOrderConfirmPayDTO.setOrderId(entry.getKey());
-            repairSaleOrderConfirmPayDTO.setPayAmount(entry.getValue());
-            repairSaleOrderConfirmPayDTO.setCollectionTime(new Date(1689150504070L));
-            System.out.println(JSON.toJSONString(repairSaleOrderConfirmPayDTO));
-            NewApiTest.orderPayConfirm("pre", repairSaleOrderConfirmPayDTO);
-        }
+//        Map<Long, BigDecimal> map = new HashMap<>();
+////        map.put(1240002307111949082L, BigDecimal.valueOf(288));
+//        map.put(5143504159428274117L, BigDecimal.valueOf(1881));
+//        for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {
+//            RepairSaleOrderConfirmPayDTO repairSaleOrderConfirmPayDTO =new RepairSaleOrderConfirmPayDTO();
+//            repairSaleOrderConfirmPayDTO.setOptUserId(String.valueOf(1));
+//            repairSaleOrderConfirmPayDTO.setOptUserName("1");
+//            repairSaleOrderConfirmPayDTO.setOrderId(entry.getKey());
+//            repairSaleOrderConfirmPayDTO.setPayAmount(entry.getValue());
+//            repairSaleOrderConfirmPayDTO.setCollectionTime(new Date());
+//            System.out.println(JSON.toJSONString(repairSaleOrderConfirmPayDTO));
+//            NewApiTest.orderPayConfirm("pre", repairSaleOrderConfirmPayDTO);
+//        }
 //        singlePay();
 
     }
 
 
     private static BatchPayConfirmDTO getData() {
-        String json = "{\"saleOrderPayConfirms\":[{\"orderId\":5212155138355924647,\"payAmount\":1353.9,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212300127425695402,\"payAmount\":598.3,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212332559705214635,\"payAmount\":99.0,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212332561001254569,\"payAmount\":465.0,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212381101962464933,\"payAmount\":323.0,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212391310487359139,\"payAmount\":513.0,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212404980245254624,\"payAmount\":291.6,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212404982366506670,\"payAmount\":36.9,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212434564603874986,\"payAmount\":627.8,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212434566050909858,\"payAmount\":55.0,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212437177509532134,\"payAmount\":374.0,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212453834592276962,\"payAmount\":324.3,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212484975021969893,\"payAmount\":336.8,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212485639641927335,\"payAmount\":307.6,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212509392606236329,\"payAmount\":328.9,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":5212637001117765290,\"payAmount\":318.6,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":7120002307151672938,\"payAmount\":3811.07,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":7120002307151973019,\"payAmount\":758.2,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":7120002307151973041,\"payAmount\":225.87,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":7120002307151973061,\"payAmount\":30.2,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":7120002307152373237,\"payAmount\":50.0,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":7120002307160073253,\"payAmount\":1102.25,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":7120002307160973329,\"payAmount\":527.32,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"},{\"orderId\":7120002307160973345,\"payAmount\":217.75,\"collectionTime\":\"2023-07-18T09:22:11.179+08:00\"}],\"returnOrderPayConfirms\":null,\"awardOrderPayConfirms\":null,\"taskId\":\"5212504011498824393\",\"optUserId\":\"67741513\",\"optUserName\":null,\"desc\":\"车次确认收款\"}";
+        String json = "{\"desc\":\"车次确认收款\",\"optUserId\":\"68029183\",\"saleOrderPayConfirms\":[{\"collectionTime\":1680223439579,\"orderId\":5172802868776876613,\"payAmount\":409.4},{\"collectionTime\":1680223439579,\"orderId\":5172815362064988750,\"payAmount\":560.8},{\"collectionTime\":1680223439579,\"orderId\":5172971184001915424,\"payAmount\":567.0},{\"collectionTime\":1680223439579,\"orderId\":5173017548635249196,\"payAmount\":400.4},{\"collectionTime\":1680223439579,\"orderId\":5173165262304787014,\"payAmount\":438.0},{\"collectionTime\":1680223439579,\"orderId\":5173169162395138638,\"payAmount\":347.0},{\"collectionTime\":1680223439579,\"orderId\":5173196017868479020,\"payAmount\":525.0},{\"collectionTime\":1680223439579,\"orderId\":5173200264697748009,\"payAmount\":744.8},{\"collectionTime\":1680223439579,\"orderId\":5173202631397554763,\"payAmount\":492.0}],\"taskId\":\"5173207844723791081\"}";
         BatchPayConfirmDTO batchPayConfirmDTO = JSON.parseObject(json, BatchPayConfirmDTO.class);
         return batchPayConfirmDTO;
     }
@@ -79,12 +81,12 @@ public class PayConfirmBL {
             Thread.sleep(500L);
         }
 
-//        PushTmsPayConfirmDTO pushTmsPayConfirm =new PushTmsPayConfirmDTO();
-//        pushTmsPayConfirm.setDeliveryTaskId(data.getTaskId());
-//        pushTmsPayConfirm.setOrderIds(orderIds);
-//        pushTmsPayConfirm.setOptUserId(data.getOptUserId());
-//        System.out.println(JSON.toJSONString(pushTmsPayConfirm));
-//        NewApiTest.processConfirmReceiptAmount("pre",pushTmsPayConfirm);
+        PushTmsPayConfirmDTO pushTmsPayConfirm =new PushTmsPayConfirmDTO();
+        pushTmsPayConfirm.setDeliveryTaskId(data.getTaskId());
+        pushTmsPayConfirm.setOrderIds(orderIds);
+        pushTmsPayConfirm.setOptUserId(data.getOptUserId());
+        System.out.println(JSON.toJSONString(pushTmsPayConfirm));
+        NewApiTest.processConfirmReceiptAmount("pre",pushTmsPayConfirm);
 
     }
 }

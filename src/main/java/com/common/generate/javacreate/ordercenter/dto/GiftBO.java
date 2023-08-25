@@ -1,5 +1,7 @@
 package com.common.generate.javacreate.ordercenter.dto;
 
+import java.util.List;
+
 /**
  * @author xialei
  * @date 2023/8/10 15:44
@@ -18,6 +20,26 @@ public class GiftBO {
     private Integer deliveryMode;
 
     private boolean isOutOfStock;
+
+    private List<String> outOfStockProductList;
+
+    private List<String> giftProductList;
+
+    public List<String> getOutOfStockProductList() {
+        return outOfStockProductList;
+    }
+
+    public void setOutOfStockProductList(List<String> outOfStockProductList) {
+        this.outOfStockProductList = outOfStockProductList;
+    }
+
+    public List<String> getGiftProductList() {
+        return giftProductList;
+    }
+
+    public void setGiftProductList(List<String> giftProductList) {
+        this.giftProductList = giftProductList;
+    }
 
     public boolean isOutOfStock() {
         return isOutOfStock;

@@ -12,6 +12,7 @@ import com.common.generate.javacreate.ordercenter.dto.ElkDTO;
 import com.common.generate.javacreate.ordercenter.dto.EsOrderSyncDTO;
 import com.common.generate.javacreate.ordercenter.dto.OrderDTO;
 import com.common.generate.javacreate.ordercenter.dto.OrderItemAwardDTO;
+import com.common.generate.javacreate.ordercenter.dto.PageTurnResult;
 import com.common.generate.javacreate.ordercenter.dto.PushSaleOrderDTO;
 import com.common.generate.javacreate.ordercenter.dto.PushTmsPayConfirmDTO;
 import com.common.generate.javacreate.ordercenter.dto.RepairBusinessItemIdDTO;
@@ -33,6 +34,7 @@ import com.common.generate.javacreate.service.impl.es.base.OrderConsignorDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderContactDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderPickDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderReturnDTO;
+import com.common.generate.javacreate.service.impl.es.base.OrderSaleDTO;
 import com.common.generate.javacreate.service.impl.es.orderdocument.OrderDocumentDTO;
 import com.common.generate.javacreate.utils.ExcelUtils;
 import com.common.generate.javacreate.utils.FileUtil;
@@ -75,7 +77,7 @@ public class NewApiTest {
 
     private static final String releaseToken = "7ae9138e-5f74-4167-bd0b-29dea93391c2";
 
-    private static final String token = "654b70c8-f09e-4b0a-ae47-07315b058070";
+    private static final String token = "a7689340-2099-4950-a703-f63a87f6af10";
 
     private static final String saasToken = "47bc24c8-cef0-426d-a7d6-dbe9138b4d14";
 
@@ -159,11 +161,12 @@ public class NewApiTest {
 
 //            startOrderCenter(orderId);
 //            cancelTransferOrder("pre", orderId);
+            cancelSaleOrder("pre", orderId);
 //            repairSaleComplete("pre", orderId);
 //            repairReturnComplete("release",111111L);
 //            completeSaleOrder("pre",orderId);
 //            completeReturnOrder("saas",orderId);
-            preToSaleByOrderId("pre", orderId);
+//            preToSaleByOrderId("pre", orderId);
 //            pullScmTransferOrderToOrderCenter("pre",orderId);
 //            deleteByOrderId("pre", orderId);
 //            saleOrderPushWms("saas", orderId);
@@ -177,7 +180,7 @@ public class NewApiTest {
         }
 
 //        for (Long orderId : orderIds) {
-////            retrySyncOrderByOrderIds("pre", orderId);
+//            retrySyncOrderByOrderIds("pre", orderId);
 //            initOrderCenterByOmsorderIds("pre",orderId);
 //        }
 
@@ -212,7 +215,7 @@ public class NewApiTest {
 
 
     private static List<Long> getOrderIds() {
-        return Arrays.asList(5223211018370088645L);
+        return Arrays.asList(5218919354541473473L);
     }
 
 
@@ -555,6 +558,21 @@ public class NewApiTest {
         return eventRegisterDTOS;
     }
 
+    public static PageTurnResult<OrderDocumentDTO> findOrderSnapshotByPageTurn(String code, String params) {
+        String url = getUrl(code) + "ordercenter-aggregatequery-servicems/OrderCommonQueryService/findOrderSnapshotByPageTurn";
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
+//        System.out.println(resultstr);
+        Result result = JSON.parseObject(resultstr, Result.class);
+
+        Object data1 = result.getData();
+        PageTurnResult pageableResult = JSON.parseObject(JSON.toJSONString(data1), PageTurnResult.class);
+
+        List<OrderDocumentDTO> orderDocumentDTOS = JSON.parseArray(JSON.toJSONString(pageableResult.getDatas()), OrderDocumentDTO.class);
+        PageTurnResult<OrderDocumentDTO> orderByPageTurn = pageableResult;
+        orderByPageTurn.setDatas(orderDocumentDTOS);
+        return orderByPageTurn;
+    }
+
     public static List<OrderDTO> getOrderWithItemOwners(String code, String params) {
         String url = getUrl(code) + "ordercenter-aggregatequery-servicems/OrderQueryService/getOrderWithItemOwners";
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
@@ -731,6 +749,15 @@ public class NewApiTest {
         System.out.println(resultstr);
     }
 
+    public static void cancelSaleOrder(String code, Long orderId) {
+        String baseUrl = getUrl(code);
+        String token = getToken(code);
+        String url = baseUrl + "ordercenter-datasync-servicems/SaleOrderRepairService/cancelByOrderId";
+        String params = "[" + orderId + "]";
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
+        System.out.println(resultstr);
+    }
+
 
     public static void nptOutSyncErp(String code) {
         String baseUrl = getUrl(code);
@@ -839,6 +866,16 @@ public class NewApiTest {
         String token = getToken(code);
         String url = baseUrl + "ordercenter-datasync-servicems/OrderRepairService/updateOrderConsignor";
         String params = "[" + JSON.toJSONString(orderConsignorDTO) + "]";
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
+        System.out.println(resultstr);
+    }
+
+
+    public static void updateOrderSale(String code, OrderSaleDTO orderSaleDTO) {
+        String baseUrl = getUrl(code);
+        String token = getToken(code);
+        String url = baseUrl + "ordercenter-datasync-servicems/OrderRepairService/updateOrderSale";
+        String params = "[" + JSON.toJSONString(orderSaleDTO) + "]";
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
         System.out.println(resultstr);
     }

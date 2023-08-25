@@ -11,6 +11,7 @@ import com.common.generate.javacreate.service.impl.es.base.OrderConsignorDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderContactDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderPickDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderReturnDTO;
+import com.common.generate.javacreate.service.impl.es.base.OrderSaleDTO;
 import com.common.generate.javacreate.utils.ExcelUtils;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +56,14 @@ public class UpdateOrderPickBL {
 //            NewApiTest.updateWarehouse("pre", orderPickDTO);
 //        }
 
-//        List<Long> orderIds = Arrays.asList(5219383248150003393L);
-//        for (Long orderId : orderIds) {
-//            OrderBaseDTO orderBaseDTO = new OrderBaseDTO();
-//            orderBaseDTO.setOrderId(orderId);
-//            orderBaseDTO.setState(200);
-//            NewApiTest.updateState("pre", orderBaseDTO);
-//        }
+        List<Long> orderIds = Arrays.asList(5223266568345296619L,5223262086949576416L,5223274593272921804L,5224032248446746528L);
+        for (Long orderId : orderIds) {
+            OrderBaseDTO orderBaseDTO = new OrderBaseDTO();
+            orderBaseDTO.setOrderId(orderId);
+            orderBaseDTO.setState(300);
+            NewApiTest.updateState("pre", orderBaseDTO);
+            NewApiTest.retrySyncOrderByOrderIds("pre", orderId);
+        }
 
 //        Map<Long ,BigDecimal> map = new HashMap<>();
 //        map.put(4620002307061904536L,BigDecimal.valueOf(3));
@@ -77,16 +79,18 @@ public class UpdateOrderPickBL {
 
 
 //        for (Long orderId : orderIds) {
-            OrderAmountDTO orderAmountDTO = new OrderAmountDTO();
-            orderAmountDTO.setOrderId(5221902542159150798L);
+//            OrderAmountDTO orderAmountDTO = new OrderAmountDTO();
+//            orderAmountDTO.setOrderId(1190002308111764204L);
+//            orderAmountDTO.setPayType(31);
+//            orderAmountDTO.setPayTypeName("组合支付");
 //            orderAmountDTO.setOrderAmount(BigDecimal.valueOf(3.6));
 //            orderAmountDTO.setPayableAmount(BigDecimal.valueOf(3.6));
 //            orderAmountDTO.setReceiveAmount(BigDecimal.valueOf(54));
 //            orderAmountDTO.setUncollectedAmount(BigDecimal.valueOf(0));
-            orderAmountDTO.setTotalDiscount(BigDecimal.valueOf(5));
-            orderAmountDTO.setUncollectedAmount(BigDecimal.valueOf(918));
-            orderAmountDTO.setPayableAmount(BigDecimal.valueOf(918));
-            NewApiTest.updateOrderAmount("pre", orderAmountDTO);
+//            orderAmountDTO.setTotalDiscount(BigDecimal.valueOf(5));
+//            orderAmountDTO.setUncollectedAmount(BigDecimal.valueOf(918));
+//            orderAmountDTO.setPayableAmount(BigDecimal.valueOf(918));
+//            NewApiTest.updateOrderAmount("pre", orderAmountDTO);
 //        }
 
 //        List<Long> orderIds = Arrays.asList();
@@ -103,6 +107,20 @@ public class UpdateOrderPickBL {
 //            orderConsignorDTO.setAddressId(2864021L);
 //            System.out.println(JSON.toJSONString(orderConsignorDTO));
 //            NewApiTest.updateOrderConsignor("pre", orderConsignorDTO);
+//        }
+
+//        List<Long> orderIds = Arrays.asList(5225460663836768844L,
+//                5225481381839460195L,
+//                5225719066374994496L,
+//                5225753996647758400L,
+//                5225785459292273222L,
+//                5225886429325121386L);
+//        for (Long orderId : orderIds) {
+//            OrderSaleDTO orderSaleDTO = new OrderSaleDTO();
+//            orderSaleDTO.setOrderId(orderId);
+//            orderSaleDTO.setCheckoutWarehouseId(4784L);
+//            System.out.println(JSON.toJSONString(orderSaleDTO));
+//            NewApiTest.updateOrderSale("pre", orderSaleDTO);
 //        }
     }
 

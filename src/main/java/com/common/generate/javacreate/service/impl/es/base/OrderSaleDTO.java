@@ -55,6 +55,15 @@ public class OrderSaleDTO implements Serializable {
 	@ApiParam(description = "更新时间")
 	private Date lastUpdateTime;
 
+	private Long checkoutWarehouseId;
+
+	public Long getCheckoutWarehouseId() {
+		return checkoutWarehouseId;
+	}
+
+	public void setCheckoutWarehouseId(Long checkoutWarehouseId) {
+		this.checkoutWarehouseId = checkoutWarehouseId;
+	}
 
 	public String getPartnerCode() {
 		return partnerCode;

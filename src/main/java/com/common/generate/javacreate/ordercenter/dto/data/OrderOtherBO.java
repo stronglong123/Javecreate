@@ -1,5 +1,8 @@
 package com.common.generate.javacreate.ordercenter.dto.data;
 
+import com.common.generate.javacreate.service.impl.es.ApiModel;
+import com.common.generate.javacreate.service.impl.es.ApiParam;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -10,62 +13,77 @@ import java.util.Set;
  * @Date 2022/5/11 13:58
  * @Version 1.0
  **/
+@ApiModel(description = "oms给crm的额外字段模型")
 public class OrderOtherBO {
-
+    @ApiParam(description = "no")
     private String sourceOrderNo;
     /**
      * 订单批次ID.
      */
+    @ApiParam(description = "订单批次ID")
     private Long orderBatchId;
     /**
      * 邮政编码.
      */
+    @ApiParam(description = "邮政编码")
     private String zipCode;
     /**
      * 是否测试订单
      */
+    @ApiParam(description = "是否测试订单")
     private Boolean isTestOrder;
     /**
      * 下单APP版本号.
      */
+    @ApiParam(description = "下单APP版本号")
     private String appVersion;
     /**
      * 下单设备序列号.
      */
+    @ApiParam(description = "下单设备序列号")
     private String deviceSequence;
     /**
      * 订单来源.
      */
+    @ApiParam(description = "订单来源")
     private Integer orderSource;
     /**
      * 渠道类型。
      */
+    @ApiParam(description = "渠道类型")
     private Integer channelType;
     /**
      * 会员等级.
      */
+    @ApiParam(description = "会员等级")
     private Integer bizUserLevel;
     /**
      * 会员来源.
      */
+    @ApiParam(description = "会员来源")
     private Integer userSource;
     /**
      * 使用的红包ID
      */
+    @ApiParam(description = "使用的红包ID")
     private Set<Long> useBonusIds;
     /**
      * 使用的优惠券ID
      */
+    @ApiParam(description = "使用的优惠券ID")
     private Set<Long> useCouponIds;
     /**
      * 使用的优惠码ID.
      */
+    @ApiParam(description = "使用的优惠码ID")
     private Long useCouponCodeId;
     /**
      * 拒绝原因
      */
+    @ApiParam(description = "拒绝原因")
     private String refuseReason;
 
+    @ApiParam(description = "透传字段")
     private Map<String, Object> transferFields;
 
     public String getSourceOrderNo() {

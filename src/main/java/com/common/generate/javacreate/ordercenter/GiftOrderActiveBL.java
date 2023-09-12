@@ -36,8 +36,8 @@ public class GiftOrderActiveBL {
     public static void main(String[] args) {
 //        activeByExcel();
 //        activeByOrderNo();
-        activeByQuery();
-//        directActiveOrder();
+//        activeByQuery();
+        directActiveOrder();
 //        directActive();
     }
 
@@ -54,7 +54,7 @@ public class GiftOrderActiveBL {
     }
 
     public static void directActiveOrder() {
-        List<String> orderNoList = Arrays.asList();
+        List<String> orderNoList = Arrays.asList("114324600467-1");
         for (String orderNo : orderNoList) {
             if (StringUtils.isEmpty(orderNo)) {
                 continue;
@@ -198,13 +198,6 @@ public class GiftOrderActiveBL {
                 return activeGiftList;
             }
             for (GiftBO giftBO : giftOrderList) {
-//                List<String> notActiveorderNos = Arrays.asList("400323200158-3","401321500130-2","404322900516-1","768323200020-1","402323301444-1","429321500226-1",
-//                        "400323300023-2","471323300018-2","103323400544-1","121323500070-1","495323300003-2","471323300018-2","428323000021-1","118322900727-1",
-//                        "425322800193-2","404323100906-2");
-//                if(notActiveorderNos.contains(giftBO.getOrderNo())){
-//                    continue;
-//                }
-
                 if (giftBO.getState() == 200 || giftBO.getState() == 213) {
                     println("赠品单需要激活" + giftBO.getOrderNo());
                     activeGiftList.add(giftBO);
@@ -214,7 +207,6 @@ public class GiftOrderActiveBL {
             }
         }
         return activeGiftList;
-
     }
 
 

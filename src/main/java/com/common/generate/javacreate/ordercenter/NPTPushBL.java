@@ -16,6 +16,7 @@ import lombok.SneakyThrows;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,13 +35,22 @@ public class NPTPushBL {
 
 
     public static void main(String[] args){
-        fixNPT("125317800038");
+        List<String> orderNos = Arrays.asList("124320500111",
+                "124321900092",
+                "124321900097",
+                "124321900103",
+                "124322000072");
+//        List<String> orderNos = Arrays.asList("DT414323800054", "DT414323800053", "DT414323900077", "DT461323900021", "DT461323900025-1", "DT414323800057");
+        for (String orderNo : orderNos) {
+            fixNPT(orderNo);
+        }
+//        fixNPT("DT164316000010");
     }
 
 
     @SneakyThrows
     public static void fixNPT(String orderNo){
-        List<OrderDocumentDTO> returnOrders = NewApiTest.findPageByOrderSnapshot("pre", "[{\"orderNo\":" + orderNo + ",\"companyCode\":\"YJP\"},{\"pageIndex\":1,\"pageSize\":10}]");
+        List<OrderDocumentDTO> returnOrders = NewApiTest.findPageByOrderSnapshot("pre", "[{\"orderNo\":\"" + orderNo + "\",\"companyCode\":\"YJP\"},{\"pageIndex\":1,\"pageSize\":10}]");
         if(CollectionUtils.isEmpty(returnOrders)||returnOrders.size()>1){
             System.out.println("退货单据异常"+orderNo);
         }
@@ -68,6 +78,10 @@ public class NPTPushBL {
         erpTransferOrderDTO.setOrgId(saleOrder.getOrderPick().getOrgId());
         erpTransferOrderDTO.setWarehouseId(saleOrder.getOrderPick().getWarehouseId());
         erpTransferOrderDTO.setTransferType(2);
+
+        if(erpTransferOrderDTO.getWarehouseId().equals(erpTransferOrderDTO.getFromWarehouseId())){
+            throw new BusinessValidateException("仓库id一样,不能生成内配退"+returnOrderNo);
+        }
 
         List<ERPTransferOrderItemDTO> items = new ArrayList<>();
         for (OrderItemDocumentDTO returnOrderItemDTO : returnOrder.getOrderItems()) {
@@ -97,6 +111,10 @@ public class NPTPushBL {
 
             List<OrderItemSecOwnerAllocateDTO> itemSecOwnerAllocates = new ArrayList<>();
             List<OrderItemOwnerDTO> orderItemOwnerDTOS = itemOwnerMap.get(orderItemBaseDTO.getOrderItemId());
+            BigDecimal secCount = orderItemOwnerDTOS.stream().map(it -> it.getCount()).reduce(BigDecimal.ZERO, BigDecimal::add);
+            if(secCount.compareTo(itemDTO.getMinUnitTotalCount())!=0){
+                throw new BusinessValidateException("明细与二级货主数量不一致,"+itemDTO.getBusinessItemId()+","+returnOrderNo);
+            }
             for (OrderItemOwnerDTO orderItemOwnerDTO : orderItemOwnerDTOS) {
                 OrderItemSecOwnerAllocateDTO secOwnerAllocateDTO = new OrderItemSecOwnerAllocateDTO();
                 secOwnerAllocateDTO.setUnitTotalCount(orderItemOwnerDTO.getCount());
@@ -111,13 +129,7 @@ public class NPTPushBL {
         erpTransferOrderDTO.setItems(items);
 
         System.out.println("内配退数据="+JSON.toJSONString(erpTransferOrderDTO));
-
-        Map<String,String> map = new HashMap<>();
-        map.put("id","3874034c-06ca-4481-9b99-a4d5a1a9b132");
-        map.put("messageBody", JSON.toJSONString(erpTransferOrderDTO));
-        requeueWithBody(JSON.toJSONString(map));
-
-
+        NewApiTest.addTransferOrder("pre",erpTransferOrderDTO);
 
     }
 

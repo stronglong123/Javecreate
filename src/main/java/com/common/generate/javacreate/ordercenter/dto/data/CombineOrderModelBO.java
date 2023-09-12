@@ -1,5 +1,8 @@
 package com.common.generate.javacreate.ordercenter.dto.data;
 
+import com.common.generate.javacreate.service.impl.es.ApiModel;
+import com.common.generate.javacreate.service.impl.es.ApiParam;
+
 import java.util.List;
 import java.util.Map;
 
@@ -10,27 +13,32 @@ import java.util.Map;
  * @Date 2022/5/11 14:09
  * @Version 1.0
  **/
+@ApiModel(description = "oms合并单模型")
 public class CombineOrderModelBO {
 
     /**
      * 申请合并的单据(既发起合并请求的单据)
      */
+    @ApiParam(description = "申请合并的单据(既发起合并请求的单据)")
     private OrderBO applyOrder;
 
     /**
      * 已存在的合并主单(若没有有效合并单则为空)
      */
+    @ApiParam(description = "已存在的合并主单(若没有有效合并单则为空)")
     private OrderBO existCombineOrder;
 
     /**
      * 待合并子单列表
      */
+    @ApiParam(description = "待合并子单列表")
     private List<OrderBO> combineSubOrderList;
 
     /**
      * 需要重新组合的单据
      * (是备份，之前争抢合并资格失败)
      */
+    @ApiParam(description = "需要重新组合的单据")
     private Map<Integer, OrderBO> productStatisticsClassIndexMap;
 
     public OrderBO getApplyOrder() {

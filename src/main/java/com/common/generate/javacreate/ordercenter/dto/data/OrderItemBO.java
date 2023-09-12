@@ -1,5 +1,7 @@
 package com.common.generate.javacreate.ordercenter.dto.data;
 
+import com.common.generate.javacreate.service.impl.es.ApiModel;
+import com.common.generate.javacreate.service.impl.es.ApiParam;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,363 +14,502 @@ import java.util.List;
  * @Date 2022/5/11 11:48
  * @Version 1.0
  **/
+@ApiModel(description = "oms订单信息明细模型")
 public class OrderItemBO {
     /**
      * 主键
      */
+    @ApiParam(description = "id")
     private Long id;
-
+    @ApiParam(description = "orderId")
     private Long order_Id;
 
     /**
      * 业务id
      */
+    @ApiParam(description = "业务id")
     private Long business_Id;
-
+    @ApiParam(description = "商城id")
     private Long businessItem_Id;
 
     /**
      * 产品ID
      */
+    @ApiParam(description = "产品ID")
     private Long productSku_Id;
 
     /**
      * 产品中台unifySkuId
      */
+    @ApiParam(description = "产品中台unifySkuId")
     private Long unifySkuId;
 
     /**
      * 产品名称
      */
+    @ApiParam(description = "产品名称")
     private String productName;
 
     /**
      * 数量
      */
+    @ApiParam(description = "数量")
     private BigDecimal saleCount;
 
     /**
      * 单位名称
      */
+    @ApiParam(description = "单位名称")
     private String sellUnit;
 
     /**
      * 销售规格名称
      */
+    @ApiParam(description = "销售规格名称")
     private String productSaleSpec;
 
     /**
      * 包装规格名称
      */
+    @ApiParam(description = "包装规格名称")
     private String productSpec;
 
     /**
      * 销售规格系数
      */
+    @ApiParam(description = "销售规格系数")
     private BigDecimal saleSpecQuantity;
 
     /**
      * 销售规格系数
      */
+    @ApiParam(description = "销售规格系数")
     private BigDecimal specQuantity;
 
     /**
      * 销售价格单位
      */
+    @ApiParam(description = "销售价格单位")
     private String sellPriceUnit;
 
     /**
      * 销售数量小单位
      */
+    @ApiParam(description = "销售数量小单位")
     private BigDecimal minUnitTotalCount;
 
     /**
      * 销售单价
      */
+    @ApiParam(description = "销售单价")
     private BigDecimal sellPrice;
 
     /**
      * 金额
      */
+    @ApiParam(description = "金额")
     private BigDecimal totalAmount;
 
     /**
      * 产品实际货值金额
      */
+    @ApiParam(description = "产品实际货值金额")
     private BigDecimal totalRealAmount;
 
     /**
      * 应付金额
      */
+    @ApiParam(description = "应付金额")
     private BigDecimal payableAmount;
 
     /**
      * 配送费用金额
      */
+    @ApiParam(description = "配送费用金额")
     private BigDecimal deliveryAmount;
 
     /**
      * 大单位名称
      */
+    @ApiParam(description = "大单位名称")
     private String packageName;
 
     /**
      * 小单位名称
      */
+    @ApiParam(description = "小单位名称")
     private String unitName;
 
     /**
      * 备注
      */
+    @ApiParam(description = "备注")
     private String remark;
-
+    @ApiParam(description = "创建时间")
     private Date createTime;
-
+    @ApiParam(description = "创建人")
     private Integer createUser_Id;
-
+    @ApiParam(description = "更新时间")
     private Date lastUpdateTime;
-
+    @ApiParam(description = "更新人")
     private Integer lastUpdateUser_Id;
 
     /**
      * 包装箱码
      */
+    @ApiParam(description = "包装箱码")
     private String packageBoxNo;
 
     /**
      * 成本金额
      */
+    @ApiParam(description = "成本金额")
     private BigDecimal supplyCostPrice;
 
     /**
      * 成本价单位
      */
+    @ApiParam(description = "成本价单位")
     private String supplyCostPriceUnit;
 
     /**
      * 产品货主
      */
+    @ApiParam(description = "产品货主")
     private Long productOwner_Id;
 
     /**
      * 规格ID
      */
+    @ApiParam(description = "规格ID")
     private Long specification_Id;
 
     /**
      * 原始下单数量
      */
+    @ApiParam(description = "原始下单数量")
     private BigDecimal originalSaleCount;
 
     /**
      * 拣货顺序
      */
+    @ApiParam(description = "拣货顺序")
     private Integer pickSequence;
 
     /**
      * 小单位内配成本价
      */
+    @ApiParam(description = "小单位内配成本价")
     private BigDecimal unitCostprice;
 
     /**
      * 控货策略
      */
+    @ApiParam(description = "控货策略")
     private Long productControl_Id;
 
     /**
      * 控货策略
      */
+    @ApiParam(description = "控货策略")
     private String productControlName;
 
     /**
      * 溯原码
      */
+    @ApiParam(description = "溯原码")
     private String productSourceName;
 
     /**
      * 扣库存数量
      */
+    @ApiParam(description = "扣库存数量")
     private BigDecimal inventoryCount;
 
     /**
      * 发货仓数量
      */
+    @ApiParam(description = "发货仓数量")
     private BigDecimal localOriginalSaleCount;
 
     /**
      * crm要求，不要用
      */
+    @ApiParam(description = "crm要求")
     private Long relOrderItemId;
 
     /**
      * SKU是否带票.
      */
+    @ApiParam(description = "SKU是否带票")
     private Boolean skuHasInputTaxInvoice;
     /**
      * 是否强制--强制的话不管关不关连原单,一律强制退指定类型库存
      */
+    @ApiParam(description = "是否强制")
     private Boolean isForce = false;
 
     /**
      * jiupiorderitem表主键
      */
+    @ApiParam(description = "jiupiorderitem表主键")
     private Long jiupiOrderItemTableId;
 
     /**
      * jiupiorder表主键
      */
+    @ApiParam(description = "jiupiorder表主键")
     private Long jiupiOrder_Id;
 
     /**
      * orderitem表主键
      */
+    @ApiParam(description = "orderitem表主键")
     private Long orderItem_Id;
 
     /**
      * 销售模式  0代营/1自营/2合作/3寄售/4大商转自营/5大商转配送/6入驻/7总部寄售
      */
+    @ApiParam(description = "销售模式")
     private Integer saleMode;
 
     /**
      * 供应商ID
      */
+    @ApiParam(description = "供应商ID")
     private Integer supplier_Id;
 
     /**
      * 品牌
      */
+    @ApiParam(description = "品牌")
     private String productBrand;
 
     /**
      * 产品分类
      */
+    @ApiParam(description = "产品分类")
     private Long productStatisticsClass;
 
     /**
      * 统计类目
      */
+    @ApiParam(description = "统计类目")
     private String statisticsCategoryName;
 
     /**
      * 条形码
      */
+    @ApiParam(description = "条形码")
     private String boxCode;
 
     /**
      * 总价立减
      */
+    @ApiParam(description = "总价立减")
     private BigDecimal reduceProductAmount;
 
     /**
      * 订单满减
      */
+    @ApiParam(description = "订单满减")
     private BigDecimal reduceOrderAmount;
 
     /**
      * 优惠券
      */
+    @ApiParam(description = "优惠券")
     private BigDecimal reduceCouponAmount;
 
     /**
      * 红包
      */
+    @ApiParam(description = "红包")
     private BigDecimal reduceBonusAmount;
 
     /**
      * 自提优惠金额
      */
+    @ApiParam(description = "自提优惠金额")
     private BigDecimal selfPickUpReduceAmount;
 
     /**
      * 订单项来源, 0普通商品/1产品满赠/2订单满赠 /3订单加价购/4限时惠/5组合活动商品 /6优惠券赠送商品/7凑单商品/8预售商品/9团购商品
      */
+    @ApiParam(description = "订单项来源")
     private Integer sourceType;
 
     /**
      * 活动来源ID
      */
+    @ApiParam(description = "活动来源ID")
     private String source_Id;
 
     /**
      * 活动来源名称
      */
+    @ApiParam(description = "活动来源名称")
     private String sourceName;
 
     /**
      * 普通商品(0),赠送商品(1),限时惠商品(2),加价购商品(3)
      */
+    @ApiParam(description = "普通商品")
     private Integer productType;
 
     /**
      * 大商转配送，配送费用
      */
+    @ApiParam(description = "大商转配送")
     private BigDecimal partnerDeliveryAmount;
 
     /**
      * 产品业务类型(0=酒类，1=非酒类)
      */
+    @ApiParam(description = "产品业务类型")
     private Integer productBusinessClass;
 
     /**
      * 优惠合计
      */
+    @ApiParam(description = "优惠合计")
     private BigDecimal discountAmount;
 
     /**
      * 上游原始skuid
      */
+    @ApiParam(description = "上游原始skuid")
     private Long skuRef_Id;
 
 
     /**
      * 服务费
      */
+    @ApiParam(description = "服务费")
     private BigDecimal serviceFee;
 
     /**
      * 原价总金额
      */
+    @ApiParam(description = "原价总金额")
     private BigDecimal originAmount;
     /**
      * 总优惠金额
      */
+    @ApiParam(description = "总优惠金额")
     private BigDecimal totalDiscount;
 
     /**
      * 依赖订单项ID
      */
+    @ApiParam(description = "依赖订单项ID")
     private List<Long> relationOrderItemIds;
 
     /**
      * 订单项优惠信息
      */
+    @ApiParam(description = "订单项优惠信息")
     private List<OrderItemDiscountBO> itemDiscounts;
 
-    /**
-     * 给crm的额外字段
-     */
-    private OrderItemOtherBO orderItemOtherBO;
+//    /**
+//     * 给crm的额外字段
+//     */
+//    private OrderItemOtherBO orderItemOtherBO;
 
     /**
      * 是否以销代采
      */
+    @ApiParam(description = "是否以销代采")
     private Integer replacePurchaseWithSales;
 
     /**
      * 经销商库存预分配
      */
+    @ApiParam(description = "经销商库存预分配")
     private List<OrderItemDealerAllocateInventoryBO> orderItemDealerAllocateInventoryBOList;
 
     /**
      * 久批来源仓库变化
      */
+    @ApiParam(description = "久批来源仓库变化")
     @Deprecated
     private Boolean chgWarehouseId = false;
+
     /**
      * 采销模式
      */
+    @ApiParam(description = "采销模式")
     private Integer procurementMode;
 
+
+    @ApiParam(description = "运费")
+    private BigDecimal shippingRateAmount;
+
+
+    @ApiParam(description = "经销商id")
+    private Long dealerId;
+
+    /**
+     * 平台红包
+     */
+    @ApiParam(description = "使用的平台红包")
+    private BigDecimal reducePlatformBonusAmount;
+    /**
+     * 事业部红包
+     */
+    @ApiParam(description = "使用的事业部红包")
+    private BigDecimal reduceBusinessDepartmentBonusAmount;
+
+    /**
+     * 赠送的平台红包金额
+     */
+    @ApiParam(description = "赠送的平台红包金额")
+    private BigDecimal givePlatformBonusAmount;
+    /**
+     * 赠送的事业部红包金额
+     */
+    @ApiParam(description = "赠送的事业部红包金额")
+    private BigDecimal giveBusinessDepartmentBonusAmount;
+
+    public BigDecimal getReducePlatformBonusAmount() {
+        return reducePlatformBonusAmount;
+    }
+
+    public void setReducePlatformBonusAmount(BigDecimal reducePlatformBonusAmount) {
+        this.reducePlatformBonusAmount = reducePlatformBonusAmount;
+    }
+
+    public BigDecimal getReduceBusinessDepartmentBonusAmount() {
+        return reduceBusinessDepartmentBonusAmount;
+    }
+
+    public void setReduceBusinessDepartmentBonusAmount(BigDecimal reduceBusinessDepartmentBonusAmount) {
+        this.reduceBusinessDepartmentBonusAmount = reduceBusinessDepartmentBonusAmount;
+    }
+
+    public BigDecimal getGivePlatformBonusAmount() {
+        return givePlatformBonusAmount;
+    }
+
+    public void setGivePlatformBonusAmount(BigDecimal givePlatformBonusAmount) {
+        this.givePlatformBonusAmount = givePlatformBonusAmount;
+    }
+
+    public BigDecimal getGiveBusinessDepartmentBonusAmount() {
+        return giveBusinessDepartmentBonusAmount;
+    }
+
+    public void setGiveBusinessDepartmentBonusAmount(BigDecimal giveBusinessDepartmentBonusAmount) {
+        this.giveBusinessDepartmentBonusAmount = giveBusinessDepartmentBonusAmount;
+    }
+
+    public Long getDealerId() {
+        return dealerId;
+    }
+
+    public void setDealerId(Long dealerId) {
+        this.dealerId = dealerId;
+    }
 
     public Integer getProcurementMode() {
         return procurementMode;
@@ -938,14 +1079,6 @@ public class OrderItemBO {
         this.itemDiscounts = itemDiscounts;
     }
 
-    public OrderItemOtherBO getOrderItemOtherBO() {
-        return orderItemOtherBO;
-    }
-
-    public void setOrderItemOtherBO(OrderItemOtherBO orderItemOtherBO) {
-        this.orderItemOtherBO = orderItemOtherBO;
-    }
-
     public Integer getReplacePurchaseWithSales() {
         return replacePurchaseWithSales;
     }
@@ -968,5 +1101,13 @@ public class OrderItemBO {
 
     public void setChgWarehouseId(Boolean chgWarehouseId) {
         this.chgWarehouseId = chgWarehouseId;
+    }
+
+    public BigDecimal getShippingRateAmount() {
+        return shippingRateAmount;
+    }
+
+    public void setShippingRateAmount(BigDecimal shippingRateAmount) {
+        this.shippingRateAmount = shippingRateAmount;
     }
 }

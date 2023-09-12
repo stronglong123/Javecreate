@@ -49,9 +49,8 @@ public class UpdateSecOwnerBL {
 
 
         Map<Long, BigDecimal> map = new HashMap<>();
-        map.put(5221462428846673065L, BigDecimal.valueOf(36));
-        map.put(5221462428846673066L, BigDecimal.valueOf(24));
-        map.put(5221462428846673067L, BigDecimal.valueOf(12));
+        map.put(5228792477783938736L, BigDecimal.valueOf(4));
+
 
 
         for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {

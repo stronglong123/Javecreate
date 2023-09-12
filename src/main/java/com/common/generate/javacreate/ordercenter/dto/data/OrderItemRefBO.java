@@ -1,5 +1,8 @@
 package com.common.generate.javacreate.ordercenter.dto.data;
 
+import com.common.generate.javacreate.service.impl.es.ApiModel;
+import com.common.generate.javacreate.service.impl.es.ApiParam;
+
 import java.util.Date;
 
 /**
@@ -9,51 +12,59 @@ import java.util.Date;
  * @Date 2022/5/11 14:05
  * @Version 1.0
  **/
+@ApiModel(description = "oms明细关联单-拆单相关模型")
 public class OrderItemRefBO {
-
+    @ApiParam(description = "id")
     private Long id;
 
     /**
      * 城市ID
      */
+    @ApiParam(description = "城市ID")
     private Integer org_Id;
 
     /**
      * oms单据明细ID
      */
+    @ApiParam(description = "oms单据明细ID")
     private Long orderItem_Id;
 
     /**
      * 来源方单据明细id
      */
+    @ApiParam(description = "来源方单据明细id")
     private Long businessItem_Id;
 
     /**
      * 关联单据ID
      */
+    @ApiParam(description = "关联单据ID")
     private Long refOrder_Id;
 
     /**
      * 关联明细单据ID
      */
+    @ApiParam(description = "关联明细单据ID")
     private Long refOrderItem_Id;
 
     /**
      * 关联单据ID
      */
+    @ApiParam(description = "关联单据ID")
     private Long refBusiness_Id;
 
     /**
      * 关联明细单据ID
      */
+    @ApiParam(description = "关联明细单据ID")
     private Long refBusinessItem_Id;
-
+    @ApiParam(description = "创建时间")
     private Date createTime;
-
+    @ApiParam(description = "创建人")
     private Integer createUser_Id;
-
+    @ApiParam(description = "更新时间")
     private Date lastUpdateTime;
-
+    @ApiParam(description = "更新人")
     private Integer lastUpdateUser_Id;
 
     public Long getId() {

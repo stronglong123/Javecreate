@@ -1,5 +1,8 @@
 package com.common.generate.javacreate.ordercenter.dto.data;
 
+import com.common.generate.javacreate.service.impl.es.ApiModel;
+import com.common.generate.javacreate.service.impl.es.ApiParam;
+
 import java.math.BigDecimal;
 
 /**
@@ -9,95 +12,116 @@ import java.math.BigDecimal;
  * @Date 2022/5/11 13:43
  * @Version 1.0
  **/
+@ApiModel(description = "oms给crm的额外字段模型")
 public class OrderItemOtherBO {
-
+    @ApiParam(description = "id")
     private Long omsOrderItemId;
     /**
      * 来源数量.
      */
+    @ApiParam(description = "来源数量")
     private Integer sourceCount;
 
     /**
      * 原价.
      */
+    @ApiParam(description = "原价")
     private BigDecimal originalPrice;
     /**
      * 原价单位.
      */
+    @ApiParam(description = "原价单位")
     private String originalPriceUnit;
 
     /**
      * 小单位价格.
      */
+    @ApiParam(description = "小单位价格")
     private BigDecimal minUnitPrice;
 
     /**
      * 立减价格.
      */
+    @ApiParam(description = "立减价格")
     private BigDecimal reduceProductPrice;
     /**
      * 立减价格单位.
      */
+    @ApiParam(description = "立减价格单位")
     private String reduceProductPriceUnit;
 
     /**
      * 销售规格系数.
      */
+    @ApiParam(description = "销售规格系数")
     private Integer sellToMinUnitQuantity;
     /**
      * 包装规格系数.
      */
+    @ApiParam(description = "包装规格系数")
     private Integer maxToMinUnitQuantity;
     /**
      * 酒币数量.
      */
+    @ApiParam(description = "酒币数量")
     private Integer wineScore;
     /**
      * 自提优惠减价.
      */
+    @ApiParam(description = "自提优惠减价")
     private BigDecimal reduceSelfPickup;
     /**
      * 产品信息Id.
      */
+    @ApiParam(description = "产品信息Id")
     private Integer productInfoId;
     /**
      * 是否可使用红包.
      */
+    @ApiParam(description = "是否可使用红包")
     private Boolean isUseBonus;
     /**
      * 是否可使用优惠券.
      */
+    @ApiParam(description = "是否可使用优惠券")
     private Boolean isUseCoupon;
 
     /**
      * 优惠码优惠金额
      */
+    @ApiParam(description = "优惠码优惠金额")
     private BigDecimal reduceCouponCodeAmount;
 
     /**
      * 自提优惠金额.
      */
+    @ApiParam(description = "自提优惠金额")
     private BigDecimal reduceSelfPickUp;
 
     /**
      * SKU是否带票.
      */
+    @ApiParam(description = "SKU是否带票")
     private Boolean skuHasInputTaxInvoice;
     /**
      * 订单项 VIP价格优惠 + VIP会员首单优惠
      */
+    @ApiParam(description = "订单项")
     private BigDecimal vipPriceDiscount;
     /**
      * 连锁商户id
      */
+    @ApiParam(description = "连锁商户id")
     private Long chainStoreId;
     /**
      * 订单项原价总金额
      */
+    @ApiParam(description = "订单项原价总金额")
     private BigDecimal originAmount;
     /**
      * 订单项总优惠
      */
+    @ApiParam(description = "订单项总优惠")
     private BigDecimal totalDiscount;
 
     public Long getOmsOrderItemId() {

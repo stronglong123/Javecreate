@@ -246,7 +246,7 @@ public class HttpClientUtils {
 		try {
 
 			HttpPost post = new HttpPost(url);
-			System.out.println("要发送的数据：" + body);
+//			System.out.println("要发送的数据：" + body);
 			StringEntity myEntity = new StringEntity(body, ContentType.APPLICATION_JSON); // 构造请求数据
 			post.setHeader("Content-Type", "application/json;charset=utf8");
 			post.addHeader("Cookie",cookie);
@@ -284,7 +284,7 @@ public class HttpClientUtils {
 				LOGGER.error("关闭response出错", e);
 			}
 		}
-		System.out.println("返回结果:"+responseContent);
+//		System.out.println("返回结果:"+responseContent);
 		return responseContent;
 	}
 	

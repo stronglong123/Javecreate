@@ -13,24 +13,29 @@ import java.util.Date;
  * @Date 2022/6/22 13:40
  * @Version 1.0
  **/
+@ApiModel(description = "oms订单操作日志BO")
 public class OrderTraceBO implements Serializable {
 
     private static final long serialVersionUID = -7785346216899282328L;
+    @ApiParam(description = "id")
     private Long id;
 
     /**
      * 组织机构ID城市ID
      */
+    @ApiParam(description = "组织机构ID城市ID")
     private Integer org_Id;
 
     /**
      * 订单ID
      */
+    @ApiParam(description = "订单ID")
     private Long order_Id;
 
     /**
      * 关联业务单据ID
      */
+    @ApiParam(description = "关联业务单据ID")
     private Long business_Id;
 
     /**
@@ -157,4 +162,3 @@ public class OrderTraceBO implements Serializable {
         this.tag = tag;
     }
 }
-

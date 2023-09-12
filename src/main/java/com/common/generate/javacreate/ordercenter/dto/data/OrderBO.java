@@ -1,6 +1,6 @@
 package com.common.generate.javacreate.ordercenter.dto.data;
 
-
+import com.common.generate.javacreate.service.impl.es.ApiModel;
 import com.common.generate.javacreate.service.impl.es.ApiParam;
 
 import java.io.Serializable;
@@ -16,47 +16,51 @@ import java.util.Map;
  * @Date 2022/5/11 11:37
  * @Version 1.0
  **/
+@ApiModel(description = "oms销售单模型")
 public class OrderBO implements Serializable {
+    private static final long serialVersionUID = 5018106640363856589L;
     /**
      * 主键
      */
+    @ApiParam(description = "主键")
     private Long id;
 
     /**
      * 组织机构代码
      */
+    @ApiParam(description = "组织机构代码")
     private String companyCode;
 
     /**
      * 组织机构ID_城市ID
      */
+    @ApiParam(description = "组织机构ID_城市ID")
     private Integer org_Id;
 
     /**
      * 仓库、调拨仓库allotWarehouseId
      */
+    @ApiParam(description = "仓库、调拨仓库allotWarehouseId")
     private Integer warehouse_Id;
 
     /**
      * 关联业务单据ID
      */
+    @ApiParam(description = "关联业务单据ID")
     private Long business_Id;
 
     /**
      * 关联业务单据单号
      */
+    @ApiParam(description = "关联业务单据单号")
     private String businessNo;
 
     /**
      * 关联业务单据类型
      * 1=酒批业务订单，2=酒批业务退货单，3=经纪人撮合业务，4=兑奖订单业务，5=易经销委托配送
      */
+    @ApiParam(description = "关联业务单据类型")
     private Integer businessType;
-
-    /**
-     * true-跳过灰度检查， flase-不跳过灰度检查
-     */
-    private Boolean skipGrapCheck;
 
     /**
      * 订单状态
@@ -72,6 +76,7 @@ public class OrderBO implements Serializable {
      * <p>
      * 【（BusinessType4->兑奖订单）1=待打印，2 =待发货，3 =待结账，4=已完成，5=已取消，6=配送失败，7=已发货，8=延迟配送】
      */
+    @ApiParam(description = "订单状态")
     private Integer state;
 
     /**
@@ -88,136 +93,166 @@ public class OrderBO implements Serializable {
      * 91=wms返库入库单，51=ERP兑奖入库单，119=多多买菜销售单，72=多多买菜客户退货单，
      * 73=多多买菜多货退货单，92=wms销售出库单的冲销单据'
      */
+    @ApiParam(description = "订单类型")
     private Integer orderType;
 
     /**
      * [SCM2-14675]：订单新增SecOrderType类型字段，所有取值来源于OrderTypeConstant
      */
+    @ApiParam(description = "订单新增SecOrderType类型字段")
     private Integer secOrderType;
 
     /**
      * 下单时间
      */
+    @ApiParam(description = "下单时间")
     private Date orderCreateTime;
 
     /**
      * 订单金额
      */
+    @ApiParam(description = "订单金额")
     private BigDecimal orderAmount;
 
     /**
      * 应收金额
      */
+    @ApiParam(description = "应收金额")
     private BigDecimal payableAmount;
 
     /**
      * 司机配送应收金额
      */
+    @ApiParam(description = "司机配送应收金额")
     private BigDecimal driverOrderAmount;
 
     /**
      * 收货人
      */
+    @ApiParam(description = "收货人")
     private String contact;
 
     /**
      * 收货人电话
      */
+    @ApiParam(description = "收货人电话")
     private String contactPhone;
 
     /**
      * 收货人公司
      */
+    @ApiParam(description = "收货人公司")
     private String contactCompanyName;
 
     /**
      * 订单配送地址
      */
+    @ApiParam(description = "订单配送地址")
     private Integer address_Id;
 
+
+    @ApiParam(description = "交易订单配送地址", required = true)
+    private Integer trdAddressId;
     /**
      * 省
      */
+    @ApiParam(description = "省")
     private String province;
 
     /**
      * 市
      */
+    @ApiParam(description = "市")
     private String city;
 
     /**
      * 区县
      */
+    @ApiParam(description = "区县")
     private String county;
 
     /**
      * 街道
      */
+    @ApiParam(description = "街道")
     private String street;
 
     /**
      * 送货详细地址
      */
+    @ApiParam(description = "送货详细地址")
     private String detailAddress;
 
     /**
      * 收货地址经纬度
      */
+    @ApiParam(description = "收货地址经纬度")
     private BigDecimal contactLongitude;
 
     /**
      * 收货地址经纬度
      */
+    @ApiParam(description = "收货地址经纬度")
     private BigDecimal contactLatitude;
 
     /**
      * 发货人
      */
+    @ApiParam(description = "发货人")
     private String consignor;
 
     /**
      * 发货人电话
      */
+    @ApiParam(description = "发货人电话")
     private String consignorPhone;
 
     /**
      * 发货人公司
      */
+    @ApiParam(description = "发货人公司")
     private String consignorCompanyName;
 
     /**
      * 发货人地址
      */
+    @ApiParam(description = "发货人地址")
     private String consignorAddress;
 
     /**
      * 发货地址经纬度
      */
+    @ApiParam(description = "发货地址经纬度")
     private BigDecimal consignorLongitude;
 
     /**
      * 发货地址经纬度
      */
+    @ApiParam(description = "发货地址经纬度")
     private BigDecimal consignorLatitude;
 
     /**
      * 订单完成时间
      */
+    @ApiParam(description = "订单完成时间")
     private Date orderCompleteTime;
 
     /**
      * 经纪人ID
      */
+    @ApiParam(description = "经纪人ID")
     private Integer salesMan_Id;
 
     /**
      * 经纪人名称
      */
+    @ApiParam(description = "经纪人名称")
     private String salesManName;
 
     /**
      * 经纪人电话
      */
+    @ApiParam(description = "经纪人电话")
     private String salesManPhone;
 
     /**
@@ -225,242 +260,292 @@ public class OrderBO implements Serializable {
      * 0=酒批配送，1=经销商配送，2=配送商配送，4=客户自提，5=总部物流，
      * 6=区域代配送，7=快递直发，20=门店转配送，21=城际调拨，-1=不配送
      */
+    @ApiParam(description = "配送方式")
     private Integer deliveryMode;
 
     /**
      * 物流商
      */
+    @ApiParam(description = "物流商")
     private Integer logisticsId;
 
     /**
      * 物流商名称
      */
+    @ApiParam(description = "物流商名称")
     private String logisticsName;
 
     /**
      * 物流费用
      */
+    @ApiParam(description = "物流费用")
     private BigDecimal deliveryFee;
 
     /**
      * 物流费用付款方：发货方付款(0)，收货方付款(1)
      */
+    @ApiParam(description = "物流费用付款方")
     private Integer deliveryFeePayer;
 
     /**
      * 物流单号
      */
+    @ApiParam(description = "物流单号")
     private String deliveryOrderNO;
 
     /**
      * 物流时间
      */
+    @ApiParam(description = "物流时间")
     private Date deliveryTime;
 
     /**
      * 物流车辆
      */
+    @ApiParam(description = "物流车辆")
     private Long deliveryCar_Id;
 
     /**
      * 物流车辆车牌号
      */
+    @ApiParam(description = "物流车辆车牌号")
     private String deliveryCarNumber;
 
     /**
      * 物流车辆名称
      */
+    @ApiParam(description = "物流车辆名称")
     private String deliveryCarName;
 
     /**
      * 用户备注
      */
+    @ApiParam(description = "用户备注")
     private String remark;
 
     /**
      * 系统备注
      */
+    @ApiParam(description = "系统备注")
     private String sysRemark;
 
     /**
      * 创建时间
      */
+    @ApiParam(description = "创建时间")
     private Date createTime;
 
     /**
      * 创建人
      */
+    @ApiParam(description = "创建人")
     private Integer createUser_Id;
 
     /**
      * 最后修改时间
      */
+    @ApiParam(description = "最后修改时间")
     private Date lastUpdateTime;
 
     /**
      * 最后修改人
      */
+    @ApiParam(description = "最后修改人")
     private Integer lastUpdateUser_Id;
 
     /**
      * 来源城市ID
      */
+    @ApiParam(description = "来源城市ID")
     private Integer fromCity_Id;
 
     /**
      * 波次号
      */
+    @ApiParam(description = "波次号")
     private String waveNO;
 
     /**
      * 调度任务号
      */
+    @ApiParam(description = "调度任务号")
     private String scheduleNO;
 
     /**
      * 配送员
      */
+    @ApiParam(description = "配送员")
     private Integer deliveryUser_Id;
 
     /**
      * 配送员名称
      */
+    @ApiParam(description = "配送员名称")
     private String deliveryUserName;
 
     /**
      * 装卸员工
      */
+    @ApiParam(description = "装卸员工")
     private Integer stevedoreUser_Id;
 
     /**
      * 装卸员工名称
      */
+    @ApiParam(description = "装卸员工名称")
     private String stevedoreUserName;
 
     /**
      * 打印次数
      */
+    @ApiParam(description = "打印次数")
     private Integer printCount;
 
     /**
      * 线路名称
      */
+    @ApiParam(description = "线路名称")
     private String routingName;
 
     /**
      * 地址序号
      */
+    @ApiParam(description = "地址序号")
     private Integer routingItemSequence;
 
     /**
      * 订单序号
      */
+    @ApiParam(description = "订单序号")
     private Integer orderSequence;
 
     /**
      * 是否为合并子订单 0：否,1：是
      */
+    @ApiParam(description = "是否为合并子订单")
     private Integer combineStatus;
 
     /**
      * 是否为异常订单 0：否,1：是
      */
+    @ApiParam(description = "是否为异常订单")
     private Integer exceptionStatus;
 
     /**
      * 成本价
      */
+    @ApiParam(description = "成本价")
     private BigDecimal supplyCostPrice;
 
     /**
      * 关联合并订单id
      */
+    @ApiParam(description = "关联合并订单id")
     private Long parentOrder_Id;
 
     /**
      * 拣货方式0 未设置 1按大件拣货 2按小件拣货
      */
+    @ApiParam(description = "拣货方式0")
     private Integer pickType;
 
     /**
      * 成本价总金额
      */
+    @ApiParam(description = "成本价总金额")
     private BigDecimal costAmount;
 
     /**
      * 期望配送时间
      */
+    @ApiParam(description = "期望配送时间")
     private Date hopeDeliveryTime;
 
     /**
      * 延迟配送入库方式 1还库存 2不还库存
      */
+    @ApiParam(description = "延迟配送入库方式")
     private Integer delayEntryType;
 
     /**
      * 默认货位id
      */
+    @ApiParam(description = "默认货位id")
     private Long defaultLocation_Id;
 
     /**
      * 默认货位名称
      */
+    @ApiParam(description = "默认货位名称")
     private String defaultLocationName;
 
     /**
      * 用户收货状态(0:未收货;1:用户确认收货;2:7天自动收货)
      */
+    @ApiParam(description = "用户收货状态")
     private Integer userConfirmState;
 
     /**
      * 预计送达时间
      */
+    @ApiParam(description = "预计送达时间")
     private Date hopeArriveTime;
 
     /**
      * 下单仓、发货仓库
      */
+    @ApiParam(description = "下单仓")
     private Integer fromWarehouse_Id;
 
     /**
      * 内配类型8=内配，9=内配退，11=中转，12=中转退，13=内配退入
      */
+    @ApiParam(description = "内配类型")
     private Integer allotType;
 
     /**
      * sourceOmsOrderId
      */
+    @ApiParam(description = "sourceOmsOrderId")
     private Long oldId;
 
     /**
      * sourceOmsOrderNo
      */
+    @ApiParam(description = "sourceOmsOrderNo")
     private String oldOrderNo;
 
     /**
      * 拆分订单历史支付id
      */
+    @ApiParam(description = "拆分订单历史支付id")
     private Long oldPaymentInfoId;
 
+    @ApiParam(description = "更新时间")
     private String lastUpdateUserName;
 
     /**
      * 操作类型 true=默认不允许有流程 false=内配司机调整，继续配送，已经发车待入库
      */
+    @ApiParam(description = "操作类型")
     private Boolean optType = Boolean.TRUE;
 
     /**
      * 临时自动，存在分区
      */
+    @ApiParam(description = "临时自动")
     private Integer productStatisticsClassIndex;
 
+    @ApiParam(description = "波次")
     private Boolean needWavePicking;
 
     /**
      * 是否高货值
      */
+    @ApiParam(description = "是否高货值")
     private Boolean highAmount;
 
+    @ApiParam(description = "操作人")
     private String optUserName;
 
     /**
@@ -468,324 +553,504 @@ public class OrderBO implements Serializable {
      * true =》 是
      * false =》 否
      */
+    @ApiParam(description = "是否车销活动")
     private Boolean registrationPromotion;
     /**
      * 高货值取消的需要生成内配退
      */
+    @ApiParam(description = "高货值取消的需要生成内配退")
     private Boolean allotTrueAll;
 
     /**
      * 是否vip会员下的单
      */
+    @ApiParam(description = "是否vip会员下的单")
     private Boolean vipBizUserOrder;
 
     /**
      * 调味品特征
      */
+    @ApiParam(description = "调味品特征")
     private Boolean condimentFeature;
 
     /**
      * jiupiorder表主键
      */
+    @ApiParam(description = "jiupiorder表主键")
     private Long jiupiOrderTableId;
 
     /**
      * jiupiorder表中org_id
      */
+    @ApiParam(description = "jiupiorder表中org_id")
     private Integer jiupiOrderTableOrgId;
 
     /**
      * 销售单ID
      */
+    @ApiParam(description = "销售单ID")
     private Long order_Id;
 
     /**
      * jiupiorder表中的Warehouse_Id
      */
+    @ApiParam(description = "jiupiorder表中的Warehouse_Id")
     private Integer jiupiOrderTableWarehouseId;
 
     /**
      * jiupiorder表中的OrderType
      */
+    @ApiParam(description = "jiupiorder表中的OrderType")
     private Integer jiupiOrderTableOrderType;
 
     /**
      * 合作商转酒批(0), 酒批订单(1)
      */
+    @ApiParam(description = "合作商转酒批")
     private Integer jiupiOrderSource;
 
     /**
      * 酒批订单类型 普通订单(0),  分销商订单(1),  经销商直配订单(2), 大货批发订单(3), 撮合订单(4)
      */
+    @ApiParam(description = "酒批订单类型")
     private Integer jiupiOrderType;
 
     /**
      * 订单满减
      */
+    @ApiParam(description = "订单满减")
     private BigDecimal reduceAmount;
 
     /**
      * 红包
      */
+    @ApiParam(description = "红包")
     private BigDecimal useBonusAmount;
 
     /**
      * 立减
      */
+    @ApiParam(description = "立减")
     private BigDecimal productReduceAmount;
 
     /**
      * 优惠金额
      */
+    @ApiParam(description = "优惠金额")
     private BigDecimal useCouponAmount;
 
     /**
      * 下单本次抹零金额
      */
+    @ApiParam(description = "下单本次抹零金额")
     private BigDecimal thisRemoveAmount;
 
     /**
      * 后续抹零金额
      */
+    @ApiParam(description = "后续抹零金额")
     private BigDecimal laterRemoveAmount;
 
     /**
      * 用户账户金额
      */
+    @ApiParam(description = "用户账户金额")
     private BigDecimal balanceAmount;
 
     /**
      * 赠送的优惠券总金额
      */
+    @ApiParam(description = "赠送的优惠券总金额")
     private BigDecimal giveCouponAmount;
 
     /**
      * 赠送的红包总金额
      */
+    @ApiParam(description = "赠送的红包总金额")
     private BigDecimal giveBonusAmount;
 
     /**
      * 配送状态 无配送状态（ -1），全部配送(0),部分发货(1),部分配送(2),延迟配送(3),配送失败(4),延迟配送已入库(5)
      */
+    @ApiParam(description = "配送状态")
     private Integer deliveryState;
 
     /**
      * 支付方式 货到付款(0),微信支付(1),支付宝支付(2),白条支付(4)
      */
+    @ApiParam(description = "支付方式")
     private Integer payType;
 
     /**
      * 取货方 酒批(0),合作商(1)
      */
+    @ApiParam(description = "取货方")
     private Integer pickupType;
 
     /**
      * 收款方 酒批(0),合作商(1)
      */
+    @ApiParam(description = "收款方")
     private Integer payee;
 
     /**
      * 是否预售订单1=是0=否(ispresale)
      */
+    @ApiParam(description = "是否预售订单")
     private Integer preSaleType;
 
     /**
-     * 用户ID
+     * 商城用户ID
      */
+    @ApiParam(description = "商城用户ID")
     private Integer user_Id;
 
     /**
-     * 客户名称
+     * 商城客户名称
      */
+    @ApiParam(description = "商城客户名称")
     private String userName;
 
     /**
-     * 客户电话
+     * 商城客户电话
      */
+    @ApiParam(description = "商城客户电话")
     private String userMobileNo;
 
     /**
-     * 用户标签
+     * 商城用户标签
      */
+    @ApiParam(description = "商城用户标签")
     private String userRemark;
 
     /**
-     * 用户类型
+     * 商城用户类型
      */
+    @ApiParam(description = "商城用户类型")
     private String userClassName;
 
     /**
      * 关联合作商订单
      */
+    @ApiParam(description = "关联合作商订单")
     private Long partnerOrder_Id;
 
     /**
      * 大商配送结算状态 1待对账/2已结账/4对账中/5已对账
      */
+    @ApiParam(description = "大商配送结算状态")
     private Integer partnerPayState;
 
     /**
      * 合作商ID
      */
+    @ApiParam(description = "合作商ID")
     private Long parterId;
 
     /**
      * 合作商名称
      */
+    @ApiParam(description = "合作商名称")
     private String parterName;
 
     /**
      * 经销商ID
      */
+    @ApiParam(description = "经销商ID")
     private Long shop_Id;
 
     /**
      * 经销商名称
      */
+    @ApiParam(description = "经销商名称")
     private String shopName;
 
     /**
      * 易酒批零店铺ID
      */
+    @ApiParam(description = "易酒批零店铺ID")
     private Long shopExternal_Id;
 
     /**
      * 易酒批零店铺名称
      */
+    @ApiParam(description = "易酒批零店铺名称")
     private String shopExternalName;
 
     /**
      * 大货订单标记 1不进仓自提 2进仓自提 3进仓送货
      */
+    @ApiParam(description = "大货订单标记")
     private Integer bigGoodsMode;
 
     /**
      * 原始金额
      */
+    @ApiParam(description = "原始金额")
     private BigDecimal originalPayAmount;
 
     /**
      * 0未处理，1已处理。ERP订单完成状态
      */
+    @ApiParam(description = "订单完成状态")
     private Integer erpCompleteStatus;
 
     /**
      * 优惠合计
      */
+    @ApiParam(description = "优惠合计")
     private BigDecimal discountAmount;
 
     /**
      * 久批店铺id
      */
+    @ApiParam(description = "久批店铺id")
     private Long jiupiShop_Id;
 
     /**
      * 支付状态
      */
+    @ApiParam(description = "支付状态")
     private Integer payState;
 
     /**
      * 支付成功时间
      */
+    @ApiParam(description = "支付成功时间")
     private Date payTime;
 
     /**
      * 服务费
      */
+    @ApiParam(description = "服务费")
     private BigDecimal serviceFee;
 
     /**
      * 内配中转退关联原单、7Gan是关联的退货单
      */
+    @ApiParam(description = "内配中转退关联原单")
     private Long refOmsorder_Id;
 
     /**
      * 冲销状态(0:未冲销 1:已冲销)
      */
+    @ApiParam(description = "冲销状态")
     private Integer chargeOffState;
 
     /**
      * 订单原价总金额
      */
+    @ApiParam(description = "订单原价总金额")
     private BigDecimal originAmount;
     /**
      * 优惠总金额
      */
+    @ApiParam(description = "优惠总金额")
     private BigDecimal totalDiscount;
 
     /**
      * 给crm的额外字段
      */
+    @ApiParam(description = "给crm的额外字段")
     private OrderOtherBO orderOtherBO;
 
     /**
      * 非业务相关的透传字段
      */
+    @ApiParam(description = "非业务相关的透传字段")
     private Map<String, Object> transferFields;
 
-    /**
-     * 第三方订单来源
-     */
-    private OrderExtensionsBO orderExtensionsBO;
+//    /**
+//     * 第三方订单来源
+//     */
+//    private OrderExtensionsBO orderExtensionsBO;
 
     /**
      * 订单特性
      */
+    @ApiParam(description = "订单特性")
     private List<OrderFeatureBO> orderFeatureBOList;
 
-    /**
-     * 该订单对应合并单详情
-     */
-    private CombineOrderModelBO combineOrderBO;
-
+    //    /**
+//     * 该订单对应合并单详情
+//     */
+//    private CombineOrderModelBO combineOrderBO;
+    @ApiParam(description = "订单明细")
     private List<OrderItemBO> orderItemBOList;
 
     /**
      * 明细关联单-拆单相关
      */
+    @ApiParam(description = "明细关联单")
     private List<OrderItemRefBO> orderItemRefBO;
 
     /**
      * 订单扩展
      */
+    @ApiParam(description = "订单扩展")
     private OrderExtBO orderExtBO;
 
     /**
      * 交易的合约单Id
      */
+    @ApiParam(description = "交易的合约单Id")
     private Long contractOrderId;
 
 
     /**
      * 该订单中钱包支付的金额
      */
+    @ApiParam(description = "该订单中钱包支付的金额")
     private BigDecimal balancePayAmount;
 
     /**
      * 仓库范围配置的，用于记录虚仓对应的前置仓
      */
+    @ApiParam(description = "仓库范围配置")
     private Integer dyyRefWarehouseId;
 
     /**
      * 配送中心
      */
+    @ApiParam(description = "配送中心")
     private Integer deliveryWarehouse_Id;
 
     /**
      * 是预售且满足LARGE_TRANSFER的配置
      */
+    @ApiParam(description = "是预售且满足LARGE_TRANSFER的配置")
     private Boolean preLargeTransfer = false;
 
     /**
      * 换货单号
      */
+    @ApiParam(description = "换货单号")
     private String exchangeOrderNo;
+
+    /**
+     * 与订单中台关系 0=oms1.0新增 1=中台新增 2=oms1.0拆单后由中台新增
+     */
+    @ApiParam(description = "与订单中台关系")
+    private Integer associatedOrderCenter;
 
     /**
      * 订单日志
      */
     @ApiParam(description = "订单日志")
     private List<OrderTraceBO> orderTraceBOList;
+
+
+    /**
+     * 业务员推荐码
+     */
+    @ApiParam(description = "业务员推荐码")
+    private String brokerUserCode;
+
+    /**
+     * 流量类别编码
+     */
+    @ApiParam(description = "流量类别编码")
+    private String trafficSourceCode;
+
+    @ApiParam(description = "运费")
+    private BigDecimal shippingRateAmount;
+
+    @ApiParam(description = "预售订单预计发货天数")
+    private Integer expectDeliveryDays;
+
+
+    /**
+     * 地址类型：0. 默认(类型未知)，1. 门店，2. 仓库
+     */
+    @ApiParam(description = "地址类型 0. 默认(类型未知)，1. 门店，2. 仓库")
+    private Integer addressType;
+
+    /**
+     * 提货码
+     */
+    @ApiParam(description = "提货码")
+    private String pickupCode;
+
+    @ApiParam(description = "交易订单类型")
+    private Integer tradeOrderType;
+
+    /**
+     * 平台红包总金额
+     */
+    @ApiParam(description = "使用平台红包总金额")
+    private BigDecimal reducePlatformBonusTotalAmount;
+    /**
+     * 事业部红包总金额
+     */
+    @ApiParam(description = "使用事业部红包总金额")
+    private BigDecimal reduceBusinessDepartmentBonusTotalAmount;
+
+    /**
+     * 赠送的平台红包总金额
+     */
+    @ApiParam(description = "赠送的平台红包总金额")
+    private BigDecimal givePlatformBonusTotalAmount;
+    /**
+     * 赠送的事业部红包总金额
+     */
+    @ApiParam(description = "赠送的事业部红包总金额")
+    private BigDecimal giveBusinessDepartmentBonusTotalAmount;
+
+    public BigDecimal getReducePlatformBonusTotalAmount() {
+        return reducePlatformBonusTotalAmount;
+    }
+
+    public void setReducePlatformBonusTotalAmount(BigDecimal reducePlatformBonusTotalAmount) {
+        this.reducePlatformBonusTotalAmount = reducePlatformBonusTotalAmount;
+    }
+
+    public BigDecimal getReduceBusinessDepartmentBonusTotalAmount() {
+        return reduceBusinessDepartmentBonusTotalAmount;
+    }
+
+    public void setReduceBusinessDepartmentBonusTotalAmount(BigDecimal reduceBusinessDepartmentBonusTotalAmount) {
+        this.reduceBusinessDepartmentBonusTotalAmount = reduceBusinessDepartmentBonusTotalAmount;
+    }
+
+    public BigDecimal getGivePlatformBonusTotalAmount() {
+        return givePlatformBonusTotalAmount;
+    }
+
+    public void setGivePlatformBonusTotalAmount(BigDecimal givePlatformBonusTotalAmount) {
+        this.givePlatformBonusTotalAmount = givePlatformBonusTotalAmount;
+    }
+
+    public BigDecimal getGiveBusinessDepartmentBonusTotalAmount() {
+        return giveBusinessDepartmentBonusTotalAmount;
+    }
+
+    public void setGiveBusinessDepartmentBonusTotalAmount(BigDecimal giveBusinessDepartmentBonusTotalAmount) {
+        this.giveBusinessDepartmentBonusTotalAmount = giveBusinessDepartmentBonusTotalAmount;
+    }
+
+    public String getPickupCode() {
+        return pickupCode;
+    }
+
+    public void setPickupCode(String pickupCode) {
+        this.pickupCode = pickupCode;
+    }
+
+    public Integer getTradeOrderType() {
+        return tradeOrderType;
+    }
+
+    public void setTradeOrderType(Integer tradeOrderType) {
+        this.tradeOrderType = tradeOrderType;
+    }
+
+    public Integer getAddressType() {
+        return this.addressType;
+    }
+
+    public void setAddressType(final Integer addressType) {
+        this.addressType = addressType;
+    }
 
     public Long getId() {
         return id;
@@ -843,14 +1108,6 @@ public class OrderBO implements Serializable {
         this.businessType = businessType;
     }
 
-    public Boolean getSkipGrapCheck() {
-        return skipGrapCheck;
-    }
-
-    public void setSkipGrapCheck(Boolean skipGrapCheck) {
-        this.skipGrapCheck = skipGrapCheck;
-    }
-
     public Integer getState() {
         return state;
     }
@@ -865,14 +1122,6 @@ public class OrderBO implements Serializable {
 
     public void setOrderType(Integer orderType) {
         this.orderType = orderType;
-    }
-
-    public Integer getSecOrderType() {
-        return secOrderType;
-    }
-
-    public void setSecOrderType(Integer secOrderType) {
-        this.secOrderType = secOrderType;
     }
 
     public Date getOrderCreateTime() {
@@ -1491,60 +1740,12 @@ public class OrderBO implements Serializable {
         this.allotTrueAll = allotTrueAll;
     }
 
-    public Boolean getVipBizUserOrder() {
-        return vipBizUserOrder;
-    }
-
-    public void setVipBizUserOrder(Boolean vipBizUserOrder) {
-        this.vipBizUserOrder = vipBizUserOrder;
-    }
-
-    public Boolean getCondimentFeature() {
-        return condimentFeature;
-    }
-
-    public void setCondimentFeature(Boolean condimentFeature) {
-        this.condimentFeature = condimentFeature;
-    }
-
     public Long getJiupiOrderTableId() {
         return jiupiOrderTableId;
     }
 
     public void setJiupiOrderTableId(Long jiupiOrderTableId) {
         this.jiupiOrderTableId = jiupiOrderTableId;
-    }
-
-    public Integer getJiupiOrderTableOrgId() {
-        return jiupiOrderTableOrgId;
-    }
-
-    public void setJiupiOrderTableOrgId(Integer jiupiOrderTableOrgId) {
-        this.jiupiOrderTableOrgId = jiupiOrderTableOrgId;
-    }
-
-    public Long getOrder_Id() {
-        return order_Id;
-    }
-
-    public void setOrder_Id(Long order_Id) {
-        this.order_Id = order_Id;
-    }
-
-    public Integer getJiupiOrderTableWarehouseId() {
-        return jiupiOrderTableWarehouseId;
-    }
-
-    public void setJiupiOrderTableWarehouseId(Integer jiupiOrderTableWarehouseId) {
-        this.jiupiOrderTableWarehouseId = jiupiOrderTableWarehouseId;
-    }
-
-    public Integer getJiupiOrderTableOrderType() {
-        return jiupiOrderTableOrderType;
-    }
-
-    public void setJiupiOrderTableOrderType(Integer jiupiOrderTableOrderType) {
-        this.jiupiOrderTableOrderType = jiupiOrderTableOrderType;
     }
 
     public Integer getJiupiOrderSource() {
@@ -1875,6 +2076,30 @@ public class OrderBO implements Serializable {
         this.totalDiscount = totalDiscount;
     }
 
+    public Integer getJiupiOrderTableWarehouseId() {
+        return jiupiOrderTableWarehouseId;
+    }
+
+    public void setJiupiOrderTableWarehouseId(Integer jiupiOrderTableWarehouseId) {
+        this.jiupiOrderTableWarehouseId = jiupiOrderTableWarehouseId;
+    }
+
+    public Integer getJiupiOrderTableOrgId() {
+        return jiupiOrderTableOrgId;
+    }
+
+    public void setJiupiOrderTableOrgId(Integer jiupiOrderTableOrgId) {
+        this.jiupiOrderTableOrgId = jiupiOrderTableOrgId;
+    }
+
+    public Long getOrder_Id() {
+        return order_Id;
+    }
+
+    public void setOrder_Id(Long order_Id) {
+        this.order_Id = order_Id;
+    }
+
     public OrderOtherBO getOrderOtherBO() {
         return orderOtherBO;
     }
@@ -1883,20 +2108,20 @@ public class OrderBO implements Serializable {
         this.orderOtherBO = orderOtherBO;
     }
 
-    public Map<String, Object> getTransferFields() {
-        return transferFields;
+//    public OrderExtensionsBO getOrderExtensionsBO() {
+//        return orderExtensionsBO;
+//    }
+//
+//    public void setOrderExtensionsBO(OrderExtensionsBO orderExtensionsBO) {
+//        this.orderExtensionsBO = orderExtensionsBO;
+//    }
+
+    public List<OrderItemBO> getOrderItemBOList() {
+        return orderItemBOList;
     }
 
-    public void setTransferFields(Map<String, Object> transferFields) {
-        this.transferFields = transferFields;
-    }
-
-    public OrderExtensionsBO getOrderExtensionsBO() {
-        return orderExtensionsBO;
-    }
-
-    public void setOrderExtensionsBO(OrderExtensionsBO orderExtensionsBO) {
-        this.orderExtensionsBO = orderExtensionsBO;
+    public void setOrderItemBOList(List<OrderItemBO> orderItemBOList) {
+        this.orderItemBOList = orderItemBOList;
     }
 
     public List<OrderFeatureBO> getOrderFeatureBOList() {
@@ -1907,21 +2132,13 @@ public class OrderBO implements Serializable {
         this.orderFeatureBOList = orderFeatureBOList;
     }
 
-    public CombineOrderModelBO getCombineOrderBO() {
-        return combineOrderBO;
-    }
-
-    public void setCombineOrderBO(CombineOrderModelBO combineOrderBO) {
-        this.combineOrderBO = combineOrderBO;
-    }
-
-    public List<OrderItemBO> getOrderItemBOList() {
-        return orderItemBOList;
-    }
-
-    public void setOrderItemBOList(List<OrderItemBO> orderItemBOList) {
-        this.orderItemBOList = orderItemBOList;
-    }
+//    public CombineOrderModelBO getCombineOrderBO() {
+//        return combineOrderBO;
+//    }
+//
+//    public void setCombineOrderBO(CombineOrderModelBO combineOrderBO) {
+//        this.combineOrderBO = combineOrderBO;
+//    }
 
     public List<OrderItemRefBO> getOrderItemRefBO() {
         return orderItemRefBO;
@@ -1939,12 +2156,46 @@ public class OrderBO implements Serializable {
         this.orderExtBO = orderExtBO;
     }
 
+    public Integer getJiupiOrderTableOrderType() {
+        return jiupiOrderTableOrderType;
+    }
+
+    public void setJiupiOrderTableOrderType(Integer jiupiOrderTableOrderType) {
+        this.jiupiOrderTableOrderType = jiupiOrderTableOrderType;
+    }
+
+    public Boolean getVipBizUserOrder() {
+        return vipBizUserOrder;
+    }
+
+    public void setVipBizUserOrder(Boolean vipBizUserOrder) {
+        this.vipBizUserOrder = vipBizUserOrder;
+    }
+
     public Long getContractOrderId() {
         return contractOrderId;
     }
 
     public void setContractOrderId(Long contractOrderId) {
         this.contractOrderId = contractOrderId;
+    }
+
+    public Integer getSecOrderType() {
+        return secOrderType;
+    }
+
+    public void setSecOrderType(Integer secOrderType) {
+        this.secOrderType = secOrderType;
+
+    }
+
+    public Map<String, Object> getTransferFields() {
+        return transferFields;
+    }
+
+
+    public void setTransferFields(Map<String, Object> transferFields) {
+        this.transferFields = transferFields;
     }
 
     public BigDecimal getBalancePayAmount() {
@@ -1987,6 +2238,22 @@ public class OrderBO implements Serializable {
         this.exchangeOrderNo = exchangeOrderNo;
     }
 
+    public Boolean getCondimentFeature() {
+        return condimentFeature;
+    }
+
+    public void setCondimentFeature(Boolean condimentFeature) {
+        this.condimentFeature = condimentFeature;
+    }
+
+    public Integer getAssociatedOrderCenter() {
+        return associatedOrderCenter;
+    }
+
+    public void setAssociatedOrderCenter(Integer associatedOrderCenter) {
+        this.associatedOrderCenter = associatedOrderCenter;
+    }
+
     public List<OrderTraceBO> getOrderTraceBOList() {
         return orderTraceBOList;
     }
@@ -1994,5 +2261,44 @@ public class OrderBO implements Serializable {
     public void setOrderTraceBOList(List<OrderTraceBO> orderTraceBOList) {
         this.orderTraceBOList = orderTraceBOList;
     }
-}
 
+    public String getBrokerUserCode() {
+        return brokerUserCode;
+    }
+
+    public void setBrokerUserCode(String brokerUserCode) {
+        this.brokerUserCode = brokerUserCode;
+    }
+
+    public String getTrafficSourceCode() {
+        return trafficSourceCode;
+    }
+
+    public void setTrafficSourceCode(String trafficSourceCode) {
+        this.trafficSourceCode = trafficSourceCode;
+    }
+
+    public BigDecimal getShippingRateAmount() {
+        return shippingRateAmount;
+    }
+
+    public void setShippingRateAmount(BigDecimal shippingRateAmount) {
+        this.shippingRateAmount = shippingRateAmount;
+    }
+
+    public Integer getExpectDeliveryDays() {
+        return expectDeliveryDays;
+    }
+
+    public void setExpectDeliveryDays(Integer expectDeliveryDays) {
+        this.expectDeliveryDays = expectDeliveryDays;
+    }
+
+    public Integer getTrdAddressId() {
+        return trdAddressId;
+    }
+
+    public void setTrdAddressId(Integer trdAddressId) {
+        this.trdAddressId = trdAddressId;
+    }
+}

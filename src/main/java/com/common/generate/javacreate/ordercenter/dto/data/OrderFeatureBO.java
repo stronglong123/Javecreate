@@ -1,5 +1,8 @@
 package com.common.generate.javacreate.ordercenter.dto.data;
 
+import com.common.generate.javacreate.service.impl.es.ApiModel;
+import com.common.generate.javacreate.service.impl.es.ApiParam;
+
 import java.util.Date;
 
 /**
@@ -9,23 +12,25 @@ import java.util.Date;
  * @Date 2022/5/11 11:46
  * @Version 1.0
  **/
+@ApiModel(description = "oms订单特征模型")
 public class OrderFeatureBO {
-
+    @ApiParam(description = "id")
     private Long id;
-
+    @ApiParam(description = "orderId")
     private Long order_Id;
 
     /**
      * 特征类型1=大件;2=小件;3=单品;4=休食
      */
+    @ApiParam(description = "特征类型1")
     private Integer featureType;
-
+    @ApiParam(description = "创建时间")
     private Date createTime;
-
+    @ApiParam(description = "创建人")
     private Integer createUser_Id;
-
+    @ApiParam(description = "更新时间")
     private Date lastUpdateTime;
-
+    @ApiParam(description = "更新人")
     private Integer lastUpdateUser_Id;
 
     public Long getId() {

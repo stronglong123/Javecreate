@@ -3,6 +3,7 @@ package com.common.generate.javacreate.ordercenter;
 import com.alibaba.fastjson.JSON;
 import com.common.generate.javacreate.ordercenter.dto.PushTmsPayConfirmDTO;
 import com.common.generate.javacreate.ordercenter.dto.SaleOrderPayConfirm;
+import lombok.Data;
 import lombok.SneakyThrows;
 
 import java.math.BigDecimal;
@@ -33,23 +34,23 @@ public class PayConfirmBL {
 //        NewApiTest.processConfirmReceiptAmount("pre",pushTmsPayConfirm);
 
 
-        BatchPayConfirmDTO batchPayConfirmDTO = getData();
-        System.out.println(JSON.toJSONString(batchPayConfirmDTO));
-        NewApiTest.batchPayConfirm("pre",batchPayConfirmDTO);
+//        BatchPayConfirmDTO batchPayConfirmDTO = getData();
+//        System.out.println(JSON.toJSONString(batchPayConfirmDTO));
+//        NewApiTest.batchPayConfirm("pre",batchPayConfirmDTO);
 
-//        Map<Long, BigDecimal> map = new HashMap<>();
-////        map.put(1240002307111949082L, BigDecimal.valueOf(288));
-//        map.put(5143504159428274117L, BigDecimal.valueOf(1881));
-//        for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {
-//            RepairSaleOrderConfirmPayDTO repairSaleOrderConfirmPayDTO =new RepairSaleOrderConfirmPayDTO();
-//            repairSaleOrderConfirmPayDTO.setOptUserId(String.valueOf(1));
-//            repairSaleOrderConfirmPayDTO.setOptUserName("1");
-//            repairSaleOrderConfirmPayDTO.setOrderId(entry.getKey());
-//            repairSaleOrderConfirmPayDTO.setPayAmount(entry.getValue());
-//            repairSaleOrderConfirmPayDTO.setCollectionTime(new Date());
-//            System.out.println(JSON.toJSONString(repairSaleOrderConfirmPayDTO));
-//            NewApiTest.orderPayConfirm("pre", repairSaleOrderConfirmPayDTO);
-//        }
+        Map<Long, BigDecimal> map = new HashMap<>();
+        map.put(4010002308301905756L, BigDecimal.valueOf(696.8));
+        map.put(4010002308301605581L, BigDecimal.valueOf(664.29));
+        for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {
+            RepairSaleOrderConfirmPayDTO repairSaleOrderConfirmPayDTO =new RepairSaleOrderConfirmPayDTO();
+            repairSaleOrderConfirmPayDTO.setOptUserId(String.valueOf(68126516));
+            repairSaleOrderConfirmPayDTO.setOptUserName("68126516");
+            repairSaleOrderConfirmPayDTO.setOrderId(entry.getKey());
+            repairSaleOrderConfirmPayDTO.setPayAmount(entry.getValue());
+            repairSaleOrderConfirmPayDTO.setCollectionTime(new Date(1693658738728L));
+            System.out.println(JSON.toJSONString(repairSaleOrderConfirmPayDTO));
+            NewApiTest.orderPayConfirm("pre", repairSaleOrderConfirmPayDTO);
+        }
 //        singlePay();
 
     }

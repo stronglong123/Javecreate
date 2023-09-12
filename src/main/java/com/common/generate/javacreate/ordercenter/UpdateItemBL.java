@@ -47,7 +47,7 @@ public class UpdateItemBL {
     @SneakyThrows
     public static void fixByMap() {
         Map<Long ,BigDecimal> itemmap = new HashMap<>();
-        itemmap.put(5213850565108995973L,BigDecimal.valueOf(12));
+        itemmap.put(5224365090481156041L,BigDecimal.valueOf(12));
 
         for (Map.Entry<Long, BigDecimal> entry : itemmap.entrySet()) {
             Long itemId = entry.getKey();

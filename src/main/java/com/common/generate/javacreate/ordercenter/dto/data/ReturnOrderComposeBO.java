@@ -1,16 +1,18 @@
 package com.common.generate.javacreate.ordercenter.dto.data;
 
+import com.common.generate.javacreate.service.impl.es.ApiModel;
+
 import java.io.Serializable;
 import java.util.List;
 
 /**
- * @ClassName ReturnOrderComposeBO
- * @Description oms退货单组合模型
- * @Author hhw
- * @Date 2022/5/13 9:43
- * @Version 1.0
+ * @Author daizhibing
+ * @Description 退货单模型
+ * @Date 18:19 2021/3/8
  **/
+@ApiModel(description = "oms退货单模型")
 public class ReturnOrderComposeBO implements Serializable {
+
     private static final long serialVersionUID = -499860484884400573L;
     /**
      * 退货单主单
@@ -21,18 +23,6 @@ public class ReturnOrderComposeBO implements Serializable {
      */
     private List<ReturnOrderItemBO> returnOrderItemBOList;
 
-    /**
-     * true-跳过灰度检查， flase-不跳过灰度检查
-     */
-    private Boolean skipGrapCheck;
-
-    public ReturnOrderComposeBO() {
-    }
-
-    public ReturnOrderComposeBO(ReturnOrderBO returnOrderBO, List<ReturnOrderItemBO> returnOrderItemBOList) {
-        this.returnOrderBO = returnOrderBO;
-        this.returnOrderItemBOList = returnOrderItemBOList;
-    }
 
     public ReturnOrderBO getReturnOrderBO() {
         return returnOrderBO;
@@ -50,12 +40,4 @@ public class ReturnOrderComposeBO implements Serializable {
         this.returnOrderItemBOList = returnOrderItemBOList;
     }
 
-    public Boolean getSkipGrapCheck() {
-        return skipGrapCheck;
-    }
-
-    public void setSkipGrapCheck(Boolean skipGrapCheck) {
-        this.skipGrapCheck = skipGrapCheck;
-    }
 }
-

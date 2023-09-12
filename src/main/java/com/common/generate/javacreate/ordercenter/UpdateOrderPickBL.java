@@ -56,11 +56,13 @@ public class UpdateOrderPickBL {
 //            NewApiTest.updateWarehouse("pre", orderPickDTO);
 //        }
 
-        List<Long> orderIds = Arrays.asList(5223266568345296619L,5223262086949576416L,5223274593272921804L,5224032248446746528L);
+        List<Long> orderIds = Arrays.asList(4020002304011644230L,4510002306261691424L,4510002307230896350L
+
+        );
         for (Long orderId : orderIds) {
             OrderBaseDTO orderBaseDTO = new OrderBaseDTO();
             orderBaseDTO.setOrderId(orderId);
-            orderBaseDTO.setState(300);
+            orderBaseDTO.setState(301);
             NewApiTest.updateState("pre", orderBaseDTO);
             NewApiTest.retrySyncOrderByOrderIds("pre", orderId);
         }

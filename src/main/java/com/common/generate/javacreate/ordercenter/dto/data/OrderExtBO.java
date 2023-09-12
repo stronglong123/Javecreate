@@ -1,5 +1,8 @@
 package com.common.generate.javacreate.ordercenter.dto.data;
 
+import com.common.generate.javacreate.service.impl.es.ApiModel;
+import com.common.generate.javacreate.service.impl.es.ApiParam;
+
 import java.util.Date;
 
 /**
@@ -9,62 +12,65 @@ import java.util.Date;
  * @Date 2022/5/11 14:06
  * @Version 1.0
  **/
+@ApiModel(description = "oms订单扩展模型")
 public class OrderExtBO {
+    @ApiParam(description = "id")
     private Long id;
-
+    @ApiParam(description = "orderId")
     private Long order_Id;
 
     /**
      * 扩展类型1=拆分单...
      */
+    @ApiParam(description = "扩展类型1")
     private Integer extType;
-
+    @ApiParam(description = "扩展类型2")
     private String ext1;
-
+    @ApiParam(description = "扩展类型3")
     private String ext2;
-
+    @ApiParam(description = "扩展类型4")
     private String ext3;
-
+    @ApiParam(description = "扩展类型5")
     private String ext4;
-
+    @ApiParam(description = "扩展类型6")
     private String ext5;
-
+    @ApiParam(description = "扩展类型7")
     private String ext6;
-
+    @ApiParam(description = "扩展类型8")
     private String ext7;
-
+    @ApiParam(description = "扩展类型9")
     private String ext8;
-
+    @ApiParam(description = "扩展类型10")
     private String ext9;
-
+    @ApiParam(description = "扩展类型11")
     private String ext10;
-
+    @ApiParam(description = "扩展类型12")
     private String ext11;
-
+    @ApiParam(description = "扩展类型13")
     private String ext12;
-
+    @ApiParam(description = "扩展类型14")
     private String ext13;
-
+    @ApiParam(description = "扩展类型15")
     private String ext14;
-
+    @ApiParam(description = "扩展类型16")
     private String ext15;
-
+    @ApiParam(description = "扩展类型17")
     private String ext16;
-
+    @ApiParam(description = "扩展类型18")
     private String ext17;
-
+    @ApiParam(description = "扩展类型19")
     private String ext18;
-
+    @ApiParam(description = "扩展类型20")
     private String ext19;
-
+    @ApiParam(description = "扩展类型21")
     private String ext20;
-
+    @ApiParam(description = "扩展类型22")
     private Date createTime;
-
+    @ApiParam(description = "扩展类型23")
     private Integer createUser_Id;
-
+    @ApiParam(description = "扩展类型24")
     private Date lastUpdateTime;
-
+    @ApiParam(description = "扩展类型25")
     private Integer lastUpdateUser_Id;
 
     public Long getId() {

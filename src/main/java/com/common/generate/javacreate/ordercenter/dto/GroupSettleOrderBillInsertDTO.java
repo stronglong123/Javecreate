@@ -1,4 +1,4 @@
-package com.common.generate.javacreate.ordercenter;
+package com.common.generate.javacreate.ordercenter.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

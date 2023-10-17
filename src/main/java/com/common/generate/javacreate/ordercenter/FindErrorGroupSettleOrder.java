@@ -2,9 +2,11 @@ package com.common.generate.javacreate.ordercenter;
 
 import com.alibaba.fastjson.JSON;
 import com.common.generate.javacreate.ordercenter.dto.GroupOtherOrderCreateDTO;
+import com.common.generate.javacreate.ordercenter.dto.GroupOtherOrderDTO;
 import com.common.generate.javacreate.ordercenter.dto.GroupOtherOrderItemCreateDTO;
 import com.common.generate.javacreate.ordercenter.dto.GroupOtherOrderItemDetailDTO;
 import com.common.generate.javacreate.ordercenter.dto.GroupSettleCompareDTO;
+import com.common.generate.javacreate.ordercenter.dto.GroupSettleOrderBillInsertDTO;
 import com.common.generate.javacreate.utils.ExcelUtils;
 import com.common.generate.javacreate.utils.FileUtil;
 import com.common.generate.javacreate.utils.HttpClientUtils;
@@ -186,7 +188,7 @@ public class FindErrorGroupSettleOrder {
             }
         }
 
-//        System.out.println("其他出入:"+JSON.toJSON(createList));
+        System.out.println("其他出入:"+JSON.toJSON(createList));
         System.out.println("账单明细:"+JSON.toJSON(settleOrderBillList));
 
     }

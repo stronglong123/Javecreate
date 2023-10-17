@@ -53,6 +53,36 @@ public class ElkDTO {
 
     private Integer state;
 
+    private Long awardProduct_Id;
+
+    private Long userId;
+
+    private Integer featureType;
+
+    public Integer getFeatureType() {
+        return featureType;
+    }
+
+    public void setFeatureType(Integer featureType) {
+        this.featureType = featureType;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getAwardProduct_Id() {
+        return awardProduct_Id;
+    }
+
+    public void setAwardProduct_Id(Long awardProduct_Id) {
+        this.awardProduct_Id = awardProduct_Id;
+    }
+
     public Integer getState() {
         return state;
     }

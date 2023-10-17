@@ -35,11 +35,7 @@ public class NPTPushBL {
 
 
     public static void main(String[] args){
-        List<String> orderNos = Arrays.asList("124320500111",
-                "124321900092",
-                "124321900097",
-                "124321900103",
-                "124322000072");
+        List<String> orderNos = Arrays.asList("123328100035","123328100034");
 //        List<String> orderNos = Arrays.asList("DT414323800054", "DT414323800053", "DT414323900077", "DT461323900021", "DT461323900025-1", "DT414323800057");
         for (String orderNo : orderNos) {
             fixNPT(orderNo);

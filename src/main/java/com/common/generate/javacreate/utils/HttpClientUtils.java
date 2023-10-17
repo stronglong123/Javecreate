@@ -238,6 +238,59 @@ public class HttpClientUtils {
     }
 
 
+	public static String doPostWithSign(String url,String body) {
+		CloseableHttpResponse response = null;
+		CloseableHttpClient client = HttpClients.createDefault();
+		String responseContent = null; // 响应内容
+		try {
+
+			HttpPost post = new HttpPost(url);
+//            System.out.println("要发送的数据：" + body);
+			StringEntity myEntity = new StringEntity(body, ContentType.APPLICATION_JSON); // 构造请求数据
+			post.setHeader("Content-Type", "application/json;charset=utf8");
+			post.addHeader("x-sign-secret-id","7200e699-7372-724b-fcc2-6be475f374d9");
+			post.setEntity(myEntity); // 设置请求体
+			response = client.execute(post);
+			if (response.getStatusLine().getStatusCode() == 200) {
+				org.apache.http.HttpEntity entity = response.getEntity();
+				responseContent = EntityUtils.toString(entity, "UTF-8");
+				LOGGER.info("responseContent:" + responseContent);
+
+			}else {
+				throw new BusinessException("请求失败:" + response.getStatusLine().getStatusCode());
+
+			}
+			if (response != null) {
+				response.close();
+			}
+			if (client != null) {
+				client.close();
+			}
+		} catch (Exception e) {
+			throw new BusinessException("请求失败:" + e.getMessage());
+		} finally {
+			// 释放资源
+			try {
+				if (client != null) {
+					client.close();
+				}
+			} catch (IOException e) {
+				LOGGER.error("关闭client出错", e);
+			}
+
+			try {
+				if (response != null) {
+					response.close();
+				}
+			} catch (IOException e) {
+				LOGGER.error("关闭response出错", e);
+			}
+		}
+		System.out.println("返回结果:"+responseContent);
+		return responseContent;
+	}
+
+
 
 	public static String doPostWithCookie(String cookie, String url,String body) {
 		CloseableHttpResponse response = null;

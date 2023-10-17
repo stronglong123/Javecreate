@@ -2,6 +2,7 @@ package com.common.generate.javacreate.service.impl.es.orderitemdocument;
 
 import com.common.generate.javacreate.service.impl.es.ApiModel;
 import com.common.generate.javacreate.service.impl.es.ApiParam;
+import com.common.generate.javacreate.service.impl.es.base.OrderItemAwardDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderItemExtDTO;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -61,6 +62,20 @@ public class OrderItemDocumentDTO implements Serializable {
      */
     @ApiParam(description = "扩展信息")
     private OrderItemExtDTO orderItemExt;
+
+    /**
+     * 扩展信息
+     */
+    @ApiParam(description = "订单明细兑奖信息")
+    private OrderItemAwardDTO orderItemAward;
+
+    public OrderItemAwardDTO getOrderItemAward() {
+        return orderItemAward;
+    }
+
+    public void setOrderItemAward(OrderItemAwardDTO orderItemAward) {
+        this.orderItemAward = orderItemAward;
+    }
 
     public Long getOrderId() {
         return orderId;

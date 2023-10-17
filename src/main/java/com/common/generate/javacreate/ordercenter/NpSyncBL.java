@@ -24,10 +24,10 @@ import java.util.stream.Collectors;
 public class NpSyncBL {
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         TrainsOutStockDTO preData = getPreData();
         System.out.println(JSON.toJSONString(preData));
-        NewApiTest.nptOutSyncErp("pre",JSON.toJSONString(preData));
+        NewApiTest.nptOutSyncErp("pre", JSON.toJSONString(preData));
     }
 
 
@@ -38,23 +38,23 @@ public class NpSyncBL {
     }
 
     private static TrainsOutStockDTO getPreData() {
-        String json = FileUtil.readFileByLines("C:\\Users\\Administrator\\Desktop\\内配退异常.txt");;
+        String json = FileUtil.readFileByLines("C:\\Users\\Administrator\\Desktop\\内配退异常.txt");
 //        String json ="";
         TrainsOutStockDTO trainsOutStockDTO = JSON.parseObject(json, TrainsOutStockDTO.class);
-        fixNptOutData(trainsOutStockDTO);
+//        fixNptOutData(trainsOutStockDTO);
 
         List<Long> orderItemIds = new ArrayList<>();
-        trainsOutStockDTO.getTrainsOutStockOrderList().forEach(it->it.getTrainsOutStockOrderItemList().forEach(item->{
+        trainsOutStockDTO.getTrainsOutStockOrderList().forEach(it -> it.getTrainsOutStockOrderItemList().forEach(item -> {
             List<TrainsOutStockDealerDTO> trainsOutStockDealerList = item.getTrainsOutStockDealerList();
             for (TrainsOutStockDealerDTO trainsOutStockDealerDTO : trainsOutStockDealerList) {
-                if(trainsOutStockDealerDTO.getSecOwnerId()==null){
+                if (trainsOutStockDealerDTO.getSecOwnerId() == null) {
                     orderItemIds.add(item.getOrderItemId());
                 }
             }
         }));
 
-        if(CollectionUtils.isNotEmpty(orderItemIds)){
-            throw new BusinessException("二级货主id不能为null,"+orderItemIds);
+        if (CollectionUtils.isNotEmpty(orderItemIds)) {
+            throw new BusinessException("二级货主id不能为null," + orderItemIds);
         }
         return trainsOutStockDTO;
     }

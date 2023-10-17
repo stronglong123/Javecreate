@@ -38,16 +38,17 @@ public class UpdateItemBL {
     @SneakyThrows
     public static void main(String[] args) {
 
+//        fixAward();
         fixByMap();
-
-
+//        fixById();
     }
 
 
     @SneakyThrows
     public static void fixByMap() {
-        Map<Long ,BigDecimal> itemmap = new HashMap<>();
-        itemmap.put(5224365090481156041L,BigDecimal.valueOf(12));
+        Map<Long, BigDecimal> itemmap = new HashMap<>();
+        itemmap.put(1260012309230947395L, BigDecimal.valueOf(4));
+        itemmap.put(1260012310052162987L, BigDecimal.valueOf(15));
 
         for (Map.Entry<Long, BigDecimal> entry : itemmap.entrySet()) {
             Long itemId = entry.getKey();
@@ -56,31 +57,30 @@ public class UpdateItemBL {
 
             OrderItemBaseDTO orderItemBaseDTO = new OrderItemBaseDTO();
             orderItemBaseDTO.setOrderItemId(itemId);
-            orderItemBaseDTO.setCount(count);
+            orderItemBaseDTO.setDeliveryCount(count);
 //            orderItemBaseDTO.setTakeCount(count);
 //            orderItemBaseDTO.setWorkingItemCount(count);
             saleOrderItemDTO.setOrderItemBaseDTO(orderItemBaseDTO);
-
-//            OrderItemAmountDTO orderItemAmountDTO = new OrderItemAmountDTO();
-//            orderItemAmountDTO.setOrderItemId(itemId);
-////            orderItemAmountDTO.setDiscount(BigDecimal.valueOf(5));
-//            orderItemAmountDTO.setPayableAmount(BigDecimal.valueOf(918));
-////            orderItemAmountDTO.setWorkingOrderItemAmount(BigDecimal.valueOf(3.6));
-//            saleOrderItemDTO.setOrderItemAmountDTO(orderItemAmountDTO);
+//
+////            OrderItemAmountDTO orderItemAmountDTO = new OrderItemAmountDTO();
+////            orderItemAmountDTO.setOrderItemId(itemId);
+//////            orderItemAmountDTO.setDiscount(BigDecimal.valueOf(5));
+////            orderItemAmountDTO.setPayableAmount(BigDecimal.valueOf(918));
+//////            orderItemAmountDTO.setWorkingOrderItemAmount(BigDecimal.valueOf(3.6));
+////            saleOrderItemDTO.setOrderItemAmountDTO(orderItemAmountDTO);
             System.out.println(JSON.toJSONString(saleOrderItemDTO));
             NewApiTest.updateOrderItem("pre", saleOrderItemDTO);
 
 
-
-
 //            OrderItemAwardDTO orderItemAwardDTO = new OrderItemAwardDTO();
-//            orderItemAwardDTO.setOrderItemId(1111L);
-//            orderItemAwardDTO.setPrizeName("");
-//            NewApiTest.updateAwardItem("release",orderItemAwardDTO);
+//            orderItemAwardDTO.setOrderItemId(1040012309181795468L);
+//            orderItemAwardDTO.setProductAwardId(5196774388680802327L);
+//            NewApiTest.updateAwardItem("pre",orderItemAwardDTO);
 
             Thread.sleep(100);
-        }
+//        }
 
+        }
     }
 
 
@@ -104,6 +104,27 @@ public class UpdateItemBL {
             System.out.println(JSON.toJSONString(saleOrderItemDTO));
             NewApiTest.updateOrderItem("pre", saleOrderItemDTO);
             Thread.sleep(100);
+        }
+    }
+
+
+    @SneakyThrows
+    public static void fixAward() {
+        String filePath = "C:\\Users\\Administrator\\Desktop\\兑奖单已出.xlsx";
+        FileInputStream file = new FileInputStream(filePath);
+        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "兑奖单已出.xlsx");
+
+        for (ElkDTO elkDTO : list) {
+            if (elkDTO.getOrderItemId() == null) {
+                continue;
+            }
+            OrderItemAwardDTO orderItemAwardDTO = new OrderItemAwardDTO();
+            orderItemAwardDTO.setOrderItemId(elkDTO.getOrderItemId());
+            orderItemAwardDTO.setProductAwardId(elkDTO.getAwardProduct_Id());
+            System.out.println(JSON.toJSONString(orderItemAwardDTO));
+
+            NewApiTest.updateAwardItem("pre",orderItemAwardDTO);
+            Thread.sleep(50);
         }
     }
 

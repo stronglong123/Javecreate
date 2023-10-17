@@ -12,8 +12,10 @@ import com.common.generate.javacreate.service.impl.es.base.OrderContactDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderPickDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderReturnDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderSaleDTO;
+import com.common.generate.javacreate.service.impl.es.orderdocument.OrderDocumentDTO;
 import com.common.generate.javacreate.utils.ExcelUtils;
 import lombok.SneakyThrows;
+import org.elasticsearch.client.indices.IndexTemplatesExistRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.xml.ws.Action;
@@ -40,6 +42,8 @@ public class UpdateOrderPickBL {
 
     @SneakyThrows
     public static void main(String[] args) {
+//        updateOrderConsignor();
+//        retrySyncEs();
 //        fixByExcel();
 
 //        List<Long> orderIds =Arrays.asList(5195773240349836000L,5195773240488248040L);
@@ -56,13 +60,13 @@ public class UpdateOrderPickBL {
 //            NewApiTest.updateWarehouse("pre", orderPickDTO);
 //        }
 
-        List<Long> orderIds = Arrays.asList(4020002304011644230L,4510002306261691424L,4510002307230896350L
+        List<Long> orderIds = Arrays.asList(7030002310121011510L
 
         );
         for (Long orderId : orderIds) {
             OrderBaseDTO orderBaseDTO = new OrderBaseDTO();
             orderBaseDTO.setOrderId(orderId);
-            orderBaseDTO.setState(301);
+            orderBaseDTO.setState(401);
             NewApiTest.updateState("pre", orderBaseDTO);
             NewApiTest.retrySyncOrderByOrderIds("pre", orderId);
         }
@@ -124,6 +128,53 @@ public class UpdateOrderPickBL {
 //            System.out.println(JSON.toJSONString(orderSaleDTO));
 //            NewApiTest.updateOrderSale("pre", orderSaleDTO);
 //        }
+    }
+
+
+    @SneakyThrows
+    public static void updateOrderConsignor(){
+        String filePath = "C:\\Users\\Administrator\\Desktop\\异常userId.xlsx";
+        FileInputStream file = new FileInputStream(filePath);
+        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "异常userId.xlsx");
+        for (ElkDTO elkDTO : list) {
+
+            OrderConsignorDTO orderConsignorDTO = new OrderConsignorDTO();
+            orderConsignorDTO.setOrderId(elkDTO.getId());
+            orderConsignorDTO.setUserId(String.valueOf(elkDTO.getUserId()));
+            System.out.println(JSON.toJSONString(orderConsignorDTO));
+            NewApiTest.updateOrderConsignor("pre",orderConsignorDTO);
+        }
+    }
+
+
+
+    @SneakyThrows
+    public static void retrySyncEs(){
+
+//        List<OrderDocumentDTO> orderList = NewApiTest.findPageByOrderSnapshot("pre", "[\n" +
+//                "    {\n" +
+//                "        \"awardType\": 5\n" +
+//                "    },\n" +
+//                "    {\n" +
+//                "        \"pageIndex\": 1,\n" +
+//                "        \"pageSize\": 50\n" +
+//                "    }\n" +
+//                "]");
+//        System.out.println(JSON.toJSONString(orderList));
+
+
+
+//        String filePath = "C:\\Users\\Administrator\\Desktop\\兑奖单重新同步.xlsx";
+//        FileInputStream file = new FileInputStream(filePath);
+//        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "兑奖单重新同步.xlsx");
+//        for (ElkDTO elkDTO : list) {
+//            if(elkDTO.getId()==null){
+//                continue;
+//            }
+//            NewApiTest.retrySyncOrderByOrderIds("pre", elkDTO.getId());
+//            Thread.sleep(100);
+//        }
+
     }
 
 

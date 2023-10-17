@@ -1,5 +1,6 @@
-package com.common.generate.javacreate.ordercenter;
+package com.common.generate.javacreate.ordercenter.dto.data;
 
+import com.common.generate.javacreate.ordercenter.ReturnOrderPayConfirm;
 import com.common.generate.javacreate.ordercenter.dto.SaleOrderPayConfirm;
 
 import java.io.Serializable;
@@ -7,6 +8,9 @@ import java.util.List;
 
 public class BatchPayConfirmDTO implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    List<ReturnOrderPayConfirm> returnOrderPayConfirms;
+
     List<SaleOrderPayConfirm> saleOrderPayConfirms;
     //(description = "批次Id", required = true)
     private Long taskId;
@@ -16,6 +20,14 @@ public class BatchPayConfirmDTO implements Serializable {
     private String optUserName;
     //(description = "描述")
     private String desc;
+
+    public List<ReturnOrderPayConfirm> getReturnOrderPayConfirms() {
+        return returnOrderPayConfirms;
+    }
+
+    public void setReturnOrderPayConfirms(List<ReturnOrderPayConfirm> returnOrderPayConfirms) {
+        this.returnOrderPayConfirms = returnOrderPayConfirms;
+    }
 
     public List<SaleOrderPayConfirm> getSaleOrderPayConfirms() {
         return saleOrderPayConfirms;

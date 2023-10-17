@@ -22,10 +22,18 @@ import java.util.stream.Collectors;
 public class NewEventCheckBL {
 
     public static void main(String[] args) {
-        List<String> partnerCodeList = Arrays.asList("Xiedu","Informa","YJP-YJX","YJP-FMS","YJP-WMS","YJP-ERP","YJP-TRD","YJP-TMS");
-        for (String partnerCode : partnerCodeList) {
-            check(partnerCode);
-        }
+//        List<String> partnerCodeList = Arrays.asList("Lelema");
+//        for (String partnerCode : partnerCodeList) {
+//            check(partnerCode)
+//        }
+
+        findeventConsumption("saas","Lelema");
+    }
+
+    public static void findeventConsumption(String code, String partnerCode) {
+        Map<String, List<EventAndSubscriptionDTO>> newEvent = getNewEvent(code, partnerCode);
+        System.out.println(JSON.toJSONString(newEvent));
+        System.out.println(JSON.toJSONString(newEvent.keySet()));
     }
 
 
@@ -64,7 +72,7 @@ public class NewEventCheckBL {
         queryDTO.setEventType(0);
         queryDTO.setPageSize(500);
         queryDTO.setPageNum(1);
-        List<EventAndSubscriptionDTO> subscriptionDTOS = ApiUtil.findEventAndSubscriptionByPartnerCode(code, queryDTO);
+        List<EventAndSubscriptionDTO> subscriptionDTOS = NewApiTest.findEventAndSubscriptionByPartnerCode(code, queryDTO);
         List<EventAndSubscriptionDTO> list = subscriptionDTOS.stream().filter(it -> StringUtils.isNotEmpty(it.getUrl())).collect(Collectors.toList());
         Map<String, List<EventAndSubscriptionDTO>> map = list.stream().collect(Collectors.groupingBy(it -> it.getEventCode()));
         return map;

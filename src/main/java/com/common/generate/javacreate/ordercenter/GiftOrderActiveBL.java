@@ -21,7 +21,9 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,16 +37,19 @@ public class GiftOrderActiveBL {
     @SneakyThrows
     public static void main(String[] args) {
 //        activeByExcel();
-//        activeByOrderNo();
+        activeByOrderNo();
 //        activeByQuery();
-        directActiveOrder();
+//        directActiveOrder();
 //        directActive();
+//        activeOrderByMq(4020002309061286000L);
     }
 
 
     @SneakyThrows
     private static void activeByOrderNo() {
-        List<String> orderNoList = Arrays.asList();
+        List<String> orderNoList = Arrays.asList(
+                "160326100052-1"
+                );
         for (String orderNo : orderNoList) {
             if (StringUtils.isEmpty(orderNo)) {
                 continue;
@@ -135,22 +140,16 @@ public class GiftOrderActiveBL {
         List<GiftBO> mainOrderList = giftList.stream().filter(it -> !it.isIfGiftOrder()).collect(Collectors.toList());
         List<GiftBO> giftOrderList = giftList.stream().filter(it -> it.isIfGiftOrder()).collect(Collectors.toList());
 
-        GiftBO notYJX = giftOrderList.stream().filter(it -> it.getDeliveryMode() != 1).findFirst().orElse(null);
-        if (notYJX != null) {
-            println("非经销商配送单子，暂不处理," + JSON.toJSONString(giftOrderList));
-            return Collections.emptyList();
-        }
-
         StringBuilder builder = new StringBuilder();
         GiftBO noCompleteOrder = mainOrderList.stream().filter(it -> it.getState() != 700).findFirst().orElse(null);
 
         // 1、全部完成，2、存在未完成，3、全部取消。4、部分取消,5、存在缺货
         Integer mainType;
         if (noCompleteOrder != null) {
-            List<Integer> cancelStates = Arrays.asList(300, 305, 304);
+            List<Integer> cancelStates = Arrays.asList(300,302, 305, 304);
             Set<String> orderNos = mainOrderList.stream().map(it -> it.getOrderNo()).collect(Collectors.toSet());
             Set<String> cancelNos = mainOrderList.stream().filter(it -> cancelStates.contains(it.getState())).map(it -> it.getOrderNo()).collect(Collectors.toSet());
-
+            GiftBO completeMainBO = mainOrderList.stream().filter(it -> it.getState() == 700).findFirst().orElse(null);
             if (CollectionUtils.isNotEmpty(cancelNos)) {
                 if (orderNos.size() == cancelNos.size()) {
                     mainType = 3;
@@ -158,6 +157,7 @@ public class GiftOrderActiveBL {
                 } else {
                     mainType = 4;
                     builder.append("主单部分取消=" + JSON.toJSONString(cancelNos));
+                    activeOrderByMq(completeMainBO.getOrderId());
                 }
             } else {
                 mainType = 2;
@@ -167,15 +167,22 @@ public class GiftOrderActiveBL {
             mainType = 1;
         }
 
-
         if (mainType == 4) {
             builder.append(",需要判断是否取消/激活的赠品单" + JSON.toJSONString(giftOrderList));
             println(builder.toString());
+            return Collections.emptyList();
         }
 
         if (mainType != 1 && mainType != 3) {
+            builder.append(",需要判断是否取消/激活的赠品单" + JSON.toJSONString(giftOrderList));
             return Collections.emptyList();
         }
+
+//        GiftBO notYJX = giftOrderList.stream().filter(it -> it.getDeliveryMode() != 1).findFirst().orElse(null);
+//        if (notYJX != null) {
+//            println("非经销商配送单子，暂不处理," + JSON.toJSONString(giftOrderList));
+//            return Collections.emptyList();
+//        }
 
 
         if (mainType == 3) {
@@ -184,7 +191,7 @@ public class GiftOrderActiveBL {
             for (GiftBO giftBO : giftOrderList) {
                 if (giftBO.getState() == 213) {
                     println("赠品单需要取消" + giftBO.getOrderNo());
-                    NewApiTest.cancelSaleOrder("pre", giftBO.getOrderId());
+//                    NewApiTest.cancelSaleOrder("pre", giftBO.getOrderId());
                     Thread.sleep(200L);
                 }
             }
@@ -192,9 +199,18 @@ public class GiftOrderActiveBL {
 
         List<GiftBO> activeGiftList = new ArrayList<>();
         if (mainType == 1) {
+//            GiftBO giftBO = mainOrderList.stream().filter(it->it.getState().equals(700)).findFirst().orElse(null);
+//            if (giftBO != null) {
+//                activeOrderByMq(giftBO.getOrderId());
+//            }
             List<List<String>> productList = mainOrderList.stream().filter(it -> it.isOutOfStock()).collect(Collectors.toList()).stream().map(it -> it.getOutOfStockProductList()).collect(Collectors.toList());
             if (!partCanActive && mainType == 1 && CollectionUtils.isNotEmpty(productList)) {
-                println("主单存在缺货," + productList + ",赠品单需确认激活" + JSON.toJSONString(giftOrderList));
+
+                GiftBO giftBO = mainOrderList.stream().filter(it->it.getState().equals(700)).findFirst().orElse(null);
+                if (giftBO != null) {
+                    activeOrderByMq(giftBO.getOrderId());
+                }
+                println("主单存在缺货,"+ productList + ",赠品单需确认激活" + JSON.toJSONString(giftOrderList));
                 return activeGiftList;
             }
             for (GiftBO giftBO : giftOrderList) {
@@ -242,6 +258,20 @@ public class GiftOrderActiveBL {
         return orderList;
     }
 
+    @SneakyThrows
+    private static void activeOrderByMq(Long orderId) {
+        println("赠品单接口激活," + orderId);
+        Map<String,Object> map = new HashMap<>();
+        map.put("id","DelayMessageProcessor:5236751358886376966");
+        map.put("messageBody",orderId.toString());
+        String json ="{\"x-company-code\":\"YJP\",\"x-logId\":\"DelayMessageProcessor:5236751358886376966\",\"x-tenant-id\":\"9\",\"x-partner-app-key\":null,\"exchange\":\"\",\"x-partner-code\":\"YJP-TRD\",\"rabbit-tracer\":\"ac1904a6169529921014881281#0#0\",\"MESSAGE_ORIGIN_CLASS_TYPE\":null,\"x-partner-app-id\":null,\"routingKey\":\"mq.ordercenter.giftorder.active\"}";
+        HashMap hashMap = JSON.parseObject(json, HashMap.class);
+        map.put("header",JSON.toJSONString(hashMap));
+        println(JSON.toJSONString(map));
+        NewApiTest.requeueWithBody(JSON.toJSONString(map));
+
+    }
+
 
     @SneakyThrows
     private static void activeOrder(GiftBO giftBO) {
@@ -263,7 +293,7 @@ public class GiftOrderActiveBL {
 
 
     public static void directActive() {
-        List<String> orderNos = Arrays.asList("406322700475-2","401322700006-3","701323100475-2","406323000823-2","406323300564-4");
+        List<String> orderNos = Arrays.asList("406323900466-4");
         for (String orderNo : orderNos) {
             List<OrderDocumentDTO> orderList = getOrderByDirectOrderNo(orderNo);
             if (CollectionUtils.isEmpty(orderList) || orderList.size() > 1) {

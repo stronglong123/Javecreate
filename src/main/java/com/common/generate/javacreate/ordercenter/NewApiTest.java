@@ -3,7 +3,6 @@ package com.common.generate.javacreate.ordercenter;
 import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.dubbo.common.utils.StringUtils;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.common.generate.javacreate.constants.OrdercenterConstant;
 import com.common.generate.javacreate.model.base.PageableResult;
 import com.common.generate.javacreate.model.base.Result;
@@ -12,8 +11,11 @@ import com.common.generate.javacreate.ordercenter.dto.ChangeCountMarkDTO;
 import com.common.generate.javacreate.ordercenter.dto.ERPTransferOrderDTO;
 import com.common.generate.javacreate.ordercenter.dto.ElkDTO;
 import com.common.generate.javacreate.ordercenter.dto.EsOrderSyncDTO;
+import com.common.generate.javacreate.ordercenter.dto.EventAndSubscriptionDTO;
+import com.common.generate.javacreate.ordercenter.dto.OrderCenterMarkDTO;
 import com.common.generate.javacreate.ordercenter.dto.OrderDTO;
 import com.common.generate.javacreate.ordercenter.dto.OrderItemAwardDTO;
+import com.common.generate.javacreate.ordercenter.dto.OrderTagDTO;
 import com.common.generate.javacreate.ordercenter.dto.PageTurnResult;
 import com.common.generate.javacreate.ordercenter.dto.PushSaleOrderDTO;
 import com.common.generate.javacreate.ordercenter.dto.PushTmsPayConfirmDTO;
@@ -22,14 +24,11 @@ import com.common.generate.javacreate.ordercenter.dto.SaleOrderDTO;
 import com.common.generate.javacreate.ordercenter.dto.SaleOrderItemDTO;
 import com.common.generate.javacreate.ordercenter.dto.TrainsOutStockDTO;
 import com.common.generate.javacreate.ordercenter.dto.TrainsOutStockDealerDTO;
-import com.common.generate.javacreate.ordercenter.dto.TrainsOutStockOrderDTO;
 import com.common.generate.javacreate.ordercenter.dto.UpdateSecOwnerDTO;
 import com.common.generate.javacreate.ordercenter.dto.ability.ServiceAbilityManageDTO;
-import com.common.generate.javacreate.ordercenter.dto.ability.ServiceAbilityQueryDTO;
-import com.common.generate.javacreate.ordercenter.dto.data.OrderBO;
+import com.common.generate.javacreate.ordercenter.dto.data.BatchPayConfirmDTO;
 import com.common.generate.javacreate.ordercenter.dto.eventaudit.EventConsumptionAuditDocumentDTO;
 import com.common.generate.javacreate.ordercenter.dto.eventaudit.EventPublishAuditDocumentDTO;
-import com.common.generate.javacreate.ordercenter.utils.SignUtil;
 import com.common.generate.javacreate.service.impl.es.base.OrderAmountDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderBaseDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderConsignorDTO;
@@ -42,15 +41,12 @@ import com.common.generate.javacreate.utils.ExcelUtils;
 import com.common.generate.javacreate.utils.FileUtil;
 import com.common.generate.javacreate.utils.HttpClientUtils;
 import lombok.SneakyThrows;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -93,6 +89,8 @@ public class NewApiTest {
                 return OrdercenterConstant.PreUrl;
             case "saas":
                 return OrdercenterConstant.SaasUrl;
+            case "saasrelease":
+                return OrdercenterConstant.SaasReleaseUrl;
         }
         return OrdercenterConstant.TestUrl;
     }
@@ -107,12 +105,22 @@ public class NewApiTest {
                 return OrdercenterConstant.Token;
             case "saas":
                 return OrdercenterConstant.SaasToken;
+            case "saasrelease":
+                return OrdercenterConstant.SaasReleaseToken;
         }
         return OrdercenterConstant.Token;
     }
 
     @SneakyThrows
     public static void main(String[] args) {
+//        findOrderByPageExternal("pre","");
+//        List<OrderDocumentDTO> pre = findPageByOrderSnapshot("pre", "[{\"firstOrderType\":3,\"states\":[400,401,409,502],\"businessType\":3},{\"pageIndex\":1,\"pageSize\":10}]");
+
+//        List<Integer> integers = Arrays.asList(90000031, 9000020);
+//        List<Integer> integers = Arrays.asList(1000000011,9000012);
+//        repairInventory("saas",JSON.toJSONString(integers));
+
+
 //        String json = FileUtil.readFileByLines("C:\\Users\\Administrator\\Desktop\\测试数据.txt");
 //        List<OrderBO> orderBOS = JSON.parseArray(json, OrderBO.class);
 //        addOmsSaleOrder("pre",json);
@@ -152,7 +160,7 @@ public class NewApiTest {
 
 //        repairErpSaleCompleteEventError("pre");
 
-
+//
         List<Long> orderIds = getOrderIds();
         for (Long orderId : orderIds) {
 //            actionSelfOrder("pre", orderId);
@@ -167,26 +175,30 @@ public class NewApiTest {
 //            cancelTransferOrder("pre", orderId);
 //            cancelSaleOrder("pre", orderId);
 //            repairSaleComplete("pre", orderId);
-//            repairReturnComplete("release",111111L);
+//            repairReturnComplete("pre",orderId);
 //            completeSaleOrder("pre",orderId);
 //            completeReturnOrder("pre",orderId);
 //            preToSaleByOrderId("pre", orderId);
-            pullScmTransferOrderToOrderCenter("pre",orderId);
-//            deleteByOrderId("pre", orderId);
+            deleteByOrderId("pre", orderId);
+
+//            pullScmTransferOrderToOrderCenter("pre",orderId);
 //            saleOrderPushWms("saas", orderId);
 //            retrySyncOrderByOrderIds("saas", orderId);
 //            pushFms("release", orderId);
 //            auditComplete("pre", orderId);
 //            reTrdSaleOrderComplete("pre",orderId);
-//              Thread.sleep(300);
-//              retrySyncOrderByOrderIds("pre", orderId);
+//              Thread.sleep(100);
+//              retrySyncOrderByOrderIds("release", orderId);
 //            initOrderCenterByOmsorderIds("pre",orderId);
+//            reparitAwardProductInfo("pre", orderId);
+
         }
 //
-//        for (Long orderId : orderIds) {
-//////            retrySyncOrderByOrderIds("pre", orderId);
-//            initOrderCenterByOmsorderIds("pre",orderId);
-//        }
+        for (Long orderId : orderIds) {
+//            retrySyncOrderByOrderIds("pre", orderId);
+//            Thread.sleep(100);
+//            initOrderCenterByOmsorderIds("release",orderId);
+        }
 
 //        warehouseConfigAdd();
 //        repairErpSaleComplete(1L);
@@ -205,6 +217,7 @@ public class NewApiTest {
     public static void initOrderCenterByOmsorderIds(String code, Long orderId) {
         String params = "{\n" +
                 "  \"omsorderIds\": [\n" +
+
                 orderId +
                 "  ]\n" +
                 "  ,\n" +
@@ -218,8 +231,18 @@ public class NewApiTest {
     }
 
 
+
+    @SneakyThrows
     private static List<Long> getOrderIds() {
-        return Arrays.asList(5069537535068182921L,5069887154282978700L,5034870089092586893L);
+        return Arrays.asList(
+                5246137531919648772L
+        );
+//        String code = "pre";
+//        String filePath = "C:\\Users\\Administrator\\Desktop\\异常调拨单.xlsx";
+//        FileInputStream file = new FileInputStream(filePath);
+//        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "异常调拨单.xlsx");
+//        List<Long> orderIds = list.stream().filter(it -> it.getId() != null).map(it -> it.getId()).collect(Collectors.toList());
+//        return orderIds;
     }
 
 
@@ -310,6 +333,21 @@ public class NewApiTest {
         String token = getToken(code);
         String url = baseUrl + "ordercenter-elasticsearchsync-basems/EsRetrySyncService/retrySyncOrderByOrderIds";
         String body = "[[" + orderId + "]]";
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, body);
+        System.out.println(resultstr);
+    }
+
+
+    /**
+     * 消费者查询
+     *
+     * @return
+     */
+    public static void reparitAwardProductInfo(String code, Long orderId) {
+        String baseUrl = getUrl(code);
+        String url = baseUrl + "ordercenter-datasync-servicems/OrderRepairService/reparitAwardProductInfo";
+        String body = "[" + orderId + "]";
+        String token = getToken(code);
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, body);
         System.out.println(resultstr);
     }
@@ -567,6 +605,29 @@ public class NewApiTest {
         Object data1 = result.getData();
         PageableResult pageableResult = JSON.parseObject(JSON.toJSONString(data1), PageableResult.class);
         List<OrderDocumentDTO> eventRegisterDTOS = JSON.parseArray(JSON.toJSONString(pageableResult.getDatas()), OrderDocumentDTO.class);
+        return eventRegisterDTOS;
+    }
+
+    public static List<OrderDocumentDTO> findOrderByPageExternal(String code, String params) {
+        String url = getUrl(code) + "ordercenter-aggregatequery-servicems/OrderCommonQueryService/findOrderByPageExternal";
+        String token = getToken(code);
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, "[{\"orderId\":null,\"oneWord\":null,\"orderBase\":{\"partnerCode\":null,\"orderNo\":null,\"firstOrderType\":3,\"companyCode\":null,\"secOrderType\":30001,\"orgId\":null,\"state\":null,\"stateList\":[400,401,409,502],\"orderCreateTimeStart\":null,\"orderCreateTimeEnd\":null,\"orderCompleteTimeStart\":null,\"orderCompleteTimeEnd\":null,\"sysRemark\":null,\"orderIdList\":null,\"sortByOrderCreateTime\":null},\"orderSale\":null,\"orderReturn\":null,\"orderAmount\":null,\"orderConsignor\":null,\"orderContact\":null,\"orderDelivery\":null,\"orderPick\":{\"fromOrgId\":null,\"orgId\":null,\"fromWarehouseId\":null,\"warehouseId\":null,\"outStockTimeStart\":null,\"outStockTimeEnd\":null},\"orderExt\":null,\"businessType\":3},{\"pageIndex\":1,\"pageSize\":20}]");
+//        System.out.println(resultstr);
+        Result result = JSON.parseObject(resultstr, Result.class);
+        Object data1 = result.getData();
+        PageableResult pageableResult = JSON.parseObject(JSON.toJSONString(data1), PageableResult.class);
+        List<OrderDocumentDTO> eventRegisterDTOS = JSON.parseArray(JSON.toJSONString(pageableResult.getDatas()), OrderDocumentDTO.class);
+        return eventRegisterDTOS;
+    }
+
+    public static OrderDocumentDTO getOrderById(String code, Long orderId) {
+        String url = getUrl(code) + "ordercenter-aggregatequery-servicems/OrderCommonQueryService/getOrderById";
+        String token = getToken(code);
+        String body = "[" + orderId + "]";
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, body);
+        Result result = JSON.parseObject(resultstr, Result.class);
+        Object data1 = result.getData();
+        OrderDocumentDTO eventRegisterDTOS = JSON.parseObject(JSON.toJSONString(data1), OrderDocumentDTO.class);
         return eventRegisterDTOS;
     }
 
@@ -925,6 +986,16 @@ public class NewApiTest {
         System.out.println(resultstr);
     }
 
+    public static void batchCompleteDelivery(String code, String param) {
+        String baseUrl = getUrl(code);
+        String token = getToken(code);
+
+        String url = baseUrl + "ordercenter-datasync-servicems/OrderDeliveryTaskRepairService/batchCompleteDelivery";
+        String params = "[" + param + "]";
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
+        System.out.println(resultstr);
+    }
+
     public static void completeReturnOrder(String code, Long orderId) {
         String baseUrl = getUrl(code);
         String token = getToken(code);
@@ -958,6 +1029,14 @@ public class NewApiTest {
         String token = getToken(code);
         String url = baseUrl + "ordercenter-datasync-servicems/OrderRepairService/pushFms";
         String params = "[" + orderId + "]";
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
+        System.out.println(resultstr);
+    }
+
+    public static void repairInventory(String code, String params) {
+        String baseUrl = getUrl(code);
+        String token = getToken(code);
+        String url = baseUrl + "ordercenter-datasync-servicems/OrderRepairService/repairInventory";
         String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
         System.out.println(resultstr);
     }
@@ -1078,13 +1157,25 @@ public class NewApiTest {
     }
 
 
-    public static boolean startOrderCenter(Long orderId) {
-        String url = "https://ocop.yijiupi.com/ordercenter-aggregatequery-servicems/OrderLifeCycleQueryService/getOrderLifeCycleById";
+    public static void reparitOrderFeature(String code, OrderTagDTO orderTagDTO) {
+        String baseUrl = getUrl(code);
+        String token = getToken(code);
+        String url = baseUrl + "ordercenter-datasync-servicems/OrderRepairService/reparitOrderFeature";
+        String params = "[" + JSON.toJSONString(orderTagDTO) + "]";
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
+        System.out.println(resultstr);
+    }
+
+
+    public static boolean isOrderCenterOrder(String code,Long orderId) {
+        String baseUrl = getUrl(code);
+        String token = getToken(code);
+        String url = baseUrl+"ordercenter-aggregatequery-servicems/OrderLifeCycleQueryService/getOrderLifeCycleById";
         String params = "[" +
                 "\"YJP-TRD\"," +
                 orderId +
                 "]";
-        String resultstr = HttpClientUtils.doPostWithTokenAndSign(OrdercenterConstant.Token, url, params);
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, params);
         Result result = JSON.parseObject(resultstr, Result.class);
         Object data = result.getData();
         String jsonString = JSON.toJSONString(data);
@@ -1092,7 +1183,7 @@ public class NewApiTest {
             System.out.println("订单中台未处理," + orderId);
             return false;
         }
-        System.out.println("订单中台已经处理," + orderId);
+//        System.out.println("订单中台已经处理," + orderId);
         return true;
     }
 
@@ -1101,6 +1192,34 @@ public class NewApiTest {
         String json = "{\"cityId\":711,\"deliveryCarNumber\":\"CK711123041800021\",\"deliveryTaskChangeFetchOrderList\":[{\"deliveryTaskChangeFetchOrderItemList\":[{\"orderId\":5180194328175142048,\"orderItemId\":5180194328841092616,\"scheduleUnitTotalCount\":6.0}],\"fetchOrderId\":7110392304181800004}],\"deliveryTaskId\":\"5180194600131257671\",\"optUserId\":\"67799384\",\"outStockTime\":1681815120756,\"trainsOutStockOrderList\":[{\"orderId\":5180194328175142048,\"orderType\":3,\"outStockOrderId\":5180194331187885091,\"outStockOrderType\":1,\"trainsOutStockOrderItemList\":[{\"orderItemId\":5180194328841092616,\"outStockOrderItemId\":5180194331225729860,\"trainsOutStockDealerList\":[{\"productSpecificationId\":559951,\"secOwnerId\":1,\"unitTotalCount\":6.0}],\"unitTotalCount\":6.0}]}],\"warehouseId\":7111}";
         TrainsOutStockDTO trainsOutStockDTO = JSON.parseObject(json, TrainsOutStockDTO.class);
         return trainsOutStockDTO;
+    }
+
+    public static void requeueWithBody(String params) {
+        String url = OrdercenterConstant.MqBaseUrl + "/Rabbit/DeadLetterRecover/requeueWithBody";
+        String resultstr = HttpClientUtils.doPostWithCookie(OrdercenterConstant.Cookie, url, params);
+        System.out.println(resultstr);
+    }
+
+    public static List<EventAndSubscriptionDTO> findEventAndSubscriptionByPartnerCode(String code, Object params){
+        String url = getUrl(code) + "ordercenter-event-managerms/EventAndSubscriptionQueryService/findEventAndSubscriptionByPartnerCode";
+        String token = getToken(code);
+        String resultstr = HttpClientUtils.doPostWithTokenAndSign(token, url, addPreFix(params));
+        Result result = JSON.parseObject(resultstr, Result.class);
+        Object data1 = result.getData();
+        List<EventAndSubscriptionDTO> list = JSON.parseArray(JSON.toJSONString(data1), EventAndSubscriptionDTO.class);
+        return list;
+    }
+
+
+    public static void orderCenterMarKAdjustOldOms(String code, OrderCenterMarkDTO orderCenterMark){
+        String url = OrdercenterConstant.basicGatewayUrl + "omsapi/omscore/ordercenter.service.OrderCenterSyncService/orderCenterMarKAdjustOldOms";
+        String params = "[" + JSON.toJSONString(orderCenterMark) + "]";
+        String resultstr = HttpClientUtils.doPostWithSign(url, params);
+        System.out.println(resultstr);
+    }
+
+    private static String addPreFix(Object params) {
+        return JSON.toJSONString(Collections.singletonList(params));
     }
 
     private static TrainsOutStockDTO getPreData() {

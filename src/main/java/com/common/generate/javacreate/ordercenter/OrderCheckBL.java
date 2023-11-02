@@ -25,6 +25,16 @@ public class OrderCheckBL {
     @SneakyThrows
     public static void main(String[] args) {
 
+
+    }
+
+    @SneakyThrows
+    public static void fixErpComplete(){
+
+    }
+
+    @SneakyThrows
+    public static void fixUpdateState(){
         String code = "pre";
         String filePath = "C:\\Users\\Administrator\\Desktop\\状态异常数据.xlsx";
         FileInputStream file = new FileInputStream(filePath);

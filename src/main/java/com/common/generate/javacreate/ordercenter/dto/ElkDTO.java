@@ -59,6 +59,16 @@ public class ElkDTO {
 
     private Integer featureType;
 
+    private Integer payType;
+
+    public Integer getPayType() {
+        return payType;
+    }
+
+    public void setPayType(Integer payType) {
+        this.payType = payType;
+    }
+
     public Integer getFeatureType() {
         return featureType;
     }

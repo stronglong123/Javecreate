@@ -26,24 +26,34 @@ public class MqCheckBL {
     //回单入库
     public static final String ORDER_IN_STOCK = "mq.ordercenter.coordinator.onOrderInStock";
 
+    public static final String BATCHPAY_CONFIRM = "mq.ordercenter.coordinator.onBatchPayConfirm";
+
 
     public static void main(String[] args){
-        List<String> mqList = Arrays.asList(BATCH_COMPLETE_DELIVERY,
-                INSTOCKORDER_CREATEINSTOCKBATCH,
-                ORDERCOMPLETE_CHECK,
+        List<String> mqList = Arrays.asList(
+//                BATCH_COMPLETE_DELIVERY,
+//                INSTOCKORDER_CREATEINSTOCKBATCH,
+//                ORDERCOMPLETE_CHECK,
                 ORDER_IN_STOCK
+//                BATCHPAY_CONFIRM
                 );
 
         for (String mqName : mqList) {
 
             MqQueryDTO queryDTO =new MqQueryDTO();
             queryDTO.setPageIndex(1);
-            queryDTO.setPageSize(10);
+            queryDTO.setPageSize(100);
             queryDTO.setQueueName(mqName);
             queryDTO.setState(0);
             List<DeadLetterRecoverDTO> deadLetterRecover = getDeadLetterRecover(queryDTO);
             if(CollectionUtils.isNotEmpty(deadLetterRecover)){
                 System.out.println("存在异常"+mqName);
+
+                for (DeadLetterRecoverDTO deadLetterRecoverDTO : deadLetterRecover) {
+                    if(deadLetterRecoverDTO.getCauseException().contains("退货单")){
+                        requeue(JSON.toJSONString(Arrays.asList(deadLetterRecoverDTO.getId())));
+                    }
+                }
             }
         }
     }
@@ -61,6 +71,12 @@ public class MqCheckBL {
         Object datas = result.getDatas();
         List<DeadLetterRecoverDTO> resultList = JSON.parseArray(JSON.toJSONString(datas), DeadLetterRecoverDTO.class);
         return resultList;
+    }
+
+
+    public static void requeue(String params) {
+        String url = OrdercenterConstant.MqBaseUrl + "/Rabbit/DeadLetterRecover/requeue";
+        String resultstr = HttpClientUtils.doPostWithCookie(OrdercenterConstant.Cookie, url, params);
     }
 
 }

@@ -24,13 +24,13 @@ public class UpdateSecOwnerBL {
     @SneakyThrows
     public static void main(String[] args){
 //        dealData();
-//        String filePath = "C:\\Users\\Administrator\\Desktop\\二级或组合数量修复.xlsx";
+//        String filePath = "C:\\Users\\Administrator\\Desktop\\二级货主修复.xlsx";
 //        FileInputStream file = new FileInputStream(filePath);
-//        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "二级或组合数量修复.xlsx");
+//        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "二级货主修复.xlsx");
 //        for (ElkDTO elkDTO : list) {
 //            UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();
 //            updateSecOwnerDTO.setId(elkDTO.getSecId());
-//            updateSecOwnerDTO.setCount(elkDTO.getWorkingItemCount());
+//            updateSecOwnerDTO.setCount(elkDTO.getCount());
 //            System.out.println(JSON.toJSONString(updateSecOwnerDTO));
 //            NewApiTest.updateItemSercOwner("pre", updateSecOwnerDTO);
 //        }
@@ -49,15 +49,8 @@ public class UpdateSecOwnerBL {
 
 
         Map<Long, BigDecimal> map = new HashMap<>();
-        map.put(5243610284908393485L, BigDecimal.valueOf(6));
-        map.put(5243612484839238786L, BigDecimal.valueOf(24));
-        map.put(5243612484839238787L, BigDecimal.valueOf(24));
-        map.put(5243612484839238788L, BigDecimal.valueOf(6));
-        map.put(5243612484839238790L, BigDecimal.valueOf(13));
-        map.put(5243612484839238789L, BigDecimal.valueOf(13));
-        map.put(5243636980936127491L, BigDecimal.valueOf(28));
-        map.put(5243636981074539534L, BigDecimal.valueOf(6));
-        map.put(5243650400876016640L, BigDecimal.valueOf(24));
+        map.put(5251896696244527180L, BigDecimal.valueOf(1));
+
 
         for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {
             UpdateSecOwnerDTO updateSecOwnerDTO = new UpdateSecOwnerDTO();

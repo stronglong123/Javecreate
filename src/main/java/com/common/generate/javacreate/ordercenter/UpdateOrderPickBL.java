@@ -1,6 +1,7 @@
 package com.common.generate.javacreate.ordercenter;
 
 import com.alibaba.fastjson.JSON;
+import com.common.generate.javacreate.enums.TrdPayTypeEnum;
 import com.common.generate.javacreate.ordercenter.dto.ElkDTO;
 import com.common.generate.javacreate.ordercenter.dto.OrderItemBaseDTO;
 import com.common.generate.javacreate.ordercenter.dto.SaleOrderItemDTO;
@@ -9,6 +10,7 @@ import com.common.generate.javacreate.service.impl.es.base.OrderAmountDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderBaseDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderConsignorDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderContactDTO;
+import com.common.generate.javacreate.service.impl.es.base.OrderDeliveryDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderPickDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderReturnDTO;
 import com.common.generate.javacreate.service.impl.es.base.OrderSaleDTO;
@@ -42,6 +44,10 @@ public class UpdateOrderPickBL {
 
     @SneakyThrows
     public static void main(String[] args) {
+//        updateOrderAmount();
+//        updateOrderDelivery();
+//        updateOrderBase();
+
 //        updateOrderConsignor();
 //        retrySyncEs();
 //        fixByExcel();
@@ -60,51 +66,43 @@ public class UpdateOrderPickBL {
 //            NewApiTest.updateWarehouse("pre", orderPickDTO);
 //        }
 
-        List<Long> orderIds = Arrays.asList(7030002310121011510L
 
-        );
-        for (Long orderId : orderIds) {
-            OrderBaseDTO orderBaseDTO = new OrderBaseDTO();
-            orderBaseDTO.setOrderId(orderId);
-            orderBaseDTO.setState(401);
-            NewApiTest.updateState("pre", orderBaseDTO);
-            NewApiTest.retrySyncOrderByOrderIds("pre", orderId);
+
+        Map<Long ,BigDecimal> map = new HashMap<>();
+        map.put(5248929940148451879L,BigDecimal.valueOf(0));
+
+        for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {
+            OrderReturnDTO orderReturnDTO = new OrderReturnDTO();
+            orderReturnDTO.setOrderId(entry.getKey());
+            orderReturnDTO.setActualReturnAmount(entry.getValue());
+            System.out.println(JSON.toJSONString(orderReturnDTO));
+            NewApiTest.updateOrderReturn("pre", orderReturnDTO);
         }
-
-//        Map<Long ,BigDecimal> map = new HashMap<>();
-//        map.put(4620002307061904536L,BigDecimal.valueOf(3));
-//        map.put(4620002307061904537L,BigDecimal.valueOf(7));
-//
-//        for (Map.Entry<Long, BigDecimal> entry : map.entrySet()) {
-//            OrderReturnDTO orderReturnDTO = new OrderReturnDTO();
-//            orderReturnDTO.setOrderId(entry.getKey());
-//            orderReturnDTO.setActualReturnAmount(entry.getValue());
-//            System.out.println(JSON.toJSONString(orderReturnDTO));
-//            NewApiTest.updateOrderReturn("pre", orderReturnDTO);
-//        }
 
 
 //        for (Long orderId : orderIds) {
 //            OrderAmountDTO orderAmountDTO = new OrderAmountDTO();
-//            orderAmountDTO.setOrderId(1190002308111764204L);
-//            orderAmountDTO.setPayType(31);
-//            orderAmountDTO.setPayTypeName("组合支付");
-//            orderAmountDTO.setOrderAmount(BigDecimal.valueOf(3.6));
-//            orderAmountDTO.setPayableAmount(BigDecimal.valueOf(3.6));
-//            orderAmountDTO.setReceiveAmount(BigDecimal.valueOf(54));
-//            orderAmountDTO.setUncollectedAmount(BigDecimal.valueOf(0));
-//            orderAmountDTO.setTotalDiscount(BigDecimal.valueOf(5));
-//            orderAmountDTO.setUncollectedAmount(BigDecimal.valueOf(918));
-//            orderAmountDTO.setPayableAmount(BigDecimal.valueOf(918));
+//            orderAmountDTO.setOrderId(7110002310311283911L);
+//            orderAmountDTO.setPayType(21);
+//            orderAmountDTO.setPayTypeName("二维码支付");
+////            orderAmountDTO.setOrderAmount(BigDecimal.valueOf(3.6));
+////            orderAmountDTO.setPayableAmount(BigDecimal.valueOf(3.6));
+////            orderAmountDTO.setReceiveAmount(BigDecimal.valueOf(54));
+////            orderAmountDTO.setUncollectedAmount(BigDecimal.valueOf(0));
+////            orderAmountDTO.setTotalDiscount(BigDecimal.valueOf(5));
+////            orderAmountDTO.setUncollectedAmount(BigDecimal.valueOf(918));
+////            orderAmountDTO.setPayableAmount(BigDecimal.valueOf(918));
 //            NewApiTest.updateOrderAmount("pre", orderAmountDTO);
+//            NewApiTest.retrySyncOrderByOrderIds("pre", 1000002310311203046L);
+
 //        }
 
 //        List<Long> orderIds = Arrays.asList();
 //        for (Long orderId : orderIds) {
 //            OrderContactDTO orderContactDTO = new OrderContactDTO();
 //            orderContactDTO.setOrderId(orderId);
-//            orderContactDTO.setDetailAddress("安顺康驾校(古井训练场)东北侧260米新会区古井镇闲时商店");
-//            NewApiTest.updateOrderContract("pre", orderContactDTO);
+//            orderContactDTO.setContactPhone("15117225549");
+//            NewApiTest.updateOrderContract("saas", orderContactDTO);
 //        }
 
 //        for (Long orderId : orderIds) {
@@ -130,9 +128,50 @@ public class UpdateOrderPickBL {
 //        }
     }
 
+    @SneakyThrows
+    public static void updateOrderBase() {
+        List<Long> orderIds = Arrays.asList();
+        for (Long orderId : orderIds) {
+            OrderBaseDTO orderBaseDTO = new OrderBaseDTO();
+            orderBaseDTO.setOrderId(orderId);
+            orderBaseDTO.setState(401);
+            NewApiTest.updateState("pre", orderBaseDTO);
+            NewApiTest.retrySyncOrderByOrderIds("pre", orderId);
+        }
+    }
+    @SneakyThrows
+    public static void updateOrderAmount() {
+        String filePath = "C:\\Users\\Administrator\\Desktop\\paytype修复.xlsx";
+        FileInputStream file = new FileInputStream(filePath);
+        List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "paytype修复.xlsx");
+        for (ElkDTO elkDTO : list) {
+            if (elkDTO.getId() == null || elkDTO.getPayType() == null) {
+                continue;
+            }
+            OrderAmountDTO orderAmountDTO = new OrderAmountDTO();
+            orderAmountDTO.setOrderId(elkDTO.getId());
+            orderAmountDTO.setPayType(elkDTO.getPayType());
+            orderAmountDTO.setPayTypeName(TrdPayTypeEnum.getTextByValue(elkDTO.getPayType()));
+            System.out.println(JSON.toJSONString(orderAmountDTO));
+            NewApiTest.updateOrderAmount("pre", orderAmountDTO);
+        }
+    }
 
     @SneakyThrows
-    public static void updateOrderConsignor(){
+    public static void updateOrderDelivery() {
+        List<Long> orderIds = Arrays.asList(4000002310181315910L, 4510002310121008603L, 4020002308150935222L, 4020002307171570382L, 4020002307171570366L, 4020002307141764594L, 4020002306291730710L, 4020002306191508413L, 4250002306171478610L, 4250002306171478609L, 4250002306171478607L, 4250002306171478605L, 4250002306171478604L, 4250002306171478603L, 4690002306161063984L, 4020002306031373023L, 4020002306031373011L, 4020002305061212328L, 4020002305060611767L, 4850002305271863560L, 4020002304081357182L, 4040002303241104759L, 7010002307311765518L, 7550002304231343574L, 7550002304231343573L, 7550002304231343572L, 7550002304231343571L);
+        for (Long orderId : orderIds) {
+            OrderDeliveryDTO orderDeliveryDTO = new OrderDeliveryDTO();
+            orderDeliveryDTO.setOrderId(orderId);
+            orderDeliveryDTO.setDeliveryMode(102);
+            NewApiTest.updateOrderDelivery("pre", orderDeliveryDTO);
+            NewApiTest.retrySyncOrderByOrderIds("pre", orderId);
+        }
+
+    }
+
+    @SneakyThrows
+    public static void updateOrderConsignor() {
         String filePath = "C:\\Users\\Administrator\\Desktop\\异常userId.xlsx";
         FileInputStream file = new FileInputStream(filePath);
         List<ElkDTO> list = ExcelUtils.readExcelToEntity(ElkDTO.class, file, "异常userId.xlsx");
@@ -142,14 +181,13 @@ public class UpdateOrderPickBL {
             orderConsignorDTO.setOrderId(elkDTO.getId());
             orderConsignorDTO.setUserId(String.valueOf(elkDTO.getUserId()));
             System.out.println(JSON.toJSONString(orderConsignorDTO));
-            NewApiTest.updateOrderConsignor("pre",orderConsignorDTO);
+            NewApiTest.updateOrderConsignor("pre", orderConsignorDTO);
         }
     }
 
 
-
     @SneakyThrows
-    public static void retrySyncEs(){
+    public static void retrySyncEs() {
 
 //        List<OrderDocumentDTO> orderList = NewApiTest.findPageByOrderSnapshot("pre", "[\n" +
 //                "    {\n" +
@@ -161,7 +199,6 @@ public class UpdateOrderPickBL {
 //                "    }\n" +
 //                "]");
 //        System.out.println(JSON.toJSONString(orderList));
-
 
 
 //        String filePath = "C:\\Users\\Administrator\\Desktop\\兑奖单重新同步.xlsx";
